@@ -1750,10 +1750,21 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         }
 
         function populateVictoryReport() {
+            // DEBUG: Log all values
+            console.log('=== VICTORY REPORT DEBUG ===');
+            console.log('lifetimeRevenue:', lifetimeRevenue);
+            console.log('totalPlasticUsed:', totalPlasticUsed);
+            console.log('totalSteelUsed:', totalSteelUsed);
+            console.log('totalMoldsMade:', totalMoldsMade);
+            console.log('partsSoldTotal:', partsSoldTotal);
+            console.log('startTime:', startTime);
+            console.log('Date.now():', Date.now());
+            console.log('elapsedSec:', (Date.now() - startTime) / 1000);
+
             // Populate Report Stats
              document.getElementById('repRevenue').innerText = `$${lifetimeRevenue.toLocaleString()}`;
              document.getElementById('repTime').innerText = document.getElementById('timeDisplay').innerText;
-             
+
              // Calculate Peak Rate from metrics history
              let maxRate = 0;
              metrics.history.forEach(m => {
@@ -1761,20 +1772,21 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                  if(rate > maxRate) maxRate = rate;
              });
              document.getElementById('repPeak').innerText = `${maxRate} PPM`;
-             
+
              document.getElementById('repPlastic').innerText = totalPlasticUsed.toLocaleString();
              document.getElementById('repSteel').innerText = totalSteelUsed.toLocaleString();
              document.getElementById('repMolds').innerText = totalMoldsMade.toLocaleString();
              document.getElementById('repParts').innerText = partsSoldTotal.toLocaleString();
-             
+
              // Calculate Grade
              let elapsedSec = (Date.now() - startTime) / 1000;
              let grade = 'C';
              if(elapsedSec < 300) grade = 'S'; // 5 mins
              else if(elapsedSec < 600) grade = 'A'; // 10 mins
              else if(elapsedSec < 900) grade = 'B'; // 15 mins
+             console.log('Final grade:', grade);
              document.getElementById('gradeStamp').innerText = grade;
-             
+
              // Date
              let d = new Date();
              document.getElementById('reportDate').innerText = d.toLocaleDateString().toUpperCase();
@@ -1784,9 +1796,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
              document.getElementById('modal-overlay').style.display = 'flex';
              document.getElementById('intro-modal').style.display = 'none';
              document.getElementById('win-modal').style.display = 'flex';
-             document.getElementById('finalTime').innerText = document.getElementById('timeDisplay').innerText;
              gameRunning = false;
-             
+
              populateVictoryReport();
         }
 
