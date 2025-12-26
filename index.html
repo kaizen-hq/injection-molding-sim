@@ -1,0 +1,2034 @@
+<html lang="en"><head>
+    <script>(function(firebaseConfig, initialAuthToken, appId) {
+        window.__firebase_config = firebaseConfig;
+        window.__initial_auth_token = initialAuthToken;
+        window.__app_id = appId;
+            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjJkYmE3M2IxMjU1ZjVkYjU2ZDZhODNhYmE5YTA2Zjg5YzAwMDI1ZDciLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIwNTEzNTk5MTkwOTU2NTYyOTMxOSIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiIwMTAxM2IzMjAwN2UtZ2FtZS5odG1sLTM2MiJ9LCJleHAiOjE3NjY3MTYyMzQsImlhdCI6MTc2NjcxMjYzNCwiYWxnIjoiUlMyNTYifQ.JTwA5xNvzwlXBnGEEbqNOO2xs-JQBV8xy4q8j-6kOEKNTWMbh7-1MmsbFqdwtMddeajO45RASBtFolhsnjMoz2i-8IuNo8tLjL5Y4T5eYSwYTyp8aryaaQ0xiMxqDFp62BRexDW7a9WG-n8B7jG3XxOHm6Doi9fhdk-B-8shPNT3DQiNyhNP0YzpNStUG70eu2fqj1lCJMt_HsHznXIf--TED1XijUXeDfe-HCPM0Wuv2cu3gW1bu1TF_ZNNd3AYPvSgDU4D2lr7EPE8ug4bE7W1hRLoB-51TAR9E_KgTdV3epNNI2kBVaT5hDpzTfSCiolR7o_rgebykxiVckbs0g","01013b32007e-game.html-362")</script><script>'use strict';var h=typeof Object.defineProperties=="function"?Object.defineProperty:function(a,b,d){if(a==Array.prototype||a==Object.prototype)return a;a[b]=d.value;return a};function l(a){a=["object"==typeof globalThis&&globalThis,a,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var b=0;b<a.length;++b){var d=a[b];if(d&&d.Math==Math)return d}throw Error("Cannot find global object");}var n=l(this);
+function p(a,b){if(b)a:{var d=n;a=a.split(".");for(var c=0;c<a.length-1;c++){var e=a[c];if(!(e in d))break a;d=d[e]}a=a[a.length-1];c=d[a];b=b(c);b!=c&&b!=null&&h(d,a,{configurable:!0,writable:!0,value:b})}}function r(a){function b(c){return a.next(c)}function d(c){return a.throw(c)}return new Promise(function(c,e){function f(g){g.done?c(g.value):Promise.resolve(g.value).then(b,d).then(f,e)}f(a.next())})}function t(a){return r(a())}
+p("Object.values",function(a){return a?a:function(b){var d=[],c;for(c in b)Object.prototype.hasOwnProperty.call(b,c)&&d.push(b[c]);return d}});p("Array.prototype.includes",function(a){return a?a:function(b,d){var c=this;c instanceof String&&(c=String(c));var e=c.length;d=d||0;for(d<0&&(d=Math.max(d+e,0));d<e;d++){var f=c[d];if(f===b||Object.is(f,b))return!0}return!1}});/*
+
+ MIT License
+
+ Copyright (c) 2017-2023 W.Y.
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+*/
+function u(a,b){const d=a.style;b.backgroundColor&&(d.backgroundColor=b.backgroundColor);b.width&&(d.width=`${b.width}px`);b.height&&(d.height=`${b.height}px`);const c=b.style;c!=null&&Object.keys(c).forEach(e=>{d[e]=c[e]})};var v=(()=>{let a=0;return()=>{a+=1;return`u${`0000${(Math.random()*1679616<<0).toString(36)}`.slice(-4)}${a}`}})();function w(a){const b=[];for(let d=0,c=a.length;d<c;d++)b.push(a[d]);return b}let x=null;function y(a={}){return x?x:a.l?x=a.l:x=w(window.getComputedStyle(document.documentElement))}function z(a,b){return(a=(a.ownerDocument.defaultView||window).getComputedStyle(a).getPropertyValue(b))?parseFloat(a.replace("px","")):0}
+function A(a,b={}){var d;if(!(d=b.width)){d=z(a,"border-left-width");var c=z(a,"border-right-width");d=a.clientWidth+d+c}(b=b.height)||(b=z(a,"border-top-width"),c=z(a,"border-bottom-width"),b=a.clientHeight+b+c);return{width:d,height:b}}function B(a){return new Promise((b,d)=>{const c=new Image;c.onload=()=>{c.decode().then(()=>{requestAnimationFrame(()=>b(c))})};c.onerror=d;c.crossOrigin="anonymous";c.decoding="async";c.src=a})}
+function C(a){return t(function*(){return Promise.resolve().then(()=>(new XMLSerializer).serializeToString(a)).then(encodeURIComponent).then(b=>`data:image/svg+xml;charset=utf-8,${b}`)})}
+function D(a,b,d){return t(function*(){const c=document.createElementNS("http://www.w3.org/2000/svg","svg"),e=document.createElementNS("http://www.w3.org/2000/svg","foreignObject");c.setAttribute("width",`${b}`);c.setAttribute("height",`${d}`);c.setAttribute("viewBox",`0 0 ${b} ${d}`);e.setAttribute("width","100%");e.setAttribute("height","100%");e.setAttribute("x","0");e.setAttribute("y","0");e.setAttribute("externalResourcesRequired","true");c.appendChild(e);e.appendChild(a);return C(c)})}
+var E=(a,b)=>{if(a instanceof b)return!0;a=Object.getPrototypeOf(a);return a===null?!1:a.constructor.name===b.name||E(a,b)};function F(a,b){return y(b).map(d=>{const c=a.getPropertyValue(d),e=a.getPropertyPriority(d);return`${d}: ${c}${e?" !important":""};`}).join(" ")}
+function G(a,b,d,c){a=window.getComputedStyle(a,d);var e=a.getPropertyValue("content");if(e!==""&&e!=="none"){var f=v();try{b.className=`${b.className} ${f}`}catch(k){return}e=document.createElement("style");var g=e.appendChild;d=`.${f}:${d}`;a.cssText?(c=a.getPropertyValue("content"),c=`${a.cssText} content: '${c.replace(/'|"/g,"")}';`):c=F(a,c);g.call(e,document.createTextNode(`${d}{${c}}`));b.appendChild(e)}};function H(a){return a.search(/^(data:)/)!==-1}function I(a,b,d){return t(function*(){const c=yield fetch(a,b);if(c.status===404)throw Error(`Resource "${c.url}" not found`);const e=yield c.blob();return new Promise((f,g)=>{const k=new FileReader;k.onerror=g;k.onloadend=()=>{try{f(d({o:c,result:k.result}))}catch(m){g(m)}};k.readAsDataURL(e)})})}const J={};function K(a,b,d){let c=a.replace(/\?.*/,"");d&&(c=a);/ttf|otf|eot|woff2?/i.test(c)&&(c=c.replace(/.*\//,""));return b?`[${b}]${c}`:c}
+function L(a,b,d){return t(function*(){const c=K(a,b,d.C);if(J[c]!=null)return J[c];d.u&&(a+=(/\?/.test(a)?"&":"?")+(new Date).getTime());let e;try{const f=yield I(a,d.i,({o:g,result:k})=>{b||(b=g.headers.get("Content-Type")||"");return k.split(/,/)[1]});e=`data:${b};base64,${f}`}catch(f){e=d.B||""}return J[c]=e})};const M={P:"application/font-woff",R:"application/font-woff",N:"application/font-truetype",v:"application/vnd.ms-fontobject",H:"image/png",F:"image/jpeg",D:"image/jpeg",A:"image/gif",M:"image/tiff",L:"image/svg+xml",O:"image/webp"};function N(a){return(a=/\.([^./]*?)$/g.exec(a))?a[1]:""};function O(a){return t(function*(){const b=a.toDataURL();return b==="data:,"?a.cloneNode(!1):B(b)})}function aa(a,b){return t(function*(){if(a.currentSrc){var d=document.createElement("canvas");const c=d.getContext("2d");d.width=a.clientWidth;d.height=a.clientHeight;c==null||c.drawImage(a,0,0,d.width,d.height);d=d.toDataURL();return B(d)}d=a.poster;d=yield L(d,M[N(d).toLowerCase()]||"",b);return B(d)})}
+function ba(a,b){return t(function*(){try{let d;if(a==null?0:(d=a.contentDocument)==null?0:d.body)return yield P(a.contentDocument.body,b,!0)}catch(d){}return a.cloneNode(!1)})}function ca(a,b){return t(function*(){return E(a,HTMLCanvasElement)?O(a):E(a,HTMLVideoElement)?aa(a,b):E(a,HTMLIFrameElement)?ba(a,b):a.cloneNode(a.tagName!=null&&a.tagName.toUpperCase()==="SVG")})}
+function da(a,b,d){return t(function*(){if(b.tagName!=null&&b.tagName.toUpperCase()==="SVG")return b;let c=[];if(a.tagName!=null&&a.tagName.toUpperCase()==="SLOT"&&a.assignedNodes)c=w(a.assignedNodes());else{let e;if(E(a,HTMLIFrameElement)&&((e=a.contentDocument)==null?0:e.body))c=w(a.contentDocument.body.childNodes);else{let f;c=w(((f=a.shadowRoot)!=null?f:a).childNodes)}}if(c.length===0||E(a,HTMLVideoElement))return b;yield c.reduce((e,f)=>e.then(()=>P(f,d)).then(g=>{g&&b.appendChild(g)}),Promise.resolve());
+return b})}function ea(a,b,d){const c=b.style;if(c){var e=window.getComputedStyle(a);e.cssText?(c.cssText=e.cssText,c.transformOrigin=e.transformOrigin):y(d).forEach(f=>{let g=e.getPropertyValue(f);f==="font-size"&&g.endsWith("px")&&(g=`${Math.floor(parseFloat(g.substring(0,g.length-2)))-.1}px`);E(a,HTMLIFrameElement)&&f==="display"&&g==="inline"&&(g="block");f==="d"&&b.getAttribute("d")&&(g=`path(${b.getAttribute("d")})`);c.setProperty(f,g,e.getPropertyPriority(f))})}}
+function fa(a,b){E(a,HTMLSelectElement)&&(b=Array.from(b.children).find(d=>a.value===d.getAttribute("value")))&&b.setAttribute("selected","")}
+function ha(a,b){return t(function*(){var d=a.querySelectorAll?a.querySelectorAll("use"):[];if(d.length===0)return a;var c={};for(var e=0;e<d.length;e++){var f=d[e].getAttribute("xlink:href");if(f){const g=document.querySelector(f);a.querySelector(f)||!g||c[f]||(c[f]=yield P(g,b,!0))}}d=Object.values(c);if(d.length){c=document.createElementNS("http://www.w3.org/1999/xhtml","svg");c.setAttribute("xmlns","http://www.w3.org/1999/xhtml");c.style.position="absolute";c.style.width="0";c.style.height="0";
+c.style.overflow="hidden";c.style.display="none";e=document.createElementNS("http://www.w3.org/1999/xhtml","defs");c.appendChild(e);for(f=0;f<d.length;f++)e.appendChild(d[f]);a.appendChild(c)}return a})}
+function P(a,b,d){return t(function*(){return d||!b.filter||b.filter(a)?Promise.resolve(a).then(c=>ca(c,b)).then(c=>da(a,c,b)).then(c=>{E(c,Element)&&(ea(a,c,b),G(a,c,":before",b),G(a,c,":after",b),E(a,HTMLTextAreaElement)&&(c.textContent=a.value),E(a,HTMLInputElement)&&c.setAttribute("value",a.value),fa(a,c));return c}).then(c=>ha(c,b)):null})};const Q=/url\((['"]?)([^'"]+?)\1\)/g,ia=/url\([^)]+\)\s*format\((["']?)([^"']+)\1\)/g,ja=/src:\s*(?:url\([^)]+\)\s*format\([^)]+\)[,;]\s*)+/g;function ka(a){const b=[];a.replace(Q,(d,c,e)=>{b.push(e);return d});return b.filter(d=>!H(d))}
+function la(a,b,d,c){return t(function*(){try{const e=d?(new URL(b,d||void 0)).toString():b;let f;f=yield L(e,M[N(b).toLowerCase()]||"",c);return a.replace(new RegExp(`(url\\(['"]?)(${b.replace(/([.*+?^${}()|\[\]\/\\])/g,"\\$1")})(['"]?\\))`,"g"),`$1${f}$3`)}catch(e){}return a})}function ma(a,{I:b}){return b?a.replace(ja,d=>{for(;;){const [c,,e]=ia.exec(d)||[],f=c,g=e;if(!g)return"";if(g===b)return`src: ${f};`}}):a}
+function R(a,b,d){return t(function*(){if(a.search(Q)===-1)return a;const c=ma(a,d);return ka(c).reduce((e,f)=>e.then(g=>la(g,f,b,d)),Promise.resolve(c))})};function S(a,b,d){return t(function*(){var c;const e=(c=b.style)==null?void 0:c.getPropertyValue(a);return e?(c=yield R(e,null,d),b.style.setProperty(a,c,b.style.getPropertyPriority(a)),!0):!1})}function na(a,b){return t(function*(){(yield S("background",a,b))||(yield S("background-image",a,b));(yield S("mask",a,b))||(yield S("-webkit-mask",a,b))||(yield S("mask-image",a,b))||(yield S("-webkit-mask-image",a,b))})}
+function oa(a,b){return t(function*(){const d=E(a,HTMLImageElement);if(d&&!H(a.src)||E(a,SVGImageElement)&&!H(a.href.baseVal)){var c=d?a.src:a.href.baseVal,e=yield L(c,M[N(c).toLowerCase()]||"",b);yield new Promise((f,g)=>{a.onload=f;a.onerror=b.m?(...k)=>{try{f(b.m(...k))}catch(m){g(m)}}:g;a.decode&&(a.decode=f);a.loading==="lazy"&&(a.loading="eager");d?(a.srcset="",a.src=e):a.href.baseVal=e})}})}
+function pa(a,b){return t(function*(){const d=w(a.childNodes).map(c=>T(c,b));yield Promise.all(d).then(()=>a)})}function T(a,b){return t(function*(){E(a,Element)&&(yield na(a,b),yield oa(a,b),yield pa(a,b))})};const U={};function V(a){return t(function*(){var b=U[a];if(b!=null)return b;b=yield(yield fetch(a)).text();b={url:a,cssText:b};return U[a]=b})}function W(a,b){return t(function*(){let d=a.cssText;const c=/url\(["']?([^"')]+)["']?\)/g,e=(d.match(/url\([^)]+\)/g)||[]).map(f=>t(function*(){let g=f.replace(c,"$1");g.startsWith("https://")||(g=(new URL(g,a.url)).href);return I(g,b.i,({result:k})=>{d=d.replace(f,`url(${k})`);return[f,k]})}));return Promise.all(e).then(()=>d)})}
+function X(a){if(a==null)return[];const b=[];a=a.replace(/(\/\*[\s\S]*?\*\/)/gi,"");for(var d=RegExp("((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})","gi");;){var c=d.exec(a);if(c===null)break;b.push(c[0])}a=a.replace(d,"");d=/@import[\s\S]*?url\([^)]*\)[\s\S]*?;/gi;for(c=RegExp("((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})","gi");;){let e=d.exec(a);if(e===null)if(e=c.exec(a),e===null)break;else d.lastIndex=c.lastIndex;else c.lastIndex=
+d.lastIndex;b.push(e[0])}return b}
+function qa(a,b){return t(function*(){const d=[],c=[];a.forEach(e=>{if("cssRules"in e)try{w(e.cssRules||[]).forEach((f,g)=>{if(f.type===CSSRule.IMPORT_RULE){let k=g+1;f=V(f.href).then(m=>W(m,b)).then(m=>X(m).forEach(q=>{try{e.insertRule(q,q.startsWith("@import")?k+=1:e.cssRules.length)}catch(Da){}})).catch(()=>{});c.push(f)}})}catch(f){const g=a.find(k=>k.href==null)||document.styleSheets[0];e.href!=null&&c.push(V(e.href).then(k=>W(k,b)).then(k=>X(k).forEach(m=>{g.insertRule(m,g.cssRules.length)})).catch(()=>
+{}))}});return Promise.all(c).then(()=>{a.forEach(e=>{if("cssRules"in e)try{w(e.cssRules||[]).forEach(f=>{d.push(f)})}catch(f){}});return d})})}function ra(a){return a.filter(b=>b.type===CSSRule.FONT_FACE_RULE).filter(b=>b.style.getPropertyValue("src").search(Q)!==-1)}function sa(a,b){return t(function*(){if(a.ownerDocument==null)throw Error("Provided element is not within a Document");var d=w(a.ownerDocument.styleSheets);d=yield qa(d,b);return ra(d)})}
+function ta(a){function b(c){(c.style.fontFamily||getComputedStyle(c).fontFamily).split(",").forEach(e=>{d.add(e.trim().replace(/["']/g,""))});Array.from(c.children).forEach(e=>{e instanceof HTMLElement&&b(e)})}const d=new Set;b(a);return d}function ua(a,b){return t(function*(){const d=yield sa(a,b),c=ta(a);return(yield Promise.all(d.filter(e=>c.has(e.style.fontFamily.trim().replace(/["']/g,""))).map(e=>R(e.cssText,e.parentStyleSheet?e.parentStyleSheet.href:null,b)))).join("\n")})}
+function va(a,b){return t(function*(){const d=b.j!=null?b.j:b.K?null:yield ua(a,b);if(d){const c=document.createElement("style");c.appendChild(document.createTextNode(d));a.firstChild?a.insertBefore(c,a.firstChild):a.appendChild(c)}})};function wa(a,b={}){return t(function*(){const {width:d,height:c}=A(a,b),e=yield P(a,b,!0);yield va(e,b);yield T(e,b);u(e,b);return yield D(e,d,c)})}
+function xa(a,b={}){return t(function*(){const {width:d,height:c}=A(a,b);var e=yield wa(a,b);e=yield B(e);const f=document.createElement("canvas"),g=f.getContext("2d"),k=b.G||window.devicePixelRatio||1,m=b.h||d,q=b.g||c;f.width=m*k;f.height=q*k;!b.J&&(f.width>16384||f.height>16384)&&(f.width>16384&&f.height>16384?f.width>f.height?(f.height*=16384/f.width,f.width=16384):(f.width*=16384/f.height,f.height=16384):f.width>16384?(f.height*=16384/f.width,f.width=16384):(f.width*=16384/f.height,f.height=
+16384));f.style.width=`${m}`;f.style.height=`${q}`;b.backgroundColor&&(g.fillStyle=b.backgroundColor,g.fillRect(0,0,f.width,f.height));g.drawImage(e,0,0,f.width,f.height);return f})}function ya(a,b={}){return t(function*(){return(yield xa(a,b)).toDataURL()})};const za=["gemini.google.com","corp.google.com","proxy.googlers.com"];function Y(){return document.body.querySelectorAll('[class*="animate"]').length>0}function Z(a){return t(function*(){try{return yield ya(a,{h:a.offsetWidth,g:a.offsetHeight})}catch(d){var b=a.offsetHeight;const c=document.createElement("canvas");c.width=a.offsetWidth;c.height=b;return c.toDataURL("image/png")}})}
+function Aa(){return t(function*(){const a=document.body.offsetWidth,b=document.body.offsetHeight,d=document.body.cloneNode(!0);d.querySelectorAll('[class*="animate"]').forEach(c=>{c.classList.remove(...Array.from(c.classList).filter(e=>e.startsWith("animate")))});d.style.width=`${a}px`;d.style.height=`${b}px`;return d})}
+function Ba(a){return t(function*(){let b=document.body;if(Y()){var d=yield Aa();b=d;document.body.appendChild(d)}d=yield Z(b);Y()&&document.body.removeChild(b);window.parent.postMessage({type:"SEND_SCREENSHOT",image:d,topOffset:document.documentElement.scrollTop},a.origin)})}function Ca(a){return t(function*(){const b={type:"SEND_SCREENSHOT_FOR_DATA_VISUALIZATION",image:yield Z(document.body),topOffset:0};window.parent.postMessage(b,a.origin)})}
+window.addEventListener("message",a=>t(function*(){if(za.some(d=>a.origin.includes(d))){var b=a.data;b&&(b.type==="MAKE_SCREENSHOT"&&(yield Ba(a)),b.type==="MAKE_SCREENSHOT_FOR_DATA_VISUALIZATION"&&(yield Ca(a)))}}));
+</script><script>(function() {
+  // Ensure this script is executed only once
+  if (window.firebaseAuthBridgeScriptLoaded) {
+    return;
+  }
+  window.firebaseAuthBridgeScriptLoaded = true;
+
+  let nextTokenPromiseId = 0;
+
+  // Stores { resolve, reject } for ongoing token requests
+  const pendingTokenPromises = {};
+
+  // Listen for messages from the Host Application
+  window.addEventListener('message', function(event) {
+
+    const messageData = event.data;
+
+  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
+      const { success, token, error, promiseId } = messageData ?? {};
+      if (pendingTokenPromises[promiseId]) {
+        if (success) {
+          pendingTokenPromises[promiseId].resolve(token);
+        } else {
+          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
+        }
+        delete pendingTokenPromises[promiseId];
+      }
+    }
+  });
+
+  // Expose a function for the Generated App to request a new Firebase token
+  window.requestNewFirebaseToken = function() {
+    const currentPromiseId = nextTokenPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingTokenPromises[currentPromiseId] = { resolve, reject };
+    });
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'REQUEST_NEW_FIREBASE_TOKEN',
+        promiseId: currentPromiseId
+      }, '*');
+    } else {
+      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
+      delete pendingTokenPromises[currentPromiseId];
+    }
+    return promise;
+  };
+})();</script><script>
+let realOriginalGetUserMedia = null;
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+}
+
+(function() {
+  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
+    try {
+      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
+        get: function() {
+          return undefined; // Or throw an error
+        },
+        configurable: false
+      });
+    } catch (error) {
+      console.error("Error defining prototype getter:", error);
+    }
+  }
+})();
+
+(function() {
+  const pendingMediaResolvers = {};
+  let nextMediaPromiseId = 0;
+
+  function requestMediaPermissions(constraints) {
+    const mediaPromiseId = nextMediaPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingMediaResolvers[mediaPromiseId] = (granted) => {
+        delete pendingMediaResolvers[mediaPromiseId];
+        resolve(granted);
+      };
+    });
+
+    window.parent.postMessage({
+      type: 'requestMediaPermission',
+      constraints: constraints,
+      promiseId: mediaPromiseId,
+    }, '*');
+
+    return promise;
+  }
+
+  let originalGetUserMedia = realOriginalGetUserMedia;
+
+  function interceptGetUserMedia() {
+    if (navigator.mediaDevices) {
+      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
+        value: function(constraints) {
+          return requestMediaPermissions(constraints).then((granted) => {
+            if (granted) {
+              if (originalGetUserMedia) {
+                return originalGetUserMedia(constraints);
+              } else {
+                throw new Error("Original getUserMedia not available.");
+              }
+            } else {
+              throw new DOMException('Permission denied', 'NotAllowedError');
+            }
+          });
+        },
+        writable: false,
+        configurable: false
+      });
+    }
+  }
+
+  interceptGetUserMedia();
+
+  const observer = new MutationObserver(function(mutationsList, observer) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'childList' && mutation.addedNodes) {
+        mutation.addedNodes.forEach(node => {
+          if (node === navigator.mediaDevices) {
+            interceptGetUserMedia();
+          }
+        });
+      }
+    }
+  });
+
+  function interceptSpeechRecognition() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      return;
+    }
+
+    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const SpeechRecognitionWrapper = function(...args) {
+      const recognizer = new OriginalSpeechRecognition(...args);
+      const originalStart = recognizer.start.bind(recognizer);
+
+      recognizer.start = function() {
+        requestMediaPermissions({ audio: true }).then(granted => {
+          if (granted) {
+            originalStart();
+          } else {
+            const errorEvent = new SpeechRecognitionErrorEvent('error');
+            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
+            recognizer.dispatchEvent(errorEvent);
+          }
+        });
+      };
+
+      return recognizer;
+    };
+
+    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
+    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
+
+    if (window.SpeechRecognition) {
+      window.SpeechRecognition = SpeechRecognitionWrapper;
+    }
+    if (window.webkitSpeechRecognition) {
+      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
+    }
+  }
+
+  interceptSpeechRecognition();
+
+  window.addEventListener('message', function(event) {
+    if (event.data) {
+      if (event.data.type === 'resolveMediaPermission') {
+        const { promiseId, granted } = event.data;
+        if (pendingMediaResolvers[promiseId]) {
+          pendingMediaResolvers[promiseId](granted);
+        }
+      }
+    }
+  });
+
+})();</script><script>((function(modelInformation) {
+  const originalFetch = window.fetch;
+  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
+  let googleLlmBaseApiUrls = [
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageTransformModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
+  ];
+  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
+    );
+  });
+  modelInformation.deprecatedImageModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predict',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predictLongRunning',
+    );
+  });
+
+  const pendingFetchResolvers = {};
+  let nextPromiseId = 0;
+
+  function handleStringInput(input, optionsArgument) {
+    const actualUrl = input;
+    const fetchCallArgs = [actualUrl, optionsArgument];
+    const effectiveOptions = optionsArgument || {};
+    const bodyForApiKeyCheck = effectiveOptions.body;
+    const bodyForPostMessage = effectiveOptions.body;
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  function handleRequestInput(input, optionsArgument) {
+    const actualUrl = input.url;
+    const fetchCallArgs = [input, optionsArgument];
+    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (optionsArgument) {
+      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
+      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
+      if ('body' in optionsArgument) {
+        bodyForApiKeyCheck = optionsArgument.body;
+        bodyForPostMessage = optionsArgument.body;
+      } else {
+        bodyForApiKeyCheck = undefined;
+        bodyForPostMessage = input.body;
+      }
+    } else {
+      bodyForApiKeyCheck = undefined;
+      bodyForPostMessage = input.body;
+    }
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  window.fetch = function(input, optionsArgument) {
+    let actualUrl;
+    let fetchCallArgs;
+    let effectiveOptions = {};
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (typeof input === 'string') {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
+    } else if (input instanceof Request) {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
+    } else {
+      return originalFetch.apply(window, [input, optionsArgument]);
+    }
+
+    effectiveOptions.method = effectiveOptions.method || 'GET';
+    if (!effectiveOptions.headers) {
+      effectiveOptions.headers = new Headers();
+    }
+
+
+    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
+      let apiKeyIsNull = true;
+
+      const regex = new RegExp("models/([^:]+)");
+      const modelNameMatch = actualUrl.match(regex);
+      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
+
+
+      try {
+        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
+        const apiKeyParam = urlObject.searchParams.get('key');
+        if (apiKeyParam) {
+          apiKeyIsNull = false;
+        }
+      } catch (e) {
+        // Continue checks even if URL parsing fails
+      }
+
+      if (apiKeyIsNull && effectiveOptions.headers) {
+        const h = new Headers(effectiveOptions.headers);
+        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
+        if (apiKeyHeaderValue) {
+          apiKeyIsNull = false;
+          return originalFetch.apply(window, fetchCallArgs);
+        }
+      }
+
+      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
+        try {
+          const bodyData = JSON.parse(bodyForApiKeyCheck);
+          if (bodyData && bodyData.apiKey) {
+            apiKeyIsNull = false;
+            return originalFetch.apply(window, fetchCallArgs);
+          }
+        } catch (e) {
+          // Ignore JSON parsing errors
+        }
+      }
+
+      if(apiKeyIsNull) {
+        const promiseId = nextPromiseId++;
+        const promise = new Promise((resolve) => {
+          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
+            delete pendingFetchResolvers[promiseId];
+            resolve(resolvedResponse);
+          };
+        });
+
+        let serializedBodyForPostMessage;
+        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
+            serializedBodyForPostMessage = bodyForPostMessage;
+        } else if (bodyForPostMessage instanceof ReadableStream) {
+            serializedBodyForPostMessage = null;
+        } else {
+            try {
+                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
+            } catch (e) {
+                serializedBodyForPostMessage = null;
+            }
+        }
+
+        const messageOptions = {
+            method: effectiveOptions.method,
+            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
+            body: serializedBodyForPostMessage
+        };
+
+        window.parent.postMessage({
+          type: 'requestFetch',
+          url: actualUrl,
+          modelName: modelName,
+          options: messageOptions,
+          promiseId: promiseId,
+        }, '*');
+
+        return promise;
+      }
+      return originalFetch.apply(window, fetchCallArgs);
+    }
+    return originalFetch.apply(window, fetchCallArgs);
+  };
+
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'resolveFetch') {
+      const { promiseId, response } = event.data;
+      if (pendingFetchResolvers[promiseId]) {
+        try {
+          const reconstructedResponse = new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: new Headers(response.headers),
+          });
+          pendingFetchResolvers[promiseId](reconstructedResponse);
+        } catch (error) {
+          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
+        }
+      }
+    }
+  });
+
+}))({"textModelName":"gemini-2.5-flash-preview-09-2025","imageModelName":"imagen-4.0-generate-001","imageEditModelName":"gemini-2.5-flash-image-preview","imageTransformModelName":"gemini-3-pro-image-preview-11-2025","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash-preview-04-17","gemini-2.5-flash-preview-05-20"],"deprecatedImageModelNames":["imagen-3.0-generate-001","imagen-3.0-generate-002"]})</script><script>(function() {
+  const originalConsoleLog = console.log;
+  const originalConsoleError = console.error;
+
+    /**
+   * Normalizes an error event or a promise rejection reason into a structured error object.
+   * @param {*} errorEventOrReason The error object or reason.
+   * @return {object} Structured error data { message, name, stack }.
+   */
+  function getErrorObject(errorEventOrReason) {
+    if (errorEventOrReason instanceof Error) {
+      return {
+        message: errorEventOrReason.message,
+        name: errorEventOrReason.name,
+        stack: errorEventOrReason.stack,
+      };
+    }
+    // Fallback for non-Error objects.
+    try {
+      return {
+        message: JSON.stringify(errorEventOrReason),
+        name: 'UnknownErrorType',
+        stack: null,
+      };
+    } catch (e) {
+      return {
+        message: String(errorEventOrReason),
+        name: 'UnknownErrorTypeNonStringifiable',
+        stack: null,
+      };
+    }
+  }
+
+  /**
+   * Converts an array of arguments (from log/error) into a single string.
+   * Handles Error objects specially to include their message and stack.
+   * @param {Array<*>} args - Arguments passed to console methods.
+   * @return {string} A string representation of the arguments.
+   */
+  function stringifyArgs(args) {
+    return args
+      .map((arg) => {
+        if (arg instanceof Error) {
+          const {message, stack} = arg;
+          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
+        }
+        if (typeof arg === 'object' && arg !== null) {
+          try {
+            return JSON.stringify(arg);
+          } catch (error) {
+            return '[Circular Object]';
+          }
+        } else {
+          return String(arg);
+        }
+      })
+      .join(' ');
+  }
+
+  console.log = function(...args) {
+    const logString = stringifyArgs(args);
+    window.parent.postMessage({ type: 'log', message: logString }, '*');
+    originalConsoleLog.apply(console, args);
+  };
+
+  console.error = function(...args) {
+    let errorData;
+    if (args.length > 0 && args[0] instanceof Error) {
+      const err = args[0];
+      // If the first arg is an Error, capture its details.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        ...getErrorObject(err),
+        rawArgsString: stringifyArgs(args.slice(1)),
+        timestamp: new Date().toISOString(),
+      };
+    } else {
+      // If not an Error object, treat all args as a general error message.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        message: stringifyArgs(args),
+        name: 'ConsoleLoggedError',
+        stack: null,
+        timestamp: new Date().toISOString(),
+      };
+    }
+    window.parent.postMessage(errorData, '*');
+    originalConsoleError.apply(console, args);
+  };
+
+  // Listen for global unhandled synchronous errors.
+  window.addEventListener('error', function(event) {
+    const errorDetails = event.error ? getErrorObject(event.error) : {
+      message: event.message,
+      name: 'GlobalError',
+      stack: null,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+    };
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'global',
+      ...errorDetails,
+      message: errorDetails.message || event.message,
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+  // Listen for unhandled promise rejections (asynchronous errors).
+  window.addEventListener('unhandledrejection', function(event) {
+    const errorDetails = getErrorObject(event.reason);
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'unhandledrejection',
+      ...errorDetails,
+      message: errorDetails.message || 'Unhandled Promise Rejection',
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomic Industries Christmas 2025</title>
+    <style>
+        :root {
+            --bg-color: #1a2634;
+            --panel-bg: #2b2b2b;
+            --led-green: #39ff14;
+            --led-red: #ff0000;
+            --gold: #ffd700;
+            --xmas-green: #165b33;
+            --xmas-red: #bb2528;
+            --xmas-gold: #f8b229;
+            --paper-white: #e0e0e0;
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: #eee;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* --- Mobile Blocker --- */
+        #mobile-warning {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; 
+            z-index: 20000;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 40px;
+            border: 20px solid #222;
+            box-sizing: border-box;
+        }
+        #mobile-warning h1 {
+            color: var(--led-red); border: 4px solid var(--led-red); 
+            padding: 20px; font-size: 24px; margin-bottom: 20px;
+            background: #110000; box-shadow: 0 0 20px var(--led-red);
+        }
+        #mobile-warning p { color: #aaa; font-size: 14px; max-width: 400px; line-height: 1.5; }
+
+        @media (max-width: 1050px), (max-height: 700px) {
+            #mobile-warning { display: flex; }
+            #game-wrapper, #stats-sidebar, .snow { display: none !important; }
+        }
+
+        /* --- Snow --- */
+        .snow {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 5;
+            background-image: 
+                radial-gradient(3px 3px at 100px 50px, #fff, transparent), 
+                radial-gradient(4px 4px at 200px 150px, #fff, transparent), 
+                radial-gradient(2px 2px at 300px 250px, #fff, transparent);
+            background-size: 550px 550px;
+            animation: snowAnim 15s linear infinite;
+            opacity: 0.2;
+        }
+        @keyframes snowAnim { 100% { transform: translateY(550px); } }
+
+        /* --- Layout --- */
+        #game-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #111;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* Wreath Border Container */
+        #game-frame {
+            position: relative;
+            border: 12px solid var(--xmas-green);
+            border-image: repeating-linear-gradient(45deg, var(--xmas-red), var(--xmas-red) 10px, var(--xmas-green) 10px, var(--xmas-green) 20px) 20;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            margin: 10px 0;
+            flex-shrink: 0;
+        }
+        
+        #game-frame::before {
+            content: '🎀'; font-size: 40px; position: absolute; top: -25px; left: 50%; transform: translateX(-50%); z-index: 20;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+        }
+
+        #game-container {
+            width: 720px; /* 18 * 40 */
+            height: 800px; /* 20 * 40 */
+            cursor: crosshair;
+            overflow: hidden;
+            background: #1e2430;
+            position: relative;
+        }
+        canvas { display: block; }
+
+        /* --- Sidebar --- */
+        #stats-sidebar {
+            width: 300px; 
+            background: linear-gradient(180deg, #333 0%, #222 100%);
+            border-left: 4px solid #444;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            z-index: 10;
+            overflow-y: auto; 
+        }
+
+        .panel-header {
+            background: repeating-linear-gradient(45deg, var(--xmas-red), var(--xmas-red) 10px, #fff 10px, #fff 20px);
+            padding: 4px; margin-bottom: 10px; text-align: center; border: 2px solid #000; flex-shrink: 0;
+        }
+        h1 { 
+            background: #111; color: var(--gold); margin: 0; padding: 5px; 
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .stat-card {
+            background: #000; border: 2px solid #555; padding: 10px; margin-bottom: 10px;
+            box-shadow: inset 0 0 10px #000; position: relative; flex-shrink: 0;
+        }
+        .stat-big { font-size: 20px; font-weight: bold; color: var(--led-green); text-shadow: 0 0 4px var(--led-green); }
+        .stat-label { font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 2px; }
+        .stat-row { display: flex; justify-content: space-between; align-items: baseline; }
+
+        .graph-section {
+            display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;
+        }
+        .graph-container {
+            background: #051005; border: 2px solid #444; padding: 5px;
+            display: flex; flex-direction: column;
+        }
+        .graph-label {
+            font-size: 10px; color: var(--led-green); opacity: 0.8; margin-bottom: 4px;
+            font-weight: bold; letter-spacing: 1px;
+        }
+        
+        #tool-info-card {
+            background: #1a1a1a; 
+            border: 2px solid #666; 
+            border-top: 4px solid #888;
+            padding: 10px;
+            margin-top: auto;
+            margin-bottom: 10px;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        /* Blue Screen Effect */
+        .info-screen {
+            background: #001133;
+            border: 2px inset #444;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            display: flex; flex-direction: column; align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .card-icon { font-size: 32px; margin-bottom: 5px; filter: drop-shadow(0 2px 4px #000); }
+        .card-title { color: #fff; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; border-bottom: 1px solid #449; width: 100%; padding-bottom: 4px;}
+        .card-desc { font-size: 10px; color: #aaccff; line-height: 1.4; margin-bottom: 8px; text-align: left; width: 100%; }
+        
+        .status-legend {
+            width: 100%; border-top: 1px dashed #449; padding-top: 6px;
+            display: flex; justify-content: space-around;
+        }
+        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: #889; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+
+        .controls-panel {
+            background: #111; border: 1px solid #444; padding: 10px;
+            border-radius: 4px; font-size: 11px; color: #aaa;
+        }
+        .control-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        kbd { background: #333; color: #fff; padding: 1px 4px; border: 1px solid #555; border-radius: 3px; font-weight: bold; font-family: monospace;}
+
+        /* --- Toolbar --- */
+        #toolbar-wrapper {
+            width: 100%;
+            background: #1a1a1a;
+            padding: 5px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-top: 4px solid #333;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+        
+        #tabs { display: flex; gap: 4px; margin-bottom: -2px; z-index: 5; }
+        .tab-btn {
+            background: #222; border: 1px solid #444; border-bottom: none;
+            color: #888; padding: 4px 12px; font-size: 11px; cursor: pointer;
+            border-top-left-radius: 4px; border-top-right-radius: 4px;
+            font-weight: bold; transition: all 0.2s; position: relative;
+        }
+        .tab-btn:hover { background: #333; color: #aaa; }
+        .tab-btn.active {
+            background: #444; color: var(--gold); border-color: var(--gold); border-bottom: 4px solid #444;
+            margin-bottom: -4px; padding-bottom: 8px;
+        }
+        .lock-icon { font-size: 8px; margin-left: 4px; }
+
+        #toolbar-container {
+            background: linear-gradient(to bottom, #444, #2a2a2a);
+            border: 2px solid var(--gold); border-radius: 8px;
+            padding: 8px 15px; display: flex; gap: 8px; 
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5);
+            justify-content: center;
+            width: 90%; max-width: 800px;
+        }
+
+        .tool-btn {
+            flex: 1; /* Take up container */
+            height: 70px;
+            background: linear-gradient(to bottom, #555, #333);
+            border-top: 2px solid #666; border-left: 2px solid #666;
+            border-right: 2px solid #222; border-bottom: 2px solid #222;
+            border-radius: 6px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; position: relative;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+        }
+        .tool-btn:hover { background: linear-gradient(to bottom, #666, #444); }
+        .tool-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .tool-btn.active { 
+            border: 2px solid var(--led-green); background: #222; 
+            box-shadow: inset 0 0 10px var(--led-green);
+            transform: translate(1px, 1px);
+        }
+        /* Lock style for mystery items */
+        .tool-btn.mystery {
+            background: #111; border-color: #333; cursor: not-allowed;
+        }
+        .tool-btn.mystery .tool-icon { filter: blur(4px) grayscale(1); opacity: 0.3; }
+        .tool-btn.mystery .tool-name { color: #555; }
+        
+        .tool-key { position: absolute; top: 2px; left: 3px; font-size: 9px; color: var(--gold); font-weight: bold; }
+        .tool-icon { font-size: 24px; margin-bottom: 2px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
+        .tool-name { font-size: 9px; color: #fff; text-transform: uppercase; margin-bottom: 2px; }
+        .tool-cost { font-size: 9px; color: var(--gold); background: #000; padding: 0 3px; border-radius: 2px; }
+
+        /* --- Modals & Notifications --- */
+        #inspector {
+            position: absolute; top: 20px; right: 20px; width: 180px;
+            background: #ddd; border: 4px solid #333; border-top: 15px solid #333;
+            padding: 10px; display: none; z-index: 40; box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+            font-family: 'Courier New', Courier, monospace; color: #000;
+        }
+        .insp-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px dotted #999; }
+        .insp-btn { background: #c00; color: #fff; border: none; font-size: 9px; cursor: pointer; padding: 1px 4px; }
+
+        .notification {
+            position: absolute; top: 15%; left: 50%; transform: translateX(-50%);
+            background: #000; color: var(--led-red); border: 2px solid var(--led-red);
+            padding: 8px 20px; font-family: monospace; font-weight: bold;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 50;
+        }
+
+        #modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 100;
+        }
+        
+        /* Intro Modal */
+        .modal-content {
+            background: #1a2634; border: 4px solid var(--xmas-red); padding: 30px;
+            max-width: 450px; text-align: center; color: #fff; border-radius: 8px;
+            box-shadow: 0 0 30px var(--xmas-red);
+        }
+        
+        /* Victory Report Card Styling */
+        #victory-report {
+            background: #f0f0f0; /* Paper */
+            color: #111;
+            font-family: 'Courier New', monospace;
+            width: 500px;
+            padding: 20px;
+            border: 1px solid #999;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
+            text-align: left;
+            position: relative;
+            transform: rotate(-1deg);
+        }
+        #victory-report::before {
+            content: '🎄 NORTH POLE FACTORY 🎄';
+            display: block; text-align: center; font-weight: bold; font-size: 18px; 
+            border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 15px;
+            color: var(--xmas-green);
+        }
+        .report-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .report-divider { border-bottom: 1px solid #ccc; margin: 10px 0; }
+        .grade-stamp {
+            position: absolute; top: 40px; right: 30px;
+            font-size: 80px; color: rgba(255, 0, 0, 0.4);
+            font-weight: bold; border: 5px solid rgba(255, 0, 0, 0.4);
+            padding: 0 20px; transform: rotate(-15deg); border-radius: 10px;
+        }
+        
+        .refresh-btn {
+            position: absolute; top: 10px; right: 10px;
+            background: #ddd; border: 1px solid #999;
+            width: 24px; height: 24px; border-radius: 50%;
+            cursor: pointer; font-size: 14px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .refresh-btn:hover { background: #ccc; }
+
+        .btn-primary {
+            background: var(--xmas-green); color: #fff; border: 2px solid #fff;
+            padding: 10px 20px; font-size: 16px; font-family: monospace; font-weight: bold;
+            cursor: pointer; margin-top: 20px; box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+            margin-right: 10px;
+        }
+        .btn-secondary {
+            background: #444; color: #fff; border: 2px solid #aaa;
+            padding: 10px 20px; font-size: 16px; font-family: monospace; font-weight: bold;
+            cursor: pointer; margin-top: 20px; box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mobile-warning">
+        <h1>TERMINAL ERROR</h1>
+        <p>MOBILE DEVICE DETECTED.</p>
+        <p>ATOMIC INDUSTRIES PROTOCOLS REQUIRE A DESKTOP WORKSTATION.</p>
+        <p style="margin-top:20px; color:#555;">[CONNECTION TERMINATED]</p>
+    </div>
+
+    <div class="snow"></div>
+
+    <div id="game-wrapper">
+        <div id="game-frame">
+            <div id="game-container">
+                <canvas id="gameCanvas" width="720" height="800"></canvas>
+                <div id="notification" class="notification">ALERT</div>
+                
+                <div id="inspector">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <strong id="insp-name">UNIT</strong>
+                        <button class="insp-btn" onclick="closeInspector()">X</button>
+                    </div>
+                    <div id="insp-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="toolbar-wrapper">
+            <div id="tabs">
+                <div class="tab-btn active" id="tab-1">LVL 1</div>
+                <div class="tab-btn" id="tab-2">LVL 2 <span class="lock-icon" style="display: inline;">🔒</span></div>
+                <div class="tab-btn" id="tab-3">LVL 3 <span class="lock-icon" style="display: inline;">🔒</span></div>
+                <div class="tab-btn" id="tab-4">LVL 4 <span class="lock-icon" style="display: inline;">🔒</span></div>
+            </div>
+            <div id="toolbar-container"><div class="tool-btn active">
+                    <div class="tool-key">1</div>
+                    <div class="tool-icon" style="color:#37474f">➡</div>
+                    <div class="tool-name">BELT</div>
+                    <div class="tool-cost">$10</div>
+                </div><div class="tool-btn ">
+                    <div class="tool-key">2</div>
+                    <div class="tool-icon" style="color:#fbc02d">🦾</div>
+                    <div class="tool-name">ARM</div>
+                    <div class="tool-cost">$30</div>
+                </div><div class="tool-btn ">
+                    <div class="tool-key">3</div>
+                    <div class="tool-icon" style="color:#c62828">🔴</div>
+                    <div class="tool-name">PLASTIC</div>
+                    <div class="tool-cost">$100</div>
+                </div><div class="tool-btn ">
+                    <div class="tool-key">4</div>
+                    <div class="tool-icon" style="color:#78909c">⬜</div>
+                    <div class="tool-name">STEEL</div>
+                    <div class="tool-cost">$150</div>
+                </div><div class="tool-btn ">
+                    <div class="tool-key">5</div>
+                    <div class="tool-icon" style="color:#0277bd">⚙️</div>
+                    <div class="tool-name">MILL</div>
+                    <div class="tool-cost">$500</div>
+                </div><div class="tool-btn ">
+                    <div class="tool-key">6</div>
+                    <div class="tool-icon" style="color:#ef6c00">🏭</div>
+                    <div class="tool-name">PRESS</div>
+                    <div class="tool-cost">$800</div>
+                </div><div class="tool-btn ">
+                    <div class="tool-key">7</div>
+                    <div class="tool-icon" style="color:#2e7d32">💲</div>
+                    <div class="tool-name">SELL</div>
+                    <div class="tool-cost">$100</div>
+                </div></div>
+        </div>
+    </div>
+
+    <div id="stats-sidebar">
+        <div class="panel-header">
+            <h1>ATOMIC INDUSTRIES XMAS</h1>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-row">
+                <div>
+                    <div class="stat-label">REVENUE</div>
+                    <div class="stat-big" style="color:var(--gold)" id="moneyDisplay">$600</div>
+                </div>
+                <div style="text-align:right">
+                    <div class="stat-label">TIER</div>
+                    <div class="stat-big" id="levelDisplay">1</div>
+                </div>
+            </div>
+            <div style="margin-top:10px; font-size:10px; color:#0f0; border-top:1px dashed #333; padding-top:5px;">
+                &gt; NEXT: <span id="nextUnlockDisplay" style="color:#fff">50 PARTS</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-row">
+                <span class="stat-label">TIME</span>
+                <span style="font-family:monospace; font-weight:bold; color:var(--led-red);" id="timeDisplay">00:00</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">GOAL</span>
+                <span style="color:var(--led-green); font-weight:bold">$1M</span>
+            </div>
+        </div>
+
+        <div class="graph-section">
+            <div class="graph-container">
+                <div class="graph-label">INPUT RATE (Baubles/Steel)</div>
+                <canvas id="graphResources" width="240" height="80"></canvas>
+            </div>
+            <div class="graph-container">
+                <div class="graph-label">OUTPUT RATE (Parts)</div>
+                <canvas id="graphProduction" width="240" height="80"></canvas>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div id="tool-info-card">
+            <div class="info-screen">
+                <div class="card-icon" id="card-icon" style="color: rgb(55, 71, 79);">➡</div>
+                <div class="card-title" id="card-title">BELT</div>
+                <div class="card-desc" id="card-desc">Standard Conveyor. Moves items forward continuously.</div>
+                
+                <!-- Status Legend -->
+                <div class="status-legend" id="status-legend" style="display:none;">
+                    <div class="legend-item"><span class="dot" style="background:#39ff14"></span> OK</div>
+                    <div class="legend-item"><span class="dot" style="background:#ffd700"></span> FULL</div>
+                    <div class="legend-item"><span class="dot" style="background:#ff0000"></span> ERR</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-panel">
+            <div style="margin-bottom:6px; font-weight:bold; color:#fff; border-bottom:1px solid #444; padding-bottom:2px;">OPERATOR CONTROLS</div>
+            <div class="control-row"><span>NAV TABS</span> <kbd>Shift+1-4</kbd></div>
+            <div class="control-row"><span>SELECT TOOL</span> <kbd>1-9</kbd></div>
+            <div class="control-row"><span>ROTATE</span> <kbd>R</kbd></div>
+            <div class="control-row"><span>BUILD/CFG</span> <kbd>L-Click</kbd></div>
+            <div class="control-row"><span>SCRAP</span> <kbd>R-Click</kbd></div>
+            <div class="control-row"><span>MANUAL</span> <kbd>I</kbd></div>
+        </div>
+    </div>
+
+    <div id="modal-overlay">
+        <!-- Intro -->
+        <div id="intro-modal" class="modal-content">
+            <h2 style="color: var(--gold); margin-top:0;">INJECTION MOLDING SIM</h2>
+            <p style="color: #ccc; font-size: 12px; margin-bottom: 20px;">ATOMIC INDUSTRIES // CHRISTMAS 2025</p>
+            <p><strong>MISSION: MANUFACTURE PARTS</strong></p>
+            <ul style="text-align: left; margin: 20px 0; font-size: 13px; line-height: 1.6; list-style: none; padding-left: 10px;">
+                <li>🔴 <strong>Plastic</strong> + 🧊 <strong>Mold</strong> = ⭐ <strong>Part</strong></li>
+                <li>⚙️ <strong>Machines</strong> do NOT auto-load.</li>
+                <li>🦾 <strong>Arms</strong> are required to move items.</li>
+                <li>🖱️ <strong>Click Machines</strong> to manage inventory.</li>
+                <li>⌨️ <strong>Press I</strong> anytime for help.</li>
+            </ul>
+            <button class="btn-primary" onclick="startGame()">START PRODUCTION</button>
+        </div>
+
+        <!-- Victory Report -->
+        <div id="win-modal" style="display:none; justify-content:center; align-items:center; height:100%;">
+            <div id="victory-report">
+                <button class="refresh-btn" onclick="populateVictoryReport()">↻</button>
+                <div class="grade-stamp" id="gradeStamp">A</div>
+                <div class="report-row">
+                    <span>DATE:</span> <span id="reportDate">DEC 25 2025</span>
+                </div>
+                <div class="report-row">
+                    <span>FOREMAN:</span> <span>YOU</span>
+                </div>
+                
+                <div class="report-divider"></div>
+                
+                <div style="font-weight:bold; margin-bottom:10px;">PRODUCTION METRICS</div>
+                <div class="report-row">
+                    <span>TOTAL REVENUE:</span> <span id="repRevenue">$0</span>
+                </div>
+                <div class="report-row">
+                    <span>TIME ELAPSED:</span> <span id="repTime">00:00</span>
+                </div>
+                <div class="report-row">
+                    <span>PEAK EFFICIENCY:</span> <span id="repPeak">0 PPM</span>
+                </div>
+                
+                <div class="report-divider"></div>
+                
+                <div style="font-weight:bold; margin-bottom:10px;">MATERIAL CONSUMPTION</div>
+                <div class="report-row">
+                    <span>PLASTIC PELLETS:</span> <span id="repPlastic">0</span>
+                </div>
+                <div class="report-row">
+                    <span>STEEL BLOCKS:</span> <span id="repSteel">0</span>
+                </div>
+                <div class="report-row">
+                    <span>MOLDS CUT:</span> <span id="repMolds">0</span>
+                </div>
+                <div class="report-row">
+                    <span>PARTS SHIPPED:</span> <span id="repParts">0</span>
+                </div>
+
+                <div class="report-divider"></div>
+                <div style="text-align:center; font-size:11px; margin-top:15px; color:#555;">
+                    Atomic Industries, Inc.<br>MERRY CHRISTMAS &amp; HAPPY NEW YEAR
+                </div>
+                
+                <div style="text-align:center;">
+                    <button class="btn-primary" onclick="continueGame()">CONTINUE OPERATIONS</button>
+                    <button class="btn-secondary" onclick="location.reload()">NEW FACILITY</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TILE_SIZE = 40; 
+        const GRID_W = 18;
+        const GRID_H = 20;
+        const TICK_RATE = 1000 / 60;
+
+        const C_PLASTIC = '#d32f2f';
+        const C_STEEL = '#cfd8dc';
+        const C_MOLD = '#81d4fa';
+        const C_PART = '#ffd700'; 
+        
+        const ITEM = { PLASTIC: 'plastic', STEEL: 'steel', MOLD: 'mold', PART: 'part', MOLD_QUAD: 'mold_quad' };
+
+        const LEVELS = {
+            1: { reqParts: 0 },
+            2: { reqParts: 50 },
+            3: { reqParts: 250 },
+            4: { reqParts: 1000 },
+        };
+
+        const BUILDINGS = {
+            // TAB 1
+            BELT: { id: 'belt', name: 'BELT', cost: 10, color: '#37474f', icon: '➡', reqLevel: 1, transportSpeed: 0.05, tab: 1, desc: "Standard Conveyor. Moves items forward continuously." },
+            ARM: { id: 'arm_basic', name: 'ARM', cost: 30, color: '#fbc02d', icon: '🦾', reqLevel: 1, isArm: true, speed: 1.0, tab: 1, desc: "Robot Arm. Moves items from BELTS to MACHINES. Essential for automation." },
+            SRC_P: { id: 'src_p', name: 'PLASTIC', cost: 100, color: '#c62828', icon: '🔴', reqLevel: 1, output: ITEM.PLASTIC, speed: 60, tab: 1, desc: "Infinite source of Red Plastic Pellets. Used in Injection Presses." },
+            SRC_S: { id: 'src_s', name: 'STEEL', cost: 150, color: '#78909c', icon: '⬜', reqLevel: 1, output: ITEM.STEEL, speed: 120, tab: 1, desc: "Infinite source of Steel Blocks. Used to cut Molds." },
+            CNC: { id: 'cnc', name: 'MILL', cost: 500, color: '#0277bd', icon: '⚙️', reqLevel: 1, recipe: { in: ITEM.STEEL, out: ITEM.MOLD, time: 180 }, tab: 1, desc: "Subtractive Manufacturing. Cuts 1 Steel into 1 Mold." },
+            PRESS: { id: 'press', name: 'PRESS', cost: 800, color: '#ef6c00', icon: '🏭', reqLevel: 1, recipe: { in: ITEM.PLASTIC, out: ITEM.PART, time: 60 }, maxLife: 20, tab: 1, desc: "Injection Molding Machine. Requires 1 Plastic + 1 Mold. Molds degrade after 20 cycles." },
+            BIN: { id: 'bin', name: 'SELL', cost: 100, color: '#2e7d32', icon: '💲', reqLevel: 1, tab: 1, desc: "Market Export. Sells items. PRICES: Part=$45, Mold=$20, Raw=$1." },
+
+            // TAB 2
+            BELT_F: { id: 'belt_fast', name: 'FAST BELT', cost: 50, color: '#b71c1c', icon: '⏩', reqLevel: 2, transportSpeed: 0.10, tab: 2, desc: "High Speed Conveyor. Moves items 2x faster than standard belts." },
+            ARM_F: { id: 'arm_filter', name: 'FILTER ARM', cost: 100, color: '#8e24aa', icon: '🔬', reqLevel: 2, isArm: true, speed: 1.5, canFilter: true, tab: 2, desc: "Smart Filter Arm. Click placed arm to select item type. Ignores other items." },
+            SRC_P_F: { id: 'src_p_fast', name: 'HI-FLOW PLASTIC', cost: 250, color: '#d32f2f', icon: '🔴+', reqLevel: 2, output: ITEM.PLASTIC, speed: 30, tab: 2, desc: "High-Volume Plastic Hopper. Outputs 2x faster." },
+
+            // TAB 3
+            ARM_S: { id: 'arm_smart', name: 'SMART ARM', cost: 200, color: '#006064', icon: '⚡', reqLevel: 3, isArm: true, speed: 3.0, tab: 3, desc: "High-Speed Servo Arm. Transfers items 3x faster." },
+            CNC_F: { id: 'cnc_fast', name: 'TURBO MILL', cost: 1500, color: '#1565c0', icon: '⚙️+', reqLevel: 3, recipe: { in: ITEM.STEEL, out: ITEM.MOLD, time: 90 }, tab: 3, desc: "High-RPM CNC Mill. Cuts molds 2x faster." },
+            SRC_S_F: { id: 'src_s_fast', name: 'HEAVY STEEL', cost: 350, color: '#546e7a', icon: '⬜+', reqLevel: 3, output: ITEM.STEEL, speed: 60, tab: 3, desc: "Heavy Duty Steel Stock. Outputs 2x faster." },
+
+            // TAB 4
+            PRESS_F: { id: 'press_fast', name: 'MEGA PRESS', cost: 2500, color: '#e65100', icon: '🏭+', reqLevel: 4, recipe: { in: ITEM.PLASTIC, out: ITEM.PART, time: 30 }, maxLife: 40, tab: 4, desc: "Industrial Press. 2x Speed. Supports Quad-Molds (4x output). Molds last 40 cycles." },
+            CNC_M: { id: 'cnc_mega', name: 'MEGA CNC', cost: 3000, color: '#004d40', icon: '⚙️M', reqLevel: 4, recipe: { in: ITEM.STEEL, out: ITEM.MOLD_QUAD, time: 180 }, tab: 4, desc: "5-Axis Mega Mill. Cuts Steel into Quad-Cavity Molds (4x Output potential)." }
+        };
+
+        const SELL_PRICES = { [ITEM.PART]: 45, [ITEM.MOLD]: 20, [ITEM.STEEL]: 1, [ITEM.PLASTIC]: 1, [ITEM.MOLD_QUAD]: 100 };
+
+        let canvas, ctx, gResCanvas, gResCtx, gProdCanvas, gProdCtx;
+        let money = 600;
+        let lifetimeRevenue = 600;
+        let partsSoldTotal = 0;
+        let totalPlasticUsed = 0;
+        let totalSteelUsed = 0;
+        let totalMoldsMade = 0;
+        let level = 1;
+        let currentTab = 1;
+        let gameRunning = false;
+        let hasWon = false;
+        let startTime = 0;
+        let selectedTool = 'belt';
+        let rotation = 0;
+        let isDragging = false;
+        let mouseGridPos = { x: -1, y: -1 };
+        
+        let grid = [];
+        let buildings = [];
+        let items = [];
+        let inspectedBuilding = null;
+        let metrics = { history: [], current: { plastic: 0, steel: 0, mold: 0, part: 0 } };
+
+        class Tile { constructor(x, y) { this.x = x; this.y = y; this.building = null; } }
+
+        class Building {
+            constructor(type, x, y, rot) {
+                this.type = type;
+                this.x = x; this.y = y; this.rot = rot;
+                this.timer = 0;
+                this.inventory = { [ITEM.PLASTIC]: 0, [ITEM.STEEL]: 0, [ITEM.MOLD]: 0, [ITEM.MOLD_QUAD]: 0 };
+                this.outputBuffer = null;
+                this.outputCount = 0; 
+                this.moldLife = 0;
+                this.maxMoldLife = type.maxLife || 0;
+                this.heldItem = null;
+                this.armAnim = 0;
+                this.filter = null;
+                this.lastSoldTime = 0;
+            }
+            cycleFilter() {
+                if (!this.type.canFilter) return;
+                const types = [null, ITEM.PLASTIC, ITEM.STEEL, ITEM.MOLD, ITEM.PART];
+                let idx = types.indexOf(this.filter);
+                this.filter = types[(idx + 1) % types.length];
+            }
+            update() {
+                if (this.type.isArm) this.updateArm();
+                else this.updateMachine();
+            }
+            updateArm() {
+                let speed = this.type.speed * 0.05;
+                if (this.heldItem) {
+                    if (this.armAnim < 1.0) this.armAnim = Math.min(1.0, this.armAnim + speed);
+                    else {
+                        let targetXY = getNeighbor(this.x, this.y, this.rot);
+                        if (this.attemptDrop(targetXY, this.heldItem)) this.heldItem = null;
+                    }
+                } else {
+                    if (this.armAnim > 0) this.armAnim = Math.max(0, this.armAnim - speed);
+                    else {
+                        let sourceXY = getNeighbor(this.x, this.y, (this.rot + 2) % 4);
+                        let targetXY = getNeighbor(this.x, this.y, this.rot);
+                        let item = this.attemptPickup(sourceXY, targetXY);
+                        if (item) this.heldItem = item;
+                    }
+                }
+            }
+            updateMachine() {
+                if (this.type.output) {
+                    this.timer++;
+                    if (this.timer >= this.type.speed) {
+                        if (!this.outputBuffer) {
+                            this.outputBuffer = this.type.output;
+                            this.outputCount = 1;
+                            if (this.type.output === ITEM.PLASTIC) { metrics.current.plastic++; }
+                            if (this.type.output === ITEM.STEEL) { metrics.current.steel++; }
+                            this.timer = 0;
+                        }
+                    }
+                }
+                
+                if (this.type.id.includes('cnc')) {
+                    if (!this.outputBuffer && this.inventory[ITEM.STEEL] > 0) {
+                        this.timer++;
+                        if (this.timer >= this.type.recipe.time) {
+                            this.inventory[ITEM.STEEL]--;
+                            totalSteelUsed++; // Track Consumption
+                            if (this.type.id === 'cnc_mega') {
+                                this.outputBuffer = ITEM.MOLD_QUAD;
+                            } else {
+                                this.outputBuffer = ITEM.MOLD;
+                                metrics.current.mold++;
+                            }
+                            totalMoldsMade++;
+                            this.outputCount = 1;
+                            this.timer = 0;
+                        }
+                    } else if (this.inventory[ITEM.STEEL] === 0) this.timer = 0;
+                }
+
+                if (this.type.id.includes('press')) {
+                    if (this.moldLife <= 0) {
+                        if (this.inventory[ITEM.MOLD_QUAD] > 0 && this.type.id === 'press_fast') {
+                            this.inventory[ITEM.MOLD_QUAD]--;
+                            this.moldLife = this.maxMoldLife; 
+                            this.currentMoldType = ITEM.MOLD_QUAD;
+                        } else if (this.inventory[ITEM.MOLD] > 0) {
+                            this.inventory[ITEM.MOLD]--;
+                            this.moldLife = this.maxMoldLife;
+                            this.currentMoldType = ITEM.MOLD;
+                        }
+                    }
+
+                    if (this.moldLife > 0 && (!this.outputBuffer || (this.outputBuffer === ITEM.PART && this.outputCount < 5))) {
+                        let plasticNeeded = (this.currentMoldType === ITEM.MOLD_QUAD) ? 4 : 1;
+                        if (this.inventory[ITEM.PLASTIC] >= plasticNeeded) {
+                            this.timer++;
+                            if (this.timer >= this.type.recipe.time) {
+                                this.inventory[ITEM.PLASTIC] -= plasticNeeded;
+                                totalPlasticUsed += plasticNeeded; // Track Consumption
+                                this.outputBuffer = ITEM.PART;
+                                let produced = (this.currentMoldType === ITEM.MOLD_QUAD) ? 4 : 1;
+                                this.outputCount += produced;
+                                metrics.current.part += produced;
+                                this.moldLife--;
+                                this.timer = 0;
+                            }
+                        } else this.timer = 0;
+                    } else if (this.moldLife <= 0) this.timer = 0;
+                }
+
+                if (this.outputBuffer && this.type.id.includes('src')) {
+                    let targetXY = getNeighbor(this.x, this.y, this.rot);
+                    if (isValid(targetXY)) {
+                        let targetTile = grid[targetXY.y][targetXY.x];
+                        if (targetTile.building && targetTile.building.type.transportSpeed) {
+                            if (isSpaceFree(targetXY.x, targetXY.y)) {
+                                let it = new Item(this.outputBuffer, targetXY.x, targetXY.y);
+                                it.sourceDir = (this.rot + 2) % 4; // Crucial for smoothing
+                                items.push(it);
+                                this.outputCount--;
+                                if (this.outputCount <= 0) {
+                                    this.outputBuffer = null;
+                                    this.outputCount = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            attemptPickup(pos, targetPos) {
+                if (!isValid(pos)) return null;
+                let tile = grid[pos.y][pos.x];
+                if (!tile.building) return null;
+                
+                let canAcceptFunc = (itemType) => {
+                    if (!isValid(targetPos)) return true;
+                    let tTile = grid[targetPos.y][targetPos.x];
+                    if (!tTile.building) return true;
+                    let b = tTile.building;
+                    if (b.type.id.includes('cnc')) {
+                        if (itemType === ITEM.STEEL && b.inventory[ITEM.STEEL] >= 5) return false;
+                        if (itemType !== ITEM.STEEL) return false;
+                    } else if (b.type.id.includes('press')) {
+                        if (itemType === ITEM.PLASTIC && b.inventory[ITEM.PLASTIC] >= 20) return false;
+                        if (itemType === ITEM.MOLD && b.inventory[ITEM.MOLD] >= 5) return false;
+                        if (itemType === ITEM.MOLD_QUAD && b.inventory[ITEM.MOLD_QUAD] >= 5) return false;
+                        if (![ITEM.PLASTIC, ITEM.MOLD, ITEM.MOLD_QUAD].includes(itemType)) return false;
+                    }
+                    return true;
+                };
+
+                if (tile.building.outputBuffer && tile.building.outputCount > 0) {
+                    let it = tile.building.outputBuffer;
+                    if (this.filter && it !== this.filter) return null;
+                    if (!canAcceptFunc(it)) return null;
+                    
+                    tile.building.outputCount--;
+                    if (tile.building.outputCount <= 0) tile.building.outputBuffer = null;
+                    return it;
+                }
+                
+                if (tile.building.type.transportSpeed) {
+                    let bestItem = null, bestDist = 999;
+                    for (let i = 0; i < items.length; i++) {
+                        let it = items[i];
+                        if (Math.floor(it.x) === pos.x && Math.floor(it.y) === pos.y) {
+                            if (this.filter && it.type !== this.filter) continue;
+                            if (!canAcceptFunc(it.type)) continue;
+                            let d = Math.abs(it.progress - 0.5);
+                            if (d < 0.6 && d < bestDist) { bestDist = d; bestItem = it; }
+                        }
+                    }
+                    if (bestItem) { bestItem.markedForDeletion = true; return bestItem.type; }
+                }
+                return null;
+            }
+            attemptDrop(pos, itemType) {
+                if (!isValid(pos)) return false;
+                let tile = grid[pos.y][pos.x];
+                if (!tile.building) return false;
+                let b = tile.building;
+                
+                if (b.type.id === 'bin') { 
+                    sellItem(itemType); 
+                    b.lastSoldTime = Date.now(); // Trigger Animation
+                    return true; 
+                }
+                if (b.type.id.includes('cnc')) {
+                    if (itemType === ITEM.STEEL && b.inventory[ITEM.STEEL] < 5) { b.inventory[ITEM.STEEL]++; return true; }
+                }
+                if (b.type.id.includes('press')) {
+                    if (itemType === ITEM.PLASTIC && b.inventory[ITEM.PLASTIC] < 20) { b.inventory[ITEM.PLASTIC]++; return true; }
+                    if (itemType === ITEM.MOLD && b.inventory[ITEM.MOLD] < 5) { b.inventory[ITEM.MOLD]++; return true; }
+                    if (itemType === ITEM.MOLD_QUAD && b.inventory[ITEM.MOLD_QUAD] < 5) { b.inventory[ITEM.MOLD_QUAD]++; return true; }
+                }
+                if (b.type.transportSpeed) {
+                    if (isSpaceFree(pos.x, pos.y)) { 
+                        let it = new Item(itemType, pos.x, pos.y);
+                        // Item entering belt from arm: set sourceDir based on Arm Rotation
+                        // Arm is at this.x, this.y with this.rot
+                        // Drop is at pos.x, pos.y
+                        // Source dir relative to new tile is (ArmRot + 2)%4
+                        it.sourceDir = (this.rot + 2) % 4;
+                        items.push(it); 
+                        return true; 
+                    }
+                }
+                return false;
+            }
+        }
+
+        class Item {
+            constructor(type, x, y) {
+                this.type = type; this.x = x; this.y = y; this.progress = 0; this.markedForDeletion = false; 
+                this.exitDir = null; this.sourceDir = null; // sourceDir: 0=R,1=D,2=L,3=U (Where it came FROM)
+            }
+            update() {
+                let gx = Math.floor(this.x), gy = Math.floor(this.y);
+                if (!isValid({x:gx, y:gy})) { this.markedForDeletion = true; return; }
+                let tile = grid[gy][gx];
+                if (!tile.building || !tile.building.type.transportSpeed) { this.markedForDeletion = true; return; }
+                
+                let speed = tile.building.type.transportSpeed;
+                if (this.exitDir === null) this.exitDir = tile.building.rot; 
+                
+                // Determine Source Dir if null (just spawned or glitch)
+                if (this.sourceDir === null) {
+                    // Assume it came from opposite of exit if unsure, or behind
+                    this.sourceDir = (this.exitDir + 2) % 4;
+                }
+
+                let dir = this.exitDir;
+                let nextX = gx, nextY = gy;
+                if (dir === 0) nextX++; if (dir === 1) nextY++; if (dir === 2) nextX--; if (dir === 3) nextY--;
+                
+                let blocked = false;
+                let nextTile = isValid({x:nextX, y:nextY}) ? grid[nextY][nextX] : null;
+                if (!nextTile || !nextTile.building || !nextTile.building.type.transportSpeed) {
+                    if (this.progress > 0.9) blocked = true;
+                }
+                for (let other of items) {
+                    if (other === this) continue;
+                    if (Math.floor(other.x) === gx && Math.floor(other.y) === gy && other.progress > this.progress) {
+                        if (other.progress - this.progress < 0.6) blocked = true;
+                    }
+                    if (Math.floor(other.x) === nextX && Math.floor(other.y) === nextY) {
+                        if (this.progress > 0.8 && other.progress < 0.2) blocked = true;
+                    }
+                }
+                if (!blocked) {
+                    this.progress += speed;
+                    if (this.progress >= 1.0) {
+                        if (nextTile && nextTile.building && nextTile.building.type.transportSpeed) {
+                            this.x = nextX; this.y = nextY; this.progress = 0; 
+                            // New source dir is opposite of where we came from (which was 'dir')
+                            this.sourceDir = (dir + 2) % 4; 
+                            this.exitDir = null;
+                        } else this.progress = 1.0;
+                    }
+                }
+            }
+        }
+
+        // --- Core ---
+        function isValid(pos) { return pos.x >= 0 && pos.x < GRID_W && pos.y >= 0 && pos.y < GRID_H; }
+        function getNeighbor(x, y, rot) {
+            if (rot === 0) return { x: x + 1, y: y };
+            if (rot === 1) return { x: x, y: y + 1 };
+            if (rot === 2) return { x: x - 1, y: y };
+            if (rot === 3) return { x: x, y: y - 1 };
+            return { x, y };
+        }
+        function isSpaceFree(x, y) {
+            for (let it of items) {
+                if (Math.floor(it.x) === x && Math.floor(it.y) === y && it.progress < 0.5) return false;
+            }
+            return true;
+        }
+
+        function init() {
+            canvas = document.getElementById('gameCanvas');
+            canvas.width = 720; // 18 * 40
+            canvas.height = 800; // 20 * 40
+            ctx = canvas.getContext('2d');
+            gResCanvas = document.getElementById('graphResources'); gResCtx = gResCanvas.getContext('2d');
+            gProdCanvas = document.getElementById('graphProduction'); gProdCtx = gProdCanvas.getContext('2d');
+
+            for (let y = 0; y < GRID_H; y++) {
+                let row = []; for (let x = 0; x < GRID_W; x++) row.push(new Tile(x, y));
+                grid.push(row);
+            }
+            switchTab(1);
+            updateInfoCard(BUILDINGS.BELT); 
+
+            // Initialize click listeners for tabs
+            document.getElementById('tab-1').onclick = () => switchTab(1);
+            document.getElementById('tab-2').onclick = () => switchTab(2);
+            document.getElementById('tab-3').onclick = () => switchTab(3);
+            document.getElementById('tab-4').onclick = () => switchTab(4);
+
+            window.addEventListener('keydown', handleKey);
+            canvas.addEventListener('mousedown', handleMouse);
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mouseup', () => isDragging = false);
+            canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+            setInterval(update, TICK_RATE);
+            setInterval(updateMetrics, 1000); 
+            setInterval(updateInspectorUI, 200); 
+            requestAnimationFrame(draw);
+        }
+
+        function startGame() {
+            document.getElementById('intro-modal').parentElement.style.display = 'none';
+            gameRunning = true; startTime = Date.now();
+        }
+
+        function continueGame() {
+             document.getElementById('modal-overlay').style.display = 'none';
+             gameRunning = true;
+        }
+
+        function sellItem(type) {
+            let val = SELL_PRICES[type];
+            money += val;
+            lifetimeRevenue += val;
+            if (type === ITEM.PART) { partsSoldTotal++; checkLevelUp(); }
+            if (money >= 1000000 && !hasWon) {
+                 hasWon = true;
+                 endGame();
+            }
+            updateUI();
+        }
+
+        function checkLevelUp() {
+            let nextLvl = level + 1;
+            if (LEVELS[nextLvl] && partsSoldTotal >= LEVELS[nextLvl].reqParts) {
+                level = nextLvl; showNotification(`LEVEL ${level} UNLOCKED`);
+                switchTab(currentTab); 
+            }
+        }
+
+        function update() {
+            if (!gameRunning) return;
+            let diff = Math.floor((Date.now() - startTime) / 1000);
+            let m = Math.floor(diff/60).toString().padStart(2,'0');
+            let s = (diff%60).toString().padStart(2,'0');
+            document.getElementById('timeDisplay').innerText = `${m}:${s}`;
+            for (let b of buildings) b.update();
+            items = items.filter(i => !i.markedForDeletion);
+            for (let i of items) i.update();
+        }
+
+        function updateMetrics() {
+            if (!gameRunning) return;
+            metrics.history.push({ ...metrics.current });
+            if (metrics.history.length > 60) metrics.history.shift(); 
+            metrics.current = { plastic: 0, steel: 0, mold: 0, part: 0 };
+            drawGraphs();
+        }
+
+        // --- Interaction ---
+        function switchTab(t) {
+            currentTab = t;
+            let locked = (t > 1 && level < t);
+            
+            if (locked) {
+                // Determine number of items in this tab for placeholders
+                let count = Object.values(BUILDINGS).filter(b => b.tab === t).length;
+                let req = LEVELS[t].reqParts;
+                // Render Locked Toolbar
+                renderLockedToolbar(count);
+                // Update Info Card with Lock Msg
+                document.getElementById('card-icon').innerText = '🔒';
+                document.getElementById('card-icon').style.color = '#555';
+                document.getElementById('card-title').innerText = `LEVEL ${t} LOCKED`;
+                document.getElementById('card-desc').innerText = `SECURITY CLEARANCE REQUIRED.\n\nSELL ${req} PARTS TO DECLASSIFY.`;
+                document.getElementById('status-legend').style.display = 'none';
+            } else {
+                setupToolbar();
+                // Default info
+                updateInfoCard(Object.values(BUILDINGS).find(b => b.id === selectedTool) || Object.values(BUILDINGS)[0]);
+            }
+
+            document.querySelectorAll('.tab-btn').forEach((el, idx) => {
+                if (idx + 1 === t) el.classList.add('active'); else el.classList.remove('active');
+            });
+        }
+
+        function renderLockedToolbar(count) {
+            const tb = document.getElementById('toolbar-container');
+            tb.innerHTML = '';
+            for(let i=0; i<count; i++) {
+                let div = document.createElement('div');
+                div.className = `tool-btn mystery`;
+                div.innerHTML = `
+                    <div class="tool-key">${i+1}</div>
+                    <div class="tool-icon">❓</div>
+                    <div class="tool-name">???</div>
+                `;
+                tb.appendChild(div);
+            }
+        }
+
+        function setupToolbar() {
+            const tb = document.getElementById('toolbar-container');
+            tb.innerHTML = '';
+            let tabItems = Object.values(BUILDINGS).filter(b => b.tab === currentTab);
+            
+            tabItems.forEach((b, i) => {
+                let div = document.createElement('div');
+                div.className = `tool-btn ${selectedTool === b.id ? 'active' : ''}`;
+                div.onclick = () => { selectedTool = b.id; setupToolbar(); updateInfoCard(b); };
+                div.innerHTML = `
+                    <div class="tool-key">${i+1}</div>
+                    <div class="tool-icon" style="color:${b.color}">${b.icon}</div>
+                    <div class="tool-name">${b.name}</div>
+                    <div class="tool-cost">$${b.cost}</div>
+                `;
+                tb.appendChild(div);
+            });
+            
+            for(let i=2; i<=4; i++) {
+                let el = document.getElementById(`tab-${i}`);
+                if (level >= i) el.querySelector('.lock-icon').style.display = 'none';
+                else el.querySelector('.lock-icon').style.display = 'inline';
+            }
+        }
+        
+        function updateInfoCard(b) {
+            document.getElementById('card-icon').innerText = b.icon;
+            document.getElementById('card-icon').style.color = b.color;
+            document.getElementById('card-title').innerText = b.name;
+            document.getElementById('card-desc').innerText = b.desc;
+            
+            // Show Status Legend for Machines, Sources, Bins. Hide for Belts and Arms.
+            if (!b.id.includes('belt') && !b.isArm) {
+                document.getElementById('status-legend').style.display = 'flex';
+            } else {
+                document.getElementById('status-legend').style.display = 'none';
+            }
+        }
+
+        function handleKey(e) {
+            if (e.key.toLowerCase() === 'i') {
+                document.getElementById('intro-modal').parentElement.style.display = 'flex';
+                document.getElementById('intro-modal').style.display = 'block';
+                return;
+            }
+            if (e.key === 'Shift') return;
+            if (e.shiftKey) {
+                if (e.code === 'Digit1') switchTab(1);
+                else if (e.code === 'Digit2') switchTab(2);
+                else if (e.code === 'Digit3') switchTab(3);
+                else if (e.code === 'Digit4') switchTab(4);
+                return;
+            }
+            if (e.key.toLowerCase() === 'r') rotation = (rotation + 1) % 4;
+            if (e.key === 'Escape') closeInspector();
+            
+            // Use e.code to reliably get digits 1-9
+            if (e.code.startsWith('Digit')) {
+                let num = parseInt(e.code.replace('Digit',''));
+                if (!isNaN(num) && num >= 1 && num <= 9) {
+                    if (level >= currentTab) {
+                        let tabItems = Object.values(BUILDINGS).filter(b => b.tab === currentTab);
+                        if (num <= tabItems.length) {
+                            let b = tabItems[num-1];
+                            selectedTool = b.id; setupToolbar(); updateInfoCard(b);
+                        }
+                    }
+                }
+            }
+        }
+
+        function getMouseGridPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return { 
+                x: Math.floor((e.clientX - rect.left) / TILE_SIZE), 
+                y: Math.floor((e.clientY - rect.top) / TILE_SIZE) 
+            };
+        }
+
+        function handleMouse(e) {
+            if (!gameRunning) return;
+            const pos = getMouseGridPos(e);
+            if (e.button === 0) { 
+                if (grid[pos.y] && grid[pos.y][pos.x]) {
+                    const tile = grid[pos.y][pos.x];
+                    if (tile.building && tile.building.type.canFilter) {
+                        tile.building.cycleFilter();
+                        showNotification("FILTER: " + (tile.building.filter || "NONE"));
+                        return;
+                    }
+                    if (tile.building && !tile.building.type.isArm && !tile.building.type.transportSpeed) {
+                        openInspector(tile.building); return;
+                    }
+                    placeBuilding(pos.x, pos.y); isDragging = true;
+                }
+            } else if (e.button === 2) { 
+                removeBuilding(pos.x, pos.y); if (inspectedBuilding) closeInspector();
+            }
+        }
+
+        function handleMouseMove(e) {
+            mouseGridPos = getMouseGridPos(e);
+            if (isDragging && gameRunning) placeBuilding(mouseGridPos.x, mouseGridPos.y);
+        }
+
+        function placeBuilding(x, y) {
+            if (!isValid({x,y})) return;
+            const tile = grid[y][x];
+            let bData = Object.values(BUILDINGS).find(b => b.id === selectedTool);
+            if (tile.building) {
+                if (tile.building.type.id === bData.id && tile.building.rot === rotation) return;
+                return;
+            }
+            if (money >= bData.cost) {
+                money -= bData.cost;
+                tile.building = new Building(bData, x, y, rotation);
+                buildings.push(tile.building);
+                updateUI();
+            } else showNotification("INSUFFICIENT FUNDS");
+        }
+
+        function removeBuilding(x, y) {
+            if (!isValid({x,y})) return;
+            const tile = grid[y][x];
+            if (tile.building) {
+                money += Math.floor(tile.building.type.cost * 0.5);
+                buildings = buildings.filter(b => b !== tile.building);
+                tile.building = null;
+                updateUI();
+            }
+        }
+
+        function openInspector(b) {
+            inspectedBuilding = b;
+            document.getElementById('inspector').style.display = 'block';
+            document.getElementById('insp-name').innerText = b.type.name;
+            updateInspectorUI();
+        }
+        function closeInspector() { inspectedBuilding = null; document.getElementById('inspector').style.display = 'none'; }
+        function clearInv(type) { if (inspectedBuilding) inspectedBuilding.inventory[type] = 0; updateInspectorUI(); }
+        function clearOutput() { 
+            if (inspectedBuilding) {
+                inspectedBuilding.outputBuffer = null; 
+                inspectedBuilding.outputCount = 0;
+            }
+            updateInspectorUI(); 
+        }
+
+        function updateInspectorUI() {
+            if (!inspectedBuilding) return;
+            let b = inspectedBuilding;
+            let html = '';
+            let status = "OPERATIONAL", statusColor = "#4caf50";
+            if (b.outputBuffer && b.outputCount >= 5) { status = "OUTPUT FULL"; statusColor = "#ffd700"; }
+            else if (b.type.id.includes('press') && b.inventory[ITEM.PLASTIC] === 0) { status = "NO PLASTIC"; statusColor = "#f44336"; }
+            else if (b.type.id.includes('press') && b.moldLife <= 0 && b.inventory[ITEM.MOLD] === 0) { status = "NO MOLD"; statusColor = "#f44336"; }
+            
+            html += `<div style="color:${statusColor}; font-weight:bold; margin-bottom:10px;">${status}</div>`;
+            if (Object.keys(b.inventory).length > 0) {
+                for (let k in b.inventory) {
+                    if (b.type.id.includes('src')) continue; 
+                    if (b.type.id.includes('cnc') && k !== ITEM.STEEL) continue;
+                    if (b.type.id.includes('press') && k === ITEM.STEEL) continue;
+                    html += `<div class="insp-row"><span>${k.toUpperCase()}: ${b.inventory[k]}</span><button class="insp-btn" onclick="clearInv('${k}')">DEL</button></div>`;
+                }
+            }
+            if (b.outputBuffer) {
+                html += `<div class="insp-row"><span style="color:#000;">OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})</span><button class="insp-btn" onclick="clearOutput()">DEL</button></div>`;
+            }
+            document.getElementById('insp-content').innerHTML = html;
+        }
+
+        function updateUI() {
+            document.getElementById('moneyDisplay').innerText = `$${money.toLocaleString()}`;
+            document.getElementById('levelDisplay').innerText = level;
+            let nextReq = LEVELS[level + 1];
+            document.getElementById('nextUnlockDisplay').innerText = nextReq ? `${nextReq.reqParts} PARTS` : "MAX";
+        }
+        function showNotification(msg) {
+            let n = document.getElementById('notification');
+            n.innerText = msg; n.style.opacity = 1;
+            setTimeout(()=>n.style.opacity=0, 2000);
+        }
+
+        function populateVictoryReport() {
+            // Populate Report Stats
+             document.getElementById('repRevenue').innerText = `$${lifetimeRevenue.toLocaleString()}`;
+             document.getElementById('repTime').innerText = document.getElementById('timeDisplay').innerText;
+             
+             // Calculate Peak Rate from metrics history
+             let maxRate = 0;
+             metrics.history.forEach(m => {
+                 let rate = m.part * 60;
+                 if(rate > maxRate) maxRate = rate;
+             });
+             document.getElementById('repPeak').innerText = `${maxRate} PPM`;
+             
+             document.getElementById('repPlastic').innerText = totalPlasticUsed.toLocaleString();
+             document.getElementById('repSteel').innerText = totalSteelUsed.toLocaleString();
+             document.getElementById('repMolds').innerText = totalMoldsMade.toLocaleString();
+             document.getElementById('repParts').innerText = partsSoldTotal.toLocaleString();
+             
+             // Calculate Grade
+             let elapsedSec = (Date.now() - startTime) / 1000;
+             let grade = 'C';
+             if(elapsedSec < 300) grade = 'S'; // 5 mins
+             else if(elapsedSec < 600) grade = 'A'; // 10 mins
+             else if(elapsedSec < 900) grade = 'B'; // 15 mins
+             document.getElementById('gradeStamp').innerText = grade;
+             
+             // Date
+             let d = new Date();
+             document.getElementById('reportDate').innerText = d.toLocaleDateString().toUpperCase();
+        }
+
+        function endGame() {
+             document.getElementById('modal-overlay').style.display = 'flex';
+             document.getElementById('intro-modal').style.display = 'none';
+             document.getElementById('win-modal').style.display = 'flex';
+             document.getElementById('finalTime').innerText = document.getElementById('timeDisplay').innerText;
+             gameRunning = false;
+             
+             populateVictoryReport();
+        }
+
+        function drawGraphs() {
+            function drawBezier(ctx, data, color, maxVal) {
+                if (data.length < 2) return;
+                ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+                let w = ctx.canvas.width, h = ctx.canvas.height;
+                let step = w / 60;
+                let startY = h - (data[0] / maxVal) * h;
+                ctx.moveTo(0, startY);
+                for (let i = 0; i < data.length - 1; i++) {
+                    let x1 = i * step, y1 = h - (data[i] / maxVal) * h;
+                    let x2 = (i + 1) * step, y2 = h - (data[i + 1] / maxVal) * h;
+                    let mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+                    ctx.quadraticCurveTo(x1, y1, mx, my);
+                }
+                ctx.stroke();
+                ctx.shadowBlur = 4; ctx.shadowColor = color; ctx.stroke(); ctx.shadowBlur = 0;
+            }
+            
+            let plastics = metrics.history.map(m => m.plastic * 60);
+            let parts = metrics.history.map(m => m.part * 60);
+            let currentMax = Math.max(...plastics, ...parts, 10);
+            let scale = Math.ceil(currentMax / 10) * 10;
+
+            [gResCtx, gProdCtx].forEach(c => {
+                c.fillStyle = '#051005'; c.fillRect(0,0,240,100);
+                c.strokeStyle = '#0f200f'; c.beginPath();
+                for(let i=0;i<240;i+=20) { c.moveTo(i,0); c.lineTo(i,100); }
+                for(let i=0;i<100;i+=20) { c.moveTo(0,i); c.lineTo(240,i); }
+                c.stroke();
+                // Move text down to avoid label overlap
+                c.fillStyle = '#00ff00'; c.font = '8px monospace'; 
+                c.fillText(scale, 2, 10); // inside
+                c.fillText(scale/2, 2, 55);
+            });
+
+            drawBezier(gResCtx, plastics, C_PLASTIC, scale);
+            drawBezier(gProdCtx, parts, C_PART, scale);
+        }
+
+        // --- Drawing ---
+        function draw() {
+            ctx.fillStyle = '#1e2430'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#263238'; ctx.lineWidth = 1; ctx.beginPath();
+            for(let x=0; x<=GRID_W; x++) { ctx.moveTo(x*TILE_SIZE, 0); ctx.lineTo(x*TILE_SIZE, GRID_H*TILE_SIZE); }
+            for(let y=0; y<=GRID_H; y++) { ctx.moveTo(0, y*TILE_SIZE); ctx.lineTo(GRID_W*TILE_SIZE, y*TILE_SIZE); }
+            ctx.stroke();
+
+            for (let b of buildings) drawBuilding(b);
+            for (let i of items) drawItem(i);
+            if (gameRunning && mouseGridPos.x >= 0) drawGhost();
+            if (inspectedBuilding) {
+                ctx.strokeStyle = '#ff0'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+                ctx.strokeRect(inspectedBuilding.x * TILE_SIZE, inspectedBuilding.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                ctx.setLineDash([]);
+            }
+            requestAnimationFrame(draw);
+        }
+
+        function drawBuilding(b) {
+            let cx = b.x * TILE_SIZE + TILE_SIZE/2;
+            let cy = b.y * TILE_SIZE + TILE_SIZE/2;
+            ctx.save(); ctx.translate(cx, cy);
+            ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(-16, -16, 36, 36); 
+            ctx.fillStyle = b.type.color; ctx.fillRect(-18, -18, 36, 36);
+            ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.strokeRect(-18, -18, 36, 36);
+            ctx.rotate(b.rot * Math.PI/2);
+
+            if (b.type.isArm) {
+                ctx.fillStyle = '#222'; ctx.fillRect(-10, -10, 20, 20);
+                let angleOffset = (b.armAnim * Math.PI) - Math.PI; 
+                ctx.rotate(angleOffset);
+                ctx.fillStyle = b.type.color; ctx.fillRect(0, -5, 24, 10); 
+                ctx.fillStyle = '#ccc'; ctx.fillRect(22, -6, 6, 12); 
+                if (b.heldItem) {
+                    ctx.save(); ctx.translate(24, 0); ctx.rotate(-(b.rot*Math.PI/2 + angleOffset)); 
+                    drawItemShape(ctx, b.heldItem); ctx.restore();
+                }
+            } else if (b.type.id.includes('belt')) {
+                // Horizontal Belt Body (aligned with Right arrow)
+                ctx.fillStyle = '#222'; 
+                ctx.fillRect(-16, -10, 32, 20); 
+                
+                // Animation offset moving Right (positive X)
+                let offset = (Date.now() / 1000 * b.type.transportSpeed * 200) % 8; 
+                
+                // Draw tread pattern (Vertical lines moving Right)
+                ctx.fillStyle = '#1a1a1a';
+                for(let i=-16; i<16; i+=8) {
+                    let x = i + offset;
+                    if(x > 16) x -= 32;
+                    ctx.fillRect(x, -8, 2, 16); 
+                }
+                
+                ctx.fillStyle = b.type.id === 'belt_fast' ? '#d32f2f' : '#607d8b';
+                ctx.beginPath(); ctx.moveTo(-6,-6); ctx.lineTo(0,0); ctx.lineTo(-6,6); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0,-6); ctx.lineTo(6,0); ctx.lineTo(0,6); ctx.stroke();
+            } else {
+                ctx.rotate(-b.rot * Math.PI/2);
+                ctx.fillStyle = '#fff'; ctx.font = '16px Arial';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(b.type.icon, 0, 0);
+                if (b.outputBuffer) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI*2); ctx.fill();
+                    if(b.outputCount > 1) {
+                        ctx.fillStyle='#fff'; ctx.font='9px monospace';
+                        ctx.fillText(b.outputCount, 8, -8);
+                    }
+                    drawItemShape(ctx, b.outputBuffer);
+                }
+                if ((b.type.id.includes('cnc') || b.type.id.includes('press')) && b.timer > 0) {
+                     ctx.fillStyle = '#000'; ctx.fillRect(-18,16,36,6); 
+                     ctx.fillStyle = '#39ff14'; ctx.fillRect(-18,16,36*(b.timer/b.type.recipe.time),6); 
+                }
+                
+                // LED Status Lights
+                // Position: Bottom Right (relative to center un-rotated)
+                // We are unrotated at this point in the stack due to the ctx.rotate above
+                let ledX = 14, ledY = 14;
+                
+                if (b.type.id === 'bin') {
+                    // Bin: Flash Green if just sold
+                    if (Date.now() - b.lastSoldTime < 200) {
+                        ctx.fillStyle = '#39ff14';
+                        ctx.shadowBlur = 5; ctx.shadowColor = '#39ff14';
+                        ctx.beginPath(); ctx.arc(ledX, ledY, 3, 0, Math.PI*2); ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                } else {
+                    let ledColor = '#333'; // Off/Dim
+                    
+                    // Logic Priority: Red (Error) -> Yellow (Full) -> Green (Working)
+                    let error = false;
+                    let warning = false;
+                    let working = (b.timer > 0);
+
+                    // Error Checks
+                    if (b.type.id.includes('press')) {
+                        if (b.moldLife <= 0 && b.inventory[ITEM.MOLD] === 0 && b.inventory[ITEM.MOLD_QUAD] === 0) error = true;
+                        else if (b.inventory[ITEM.PLASTIC] === 0 && b.moldLife > 0) error = true; 
+                    } else if (b.type.id.includes('cnc') && b.inventory[ITEM.STEEL] === 0) {
+                        error = true;
+                    }
+
+                    // Warning Check
+                    if (b.outputBuffer && b.outputCount >= (b.type.id.includes('mega')?5:1)) warning = true; // Mega holds 5
+
+                    // Blinking Logic
+                    let blinkOn = Math.floor(Date.now() / 300) % 2 === 0;
+
+                    if (error) {
+                        ledColor = blinkOn ? '#ff0000' : '#550000';
+                    } else if (warning) {
+                        ledColor = blinkOn ? '#ffff00' : '#555500';
+                    } else if (working) {
+                        ledColor = '#39ff14';
+                    }
+
+                    ctx.fillStyle = ledColor;
+                    if (ledColor === '#39ff14' || (blinkOn && (error || warning))) {
+                        ctx.shadowBlur = 5; ctx.shadowColor = ledColor;
+                    }
+                    ctx.beginPath(); ctx.arc(ledX, ledY, 3, 0, Math.PI*2); ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawItem(i) {
+            let cx = (i.x * TILE_SIZE) + (TILE_SIZE/2), cy = (i.y * TILE_SIZE) + (TILE_SIZE/2);
+            let dir = i.exitDir; if (dir === null) dir = i.sourceDir !== null ? (i.sourceDir + 2) % 4 : 0; 
+            
+            let drawX = cx, drawY = cy;
+            
+            if (i.progress < 0.5) {
+                let sdx=0, sdy=0;
+                if(i.sourceDir===0) sdx=1; if(i.sourceDir===1) sdy=1; if(i.sourceDir===2) sdx=-1; if(i.sourceDir===3) sdy=-1;
+                let t = (0.5 - i.progress) * 2; 
+                drawX = cx + sdx * t * (TILE_SIZE/2);
+                drawY = cy + sdy * t * (TILE_SIZE/2);
+            } else {
+                let edx=0, edy=0;
+                if(dir===0) edx=1; if(dir===1) edy=1; if(dir===2) edx=-1; if(dir===3) edy=-1;
+                let t = (i.progress - 0.5) * 2;
+                drawX = cx + edx * t * (TILE_SIZE/2);
+                drawY = cy + edy * t * (TILE_SIZE/2);
+            }
+            
+            ctx.save(); ctx.translate(drawX, drawY); drawItemShape(ctx, i.type); ctx.restore();
+        }
+
+        function drawItemShape(ctx, type) {
+            if (type === ITEM.PLASTIC) { 
+                ctx.fillStyle = C_PLASTIC; ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2); ctx.fill();
+            } else if (type === ITEM.PART) {
+                ctx.fillStyle = C_PART; ctx.beginPath();
+                for(let i=0;i<5;i++) {
+                    ctx.lineTo(Math.cos((18+i*72)/180*Math.PI)*8, -Math.sin((18+i*72)/180*Math.PI)*8);
+                    ctx.lineTo(Math.cos((54+i*72)/180*Math.PI)*3, -Math.sin((54+i*72)/180*Math.PI)*3);
+                }
+                ctx.fill();
+            } else if (type === ITEM.MOLD_QUAD) {
+                ctx.fillStyle = '#004d40'; ctx.fillRect(-7,-7,14,14); 
+                ctx.fillStyle = '#fff';
+                ctx.beginPath(); ctx.arc(-3,-3,1.5,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(3,-3,1.5,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(-3,3,1.5,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(3,3,1.5,0,Math.PI*2); ctx.fill();
+            } else {
+                ctx.fillStyle = (type === ITEM.MOLD) ? C_MOLD : C_STEEL;
+                ctx.fillRect(-6,-6,12,12);
+            }
+        }
+
+        function drawGhost() {
+            let b = Object.values(BUILDINGS).find(b => b.id === selectedTool);
+            if (!b) return;
+            let cx = mouseGridPos.x * TILE_SIZE + TILE_SIZE/2;
+            let cy = mouseGridPos.y * TILE_SIZE + TILE_SIZE/2;
+            
+            ctx.save(); ctx.translate(cx, cy);
+            
+            ctx.save();
+            ctx.rotate(rotation * Math.PI / 2);
+            let s = 1 + Math.sin(Date.now()/200)*0.1;
+            ctx.scale(s, s);
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            ctx.beginPath(); ctx.moveTo(10, -8); ctx.lineTo(22, 0); ctx.lineTo(10, 8); ctx.fill();
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)'; ctx.beginPath(); ctx.arc(-15, 0, 4, 0, Math.PI*2); ctx.fill();
+            ctx.restore();
+
+            ctx.globalAlpha = 0.5;
+            ctx.fillStyle = b.color; ctx.fillRect(-18,-18,36,36);
+            ctx.strokeStyle = '#fff'; ctx.lineWidth=2; ctx.strokeRect(-18,-18,36,36);
+            ctx.restore();
+        }
+
+        window.onload = init;
+    </script>
+
+</body></html>
