@@ -1181,7 +1181,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             }
             cycleFilter() {
                 if (!this.type.canFilter) return;
-                const types = [null, ITEM.PLASTIC, ITEM.STEEL, ITEM.MOLD, ITEM.PART];
+                const types = [null, ITEM.PLASTIC, ITEM.STEEL, ITEM.MOLD, ITEM.MOLD_QUAD, ITEM.PART];
                 let idx = types.indexOf(this.filter);
                 this.filter = types[(idx + 1) % types.length];
             }
