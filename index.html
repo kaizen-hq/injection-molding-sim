@@ -640,8 +640,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         }
 
         #game-container {
-            width: TILE_SIZE * GRID_W; /* 40 * 40 */
-            height: TILE_SIZE * GRID_H; /* 40 * 40 */
+            width: TILE_SIZE * GRID_W;
+            height: TILE_SIZE * GRID_H;
             cursor: crosshair;
             overflow: hidden;
             background: #1e2430;
@@ -1442,8 +1442,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
         function init() {
             canvas = document.getElementById('gameCanvas');
-            canvas.width = TILE_SIZE * GRID_W; // 40 * 40
-            canvas.height = TILE_SIZE * GRID_H; // 40 * 40
+            canvas.width = TILE_SIZE * GRID_W;
+            canvas.height = TILE_SIZE * GRID_H;
             ctx = canvas.getContext('2d');
             gResCanvas = document.getElementById('graphResources'); gResCtx = gResCanvas.getContext('2d');
             gProdCanvas = document.getElementById('graphProduction'); gProdCtx = gProdCanvas.getContext('2d');
@@ -1468,8 +1468,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             canvas.addEventListener('contextmenu', e => e.preventDefault());
 
             setInterval(update, TICK_RATE);
-            setInterval(updateMetrics, 1000); 
-            setInterval(updateInspectorUI, 200); 
+            setInterval(updateMetrics, 1000);
+            setInterval(updateInspectorUI, 200);
             requestAnimationFrame(draw);
         }
 
