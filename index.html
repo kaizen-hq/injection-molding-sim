@@ -640,8 +640,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         }
 
         #game-container {
-            width: 720px; /* 18 * 40 */
-            height: 800px; /* 20 * 40 */
+            width: TILE_SIZE * GRID_W; /* 40 * 40 */
+            height: TILE_SIZE * GRID_H; /* 40 * 40 */
             cursor: crosshair;
             overflow: hidden;
             background: #1e2430;
@@ -892,7 +892,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     <div id="game-wrapper">
         <div id="game-frame">
             <div id="game-container">
-                <canvas id="gameCanvas" width="720" height="800"></canvas>
+                <canvas id="gameCanvas"></canvas>
                 <div id="notification" class="notification">ALERT</div>
                 
                 <div id="inspector">
@@ -1094,8 +1094,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
     <script>
         const TILE_SIZE = 40; 
-        const GRID_W = 18;
-        const GRID_H = 20;
+        const GRID_W = 40;
+        const GRID_H = 40;
         const TICK_RATE = 1000 / 60;
 
         const C_PLASTIC = '#d32f2f';
@@ -1442,8 +1442,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
         function init() {
             canvas = document.getElementById('gameCanvas');
-            canvas.width = 720; // 18 * 40
-            canvas.height = 800; // 20 * 40
+            canvas.width = TILE_SIZE * GRID_W; // 40 * 40
+            canvas.height = TILE_SIZE * GRID_H; // 40 * 40
             ctx = canvas.getContext('2d');
             gResCanvas = document.getElementById('graphResources'); gResCtx = gResCanvas.getContext('2d');
             gProdCanvas = document.getElementById('graphProduction'); gProdCtx = gProdCanvas.getContext('2d');
