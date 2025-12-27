@@ -708,6 +708,7 @@
             // PLASTIC SOURCE variants
             SRC_P: { id: 'src_p', name: 'PLASTIC', cost: 100, color: '#c62828', icon: '🔴', reqLevel: 1, output: ITEM.PLASTIC, speed: 60, desc: "Infinite source of Red Plastic Pellets. Used in Injection Presses." },
             SRC_P_F: { id: 'src_p_fast', name: 'HI-FLOW PLASTIC', cost: 250, color: '#d32f2f', icon: '🔴+', reqLevel: 2, output: ITEM.PLASTIC, speed: 30, desc: "High-Volume Plastic Hopper. Outputs 2x faster." },
+            SRC_P_M: { id: 'src_p_mega', name: 'MEGA PLASTIC', cost: 500, color: '#b71c1c', icon: '🔴M', reqLevel: 4, output: ITEM.PLASTIC, speed: 15, desc: "Ultra High-Speed Plastic Extruder. Outputs 4x faster than standard." },
 
             // STEEL SOURCE variants
             SRC_S: { id: 'src_s', name: 'STEEL', cost: 150, color: '#78909c', icon: '⬜', reqLevel: 1, output: ITEM.STEEL, speed: 120, desc: "Infinite source of Steel Blocks. Used to cut Molds." },
@@ -730,7 +731,7 @@
         const TOOL_SLOTS = [
             { slot: 1, variants: ['BELT', 'BELT_F'] },               // Hotkey 1
             { slot: 2, variants: ['ARM', 'ARM_F', 'ARM_S'] },        // Hotkey 2
-            { slot: 3, variants: ['SRC_P', 'SRC_P_F'] },             // Hotkey 3
+            { slot: 3, variants: ['SRC_P', 'SRC_P_F', 'SRC_P_M'] },  // Hotkey 3
             { slot: 4, variants: ['SRC_S', 'SRC_S_F'] },             // Hotkey 4
             { slot: 5, variants: ['CNC', 'CNC_F', 'CNC_M'] },        // Hotkey 5
             { slot: 6, variants: ['PRESS', 'PRESS_F'] },             // Hotkey 6
