@@ -992,6 +992,10 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 <div class="graph-label">OUTPUT RATE (Parts)</div>
                 <canvas id="graphProduction" width="240" height="80"></canvas>
             </div>
+            <div class="graph-container">
+                <div class="graph-label">REVENUE RATE ($/min)</div>
+                <canvas id="graphRevenue" width="240" height="80"></canvas>
+            </div>
         </div>
 
         <!-- Info Card -->
@@ -1139,7 +1143,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
         const SELL_PRICES = { [ITEM.PART]: 45, [ITEM.MOLD]: 20, [ITEM.STEEL]: 1, [ITEM.PLASTIC]: 1, [ITEM.MOLD_QUAD]: 100 };
 
-        let canvas, ctx, gResCanvas, gResCtx, gProdCanvas, gProdCtx;
+        let canvas, ctx, gResCanvas, gResCtx, gProdCanvas, gProdCtx, gRevCanvas, gRevCtx;
         let money = 600;
         let lifetimeRevenue = 600;
         let partsSoldTotal = 0;
@@ -1160,7 +1164,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         let buildings = [];
         let items = [];
         let inspectedBuilding = null;
-        let metrics = { history: [], current: { plastic: 0, steel: 0, mold: 0, part: 0 } };
+        let metrics = { history: [], current: { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 } };
 
         class Tile { constructor(x, y) { this.x = x; this.y = y; this.building = null; } }
 
@@ -1447,6 +1451,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             ctx = canvas.getContext('2d');
             gResCanvas = document.getElementById('graphResources'); gResCtx = gResCanvas.getContext('2d');
             gProdCanvas = document.getElementById('graphProduction'); gProdCtx = gProdCanvas.getContext('2d');
+            gRevCanvas = document.getElementById('graphRevenue'); gRevCtx = gRevCanvas.getContext('2d');
 
             for (let y = 0; y < GRID_H; y++) {
                 let row = []; for (let x = 0; x < GRID_W; x++) row.push(new Tile(x, y));
@@ -1487,6 +1492,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             let val = SELL_PRICES[type];
             money += val;
             lifetimeRevenue += val;
+            metrics.current.dollars += val;
             if (type === ITEM.PART) { partsSoldTotal++; checkLevelUp(); }
             if (money >= 1000000 && !hasWon) {
                  hasWon = true;
@@ -1517,8 +1523,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         function updateMetrics() {
             if (!gameRunning) return;
             metrics.history.push({ ...metrics.current });
-            if (metrics.history.length > 60) metrics.history.shift(); 
-            metrics.current = { plastic: 0, steel: 0, mold: 0, part: 0 };
+            if (metrics.history.length > 60) metrics.history.shift();
+            metrics.current = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
             drawGraphs();
         }
 
@@ -1818,26 +1824,52 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 ctx.stroke();
                 ctx.shadowBlur = 4; ctx.shadowColor = color; ctx.stroke(); ctx.shadowBlur = 0;
             }
-            
+
             let plastics = metrics.history.map(m => m.plastic * 60);
             let parts = metrics.history.map(m => m.part * 60);
+            let dollars = metrics.history.map(m => m.dollars * 60);
             let currentMax = Math.max(...plastics, ...parts, 10);
             let scale = Math.ceil(currentMax / 10) * 10;
 
-            [gResCtx, gProdCtx].forEach(c => {
+            let dollarsMax = Math.max(...dollars, 10);
+            let dollarsScale = Math.ceil(dollarsMax / 10) * 10;
+
+            [gResCtx, gProdCtx, gRevCtx].forEach(c => {
                 c.fillStyle = '#051005'; c.fillRect(0,0,240,100);
                 c.strokeStyle = '#0f200f'; c.beginPath();
                 for(let i=0;i<240;i+=20) { c.moveTo(i,0); c.lineTo(i,100); }
                 for(let i=0;i<100;i+=20) { c.moveTo(0,i); c.lineTo(240,i); }
                 c.stroke();
-                // Move text down to avoid label overlap
-                c.fillStyle = '#00ff00'; c.font = '8px monospace'; 
-                c.fillText(scale, 2, 10); // inside
+            });
+
+            // Draw graph lines first
+            drawBezier(gResCtx, plastics, C_PLASTIC, scale);
+            drawBezier(gProdCtx, parts, C_PART, scale);
+            drawBezier(gRevCtx, dollars, '#00ff00', dollarsScale);
+
+            // Draw scale labels on top so they're not obscured
+            [gResCtx, gProdCtx].forEach(c => {
+                c.font = '8px monospace';
+                // Draw dark background behind text for contrast
+                c.fillStyle = '#051005';
+                c.fillRect(0, 2, 25, 10);
+                c.fillRect(0, 47, 25, 10);
+                // Draw text
+                c.fillStyle = '#00ff00';
+                c.fillText(scale, 2, 10);
                 c.fillText(scale/2, 2, 55);
             });
 
-            drawBezier(gResCtx, plastics, C_PLASTIC, scale);
-            drawBezier(gProdCtx, parts, C_PART, scale);
+            // Draw scale labels for revenue graph
+            gRevCtx.font = '8px monospace';
+            // Draw dark background behind text for contrast
+            gRevCtx.fillStyle = '#051005';
+            gRevCtx.fillRect(0, 2, 30, 10);
+            gRevCtx.fillRect(0, 47, 30, 10);
+            // Draw text
+            gRevCtx.fillStyle = '#00ff00';
+            gRevCtx.fillText(dollarsScale, 2, 10);
+            gRevCtx.fillText(dollarsScale/2, 2, 55);
         }
 
         // --- Drawing ---
