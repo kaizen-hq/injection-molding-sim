@@ -675,23 +675,55 @@
 
     </div>
 
-    <!-- Direction Picker for MEGA ARM -->
-    <div id="direction-picker" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#1a2634; padding:30px; border-radius:12px; border:4px solid var(--usa-red); box-shadow:0 0 30px var(--usa-red); z-index:1000;">
-        <h3 style="color:var(--gold); margin-top:0; text-align:center;">MEGA ARM DELIVERY DIRECTION</h3>
-        <p style="color:#aaa; font-size:12px; text-align:center; margin-bottom:20px;">Click a direction to set where this arm delivers items:</p>
-        <div style="display:grid; grid-template-columns:repeat(3, 80px); gap:10px; margin:20px auto; width:fit-content;">
-            <div></div>
-            <button id="dir-up" class="btn-secondary" style="padding:20px; font-size:24px;">↑</button>
-            <div></div>
-            <button id="dir-left" class="btn-secondary" style="padding:20px; font-size:24px;">←</button>
-            <div style="display:flex; align-items:center; justify-content:center; color:#555;">🦾M</div>
-            <button id="dir-right" class="btn-secondary" style="padding:20px; font-size:24px;">→</button>
-            <div></div>
-            <button id="dir-down" class="btn-secondary" style="padding:20px; font-size:24px;">↓</button>
-            <div></div>
+    <!-- ARM Configuration Modal -->
+    <div id="arm-config" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#1a2634; padding:30px; border-radius:12px; border:4px solid var(--usa-red); box-shadow:0 0 30px var(--usa-red); z-index:1000; max-width:500px;">
+        <h3 style="color:var(--gold); margin-top:0; text-align:center;">ARM CONFIGURATION</h3>
+
+        <!-- Filter Section -->
+        <div id="filter-section" style="margin-bottom:30px;">
+            <h4 style="color:var(--usa-red); margin-bottom:10px;">ITEM FILTER</h4>
+            <p style="color:#aaa; font-size:12px; margin-bottom:15px;">Select which item type this arm should pick up:</p>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
+                <button id="filter-all" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:18px;">⚡</span><span>ALL</span>
+                </button>
+                <button id="filter-plastic" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:18px;">🔴</span><span>PLASTIC</span>
+                </button>
+                <button id="filter-steel" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:18px;">⬜</span><span>STEEL</span>
+                </button>
+                <button id="filter-mold" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:18px;">🟫</span><span>MOLD</span>
+                </button>
+                <button id="filter-mold_quad" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:18px;">🟫</span><span>QUAD MOLD</span>
+                </button>
+                <button id="filter-part" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:18px;">⭐</span><span>PART</span>
+                </button>
+            </div>
         </div>
-        <div style="text-align:center; margin-top:20px;">
-            <button class="btn-secondary" onclick="closeDirectionPicker()" style="padding:10px 20px;">CANCEL</button>
+
+        <!-- Direction Section -->
+        <div id="direction-section">
+            <h4 style="color:var(--usa-red); margin-bottom:10px;">DELIVERY DIRECTION</h4>
+            <p style="color:#aaa; font-size:12px; margin-bottom:15px;">Select where this arm delivers items:</p>
+            <div style="display:grid; grid-template-columns:repeat(3, 80px); gap:10px; margin:0 auto; width:fit-content;">
+                <div></div>
+                <button id="dir-up" class="btn-secondary" style="padding:20px; font-size:24px;">↑</button>
+                <div></div>
+                <button id="dir-left" class="btn-secondary" style="padding:20px; font-size:24px;">←</button>
+                <div style="display:flex; align-items:center; justify-content:center; color:#555;">🦾</div>
+                <button id="dir-right" class="btn-secondary" style="padding:20px; font-size:24px;">→</button>
+                <div></div>
+                <button id="dir-down" class="btn-secondary" style="padding:20px; font-size:24px;">↓</button>
+                <div></div>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:25px;">
+            <button class="btn-secondary" onclick="closeArmConfig()" style="padding:10px 30px;">CLOSE</button>
         </div>
     </div>
 
@@ -1479,13 +1511,8 @@
             if (e.button === 0) {
                 if (grid[pos.y] && grid[pos.y][pos.x]) {
                     const tile = grid[pos.y][pos.x];
-                    if (tile.building && tile.building.type.canDirectDeliver) {
-                        openDirectionPicker(tile.building);
-                        return;
-                    }
-                    if (tile.building && tile.building.type.canFilter) {
-                        tile.building.cycleFilter();
-                        showNotification("FILTER: " + (tile.building.filter || "NONE"));
+                    if (tile.building && (tile.building.type.canFilter || tile.building.type.canDirectDeliver)) {
+                        openArmConfig(tile.building);
                         return;
                     }
                     if (tile.building && !tile.building.type.isArm && !tile.building.type.transportSpeed) {
@@ -1582,61 +1609,109 @@
             setTimeout(()=>n.style.opacity=0, 2000);
         }
 
-        let selectedMegaArm = null;
-        function openDirectionPicker(building) {
-            selectedMegaArm = building;
-            document.getElementById('direction-picker').style.display = 'block';
+        let selectedArm = null;
 
-            // Calculate pickup direction (always behind the arm)
-            const pickupDir = (building.rot + 2) % 4;
-            const currentDir = building.deliverDir;
+        function openArmConfig(building) {
+            selectedArm = building;
+            const modal = document.getElementById('arm-config');
+            const filterSection = document.getElementById('filter-section');
+            const directionSection = document.getElementById('direction-section');
 
-            // Get all direction buttons
-            const dirButtons = [
-                document.getElementById('dir-up'),
-                document.getElementById('dir-right'),
-                document.getElementById('dir-down'),
-                document.getElementById('dir-left')
-            ];
+            // Show/hide sections based on arm capabilities
+            filterSection.style.display = building.type.canFilter ? 'block' : 'none';
+            directionSection.style.display = building.type.canDirectDeliver ? 'block' : 'none';
 
-            // Reset all buttons and set up handlers
-            dirButtons.forEach((btn, dir) => {
-                // Reset styles
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.style.border = '2px solid #444';
-                btn.style.background = '';
+            modal.style.display = 'block';
 
-                // Disable pickup direction
-                if (dir === pickupDir) {
-                    btn.disabled = true;
-                    btn.style.opacity = '0.3';
-                    btn.style.cursor = 'not-allowed';
-                }
+            // Setup FILTER section
+            if (building.type.canFilter) {
+                const filterButtons = {
+                    'filter-all': null,
+                    'filter-plastic': ITEM.PLASTIC,
+                    'filter-steel': ITEM.STEEL,
+                    'filter-mold': ITEM.MOLD,
+                    'filter-mold_quad': ITEM.MOLD_QUAD,
+                    'filter-part': ITEM.PART
+                };
 
-                // Highlight current delivery direction
-                if (dir === currentDir) {
-                    btn.style.border = '3px solid var(--usa-red)';
-                    btn.style.background = 'rgba(220, 53, 69, 0.2)';
-                }
+                Object.entries(filterButtons).forEach(([btnId, itemType]) => {
+                    const btn = document.getElementById(btnId);
+                    // Reset styles
+                    btn.style.border = '2px solid #444';
+                    btn.style.background = '';
 
-                // Set click handler
-                btn.onclick = () => setArmDirection(dir);
-            });
+                    // Highlight current filter
+                    if (building.filter === itemType) {
+                        btn.style.border = '3px solid var(--usa-red)';
+                        btn.style.background = 'rgba(220, 53, 69, 0.2)';
+                    }
+
+                    // Set click handler
+                    btn.onclick = () => setArmFilter(itemType);
+                });
+            }
+
+            // Setup DIRECTION section
+            if (building.type.canDirectDeliver) {
+                const pickupDir = (building.rot + 2) % 4;
+                const currentDir = building.deliverDir;
+
+                const dirButtons = [
+                    document.getElementById('dir-up'),
+                    document.getElementById('dir-right'),
+                    document.getElementById('dir-down'),
+                    document.getElementById('dir-left')
+                ];
+
+                dirButtons.forEach((btn, dir) => {
+                    // Reset styles
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.border = '2px solid #444';
+                    btn.style.background = '';
+
+                    // Disable pickup direction
+                    if (dir === pickupDir) {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.3';
+                        btn.style.cursor = 'not-allowed';
+                    }
+
+                    // Highlight current delivery direction
+                    if (dir === currentDir) {
+                        btn.style.border = '3px solid var(--usa-red)';
+                        btn.style.background = 'rgba(220, 53, 69, 0.2)';
+                    }
+
+                    // Set click handler
+                    btn.onclick = () => setArmDirection(dir);
+                });
+            }
+        }
+
+        function setArmFilter(itemType) {
+            if (selectedArm) {
+                selectedArm.filter = itemType;
+                const filterName = itemType ? itemType.toUpperCase() : 'ALL';
+                showNotification(`ARM FILTER: ${filterName}`);
+                // Update button highlighting
+                openArmConfig(selectedArm);
+            }
         }
 
         function setArmDirection(dir) {
-            if (selectedMegaArm) {
-                selectedMegaArm.deliverDir = dir;
+            if (selectedArm) {
+                selectedArm.deliverDir = dir;
                 const dirNames = ['UP', 'RIGHT', 'DOWN', 'LEFT'];
-                showNotification(`MEGA ARM → ${dirNames[dir]}`);
+                showNotification(`ARM DIRECTION: ${dirNames[dir]}`);
+                // Update button highlighting
+                openArmConfig(selectedArm);
             }
-            closeDirectionPicker();
         }
 
-        function closeDirectionPicker() {
-            selectedMegaArm = null;
-            document.getElementById('direction-picker').style.display = 'none';
+        function closeArmConfig() {
+            selectedArm = null;
+            document.getElementById('arm-config').style.display = 'none';
         }
 
         function populateVictoryReport() {
