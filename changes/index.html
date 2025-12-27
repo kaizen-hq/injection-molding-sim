@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Manufacturing 2026 - Changelog</title>
+    <style>
+        :root {
+            --bg-color: #1a2634;
+            --panel-bg: #2b2b2b;
+            --led-green: #39ff14;
+            --led-red: #ff0000;
+            --gold: #ffd700;
+            --usa-red: #B22234;
+            --usa-blue: #3C3B6E;
+            --usa-white: #FFFFFF;
+            --industrial-steel: #71797E;
+            --industrial-orange: #FF6600;
+            --paper-white: #e0e0e0;
+        }
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: #eee;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--panel-bg);
+            padding: 40px;
+            border: 12px solid var(--usa-blue);
+            border-image: repeating-linear-gradient(45deg, var(--usa-red), var(--usa-red) 10px, var(--usa-white) 10px, var(--usa-white) 20px, var(--usa-blue) 20px, var(--usa-blue) 30px) 20;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+        h1 {
+            color: var(--gold);
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--usa-red);
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        h2 {
+            color: var(--usa-red);
+            border-bottom: 3px solid var(--usa-blue);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: var(--industrial-orange);
+            margin-top: 30px;
+            font-size: 1.3em;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 10px 0;
+            padding: 15px 20px;
+            border-left: 4px solid var(--usa-blue);
+            border-radius: 4px;
+        }
+        li::before {
+            content: "▶ ";
+            color: var(--industrial-orange);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .feature {
+            border-left-color: var(--led-green);
+        }
+        .fix {
+            border-left-color: var(--led-red);
+        }
+        .improvement {
+            border-left-color: var(--gold);
+        }
+        .theme {
+            border-left-color: var(--usa-blue);
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+            text-transform: uppercase;
+        }
+        .badge-new { background: var(--led-green); color: #000; }
+        .badge-fix { background: var(--led-red); color: #fff; }
+        .badge-improved { background: var(--gold); color: #000; }
+        .badge-theme { background: var(--usa-blue); color: #fff; }
+        strong {
+            color: var(--gold);
+        }
+        .highlight {
+            color: var(--industrial-orange);
+            font-weight: bold;
+        }
+        a {
+            color: var(--industrial-orange);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--industrial-orange);
+        }
+        a:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 30px;
+            background: var(--usa-red);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .back-link:hover {
+            background: var(--industrial-orange);
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏭 AMERICAN MANUFACTURING 2026 🏭</h1>
+        <div class="subtitle">CHANGELOG - Development Updates</div>
+
+        <h2>📋 Summary</h2>
+        <p>This document summarizes all changes made to American Manufacturing 2026 since commit <code>a819442</code>. The updates include major new features, bug fixes, gameplay improvements, and a complete theme overhaul celebrating American manufacturing.</p>
+
+        <h2>🎯 Major Features</h2>
+        <ul>
+            <li class="feature">
+                <strong>MEGA Tier Equipment (Level 4)</strong><span class="badge badge-new">New</span>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">🔴 <strong>MEGA PLASTIC</strong> - Ultra high-speed plastic extruder (4x faster, speed 15)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🏭 <strong>MEGA PRESS</strong> - Industrial press with 2x speed, supports Quad-Molds (4x output), 40 cycle mold life</li>
+                    <li style="background: none; border: none; padding: 5px 0;">⚙️ <strong>MEGA CNC</strong> - 5-Axis mega mill that creates Quad-Cavity Molds for 4x output potential</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🦾 <strong>MEGA ARM</strong> - Omni-directional mega arm with configurable delivery directions (3x speed)</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>Omni-Directional ARM Delivery System</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">MEGA ARMs can now deliver items in any of the 4 cardinal directions (Up, Down, Left, Right), independent of their pickup direction. Click a placed MEGA ARM to configure its delivery direction via an intuitive modal interface.</p>
+            </li>
+
+            <li class="feature">
+                <strong>ARM Configuration Modal</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Unified modal interface for configuring FILTER ARM, SMART ARM, and MEGA ARM features:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Item Filter Section:</strong> Select which item types to pick up (PLASTIC, STEEL, MOLD, QUAD MOLD, PART, or ALL)</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Delivery Direction Section:</strong> Set delivery direction for MEGA ARMs (MEGA ARM only)</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Visual Indicators:</strong> Current selection highlighted in red, pickup direction disabled</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Persistent Settings:</strong> Filter and direction settings saved across page refreshes</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>Slot-Based Toolbar System</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Redesigned toolbar shows the best available variant for each equipment type based on current level. 7 hotkey slots (1-7) automatically upgrade to show higher-tier variants as you level up.</p>
+            </li>
+
+            <li class="feature">
+                <strong>Save/Load System</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Complete game state persistence including buildings, items, inventory, money, metrics, ARM filters, and MEGA ARM delivery directions. Auto-saves on page unload.</p>
+            </li>
+
+            <li class="feature">
+                <strong>Revenue/Minute Chart</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Real-time revenue tracking chart shows income rate over time, helping players optimize their production lines.</p>
+            </li>
+
+            <li class="feature">
+                <strong>SMART ARM Filter System</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">SMART ARMs can filter items by type, only picking up selected item types (PLASTIC, STEEL, MOLD, or PART).</p>
+            </li>
+        </ul>
+
+        <h2>🐛 Bug Fixes</h2>
+        <ul>
+            <li class="fix">
+                <strong>Fixed FIFO Item Pickup Order</strong><span class="badge badge-fix">Critical Fix</span>
+                <p style="margin-top: 10px;">Arms now correctly pick up items in First-In-First-Out order. Previously, arms selected items based on position within a tile, causing items to get "stuck" and skip ahead in the queue. Arms now pick the item furthest along the belt (highest progress value).</p>
+            </li>
+
+            <li class="fix">
+                <strong>Fixed Regular PRESS Accepting Quad Molds</strong><span class="badge badge-fix">Fix</span>
+                <p style="margin-top: 10px;">Regular PRESS machines no longer accept QUAD MOLDS that they cannot use. Only MEGA PRESS can accept and use quad molds for 4x output.</p>
+            </li>
+
+            <li class="fix">
+                <strong>Fixed MEGA PRESS Quad Mold Support</strong><span class="badge badge-fix">Fix</span>
+                <p style="margin-top: 10px;">MEGA PRESS now correctly uses quad molds after variable rename from PRESS_F to PRESS_M. Quad mold logic updated to check for 'press_mega' ID.</p>
+            </li>
+
+            <li class="fix">
+                <strong>Fixed ARM Direction Picker Mapping</strong><span class="badge badge-fix">Fix</span>
+                <p style="margin-top: 10px;">Direction buttons in modal now correctly map to board directions. Fixed mismatch where clicking RIGHT arrow was setting DOWN direction due to incorrect array ordering.</p>
+            </li>
+
+            <li class="fix">
+                <strong>Fixed Victory Modal 'I' Key Trigger</strong><span class="badge badge-fix">Fix</span>
+                <p style="margin-top: 10px;">Pressing 'I' key no longer accidentally triggers victory modal.</p>
+            </li>
+
+            <li class="fix">
+                <strong>Fixed Grid Boundary Validation</strong><span class="badge badge-fix">Fix</span>
+                <p style="margin-top: 10px;">Items and buildings outside grid bounds are now properly skipped during save/load to prevent errors.</p>
+            </li>
+
+            <li class="fix">
+                <strong>Fixed Victory Report Element</strong><span class="badge badge-fix">Fix</span>
+                <p style="margin-top: 10px;">Removed errant element in end game that was breaking the victory report display.</p>
+            </li>
+        </ul>
+
+        <h2>⚡ Gameplay Improvements</h2>
+        <ul>
+            <li class="improvement">
+                <strong>Expanded Grid Size</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">Grid increased from 18×20 to 35×32, providing significantly more building space for complex production lines. Grid refined through multiple iterations for optimal balance.</p>
+            </li>
+
+            <li class="improvement">
+                <strong>Enhanced Visual Effects</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">Added animated fireworks and larger industrial sparks for enhanced visual feedback during gameplay.</p>
+            </li>
+
+            <li class="improvement">
+                <strong>Victory Screen Improvements</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">Victory card redesigned to match intro card styling. "Reset Game" renamed to "New Facility" with improved flow. Victory now properly resets to new facility.</p>
+            </li>
+
+            <li class="feature">
+                <strong>Press V for Victory Report</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Press the <strong>V</strong> key at any time during gameplay to view your current performance statistics and victory report card, allowing you to track progress toward the $1M goal.</p>
+            </li>
+
+            <li class="improvement">
+                <strong>MEGA ARM Visual Clarity</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">MEGA ARM color changed from dark blue to bright cyan (#64b5f6 → light blue #64b5f6) for better visibility on the game board.</p>
+            </li>
+
+            <li class="improvement">
+                <strong>Naming Convention Consistency</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">MEGA tier equipment standardized with '_M' suffix and 'M' icon (PRESS_F renamed to PRESS_M, icon changed from 🏭+ to 🏭M).</p>
+            </li>
+        </ul>
+
+        <h2>🎨 Theme & Branding</h2>
+        <ul>
+            <li class="theme">
+                <strong>USA Manufacturing Theme</strong><span class="badge badge-theme">Theme</span>
+                <p style="margin-top: 10px;">Complete visual overhaul celebrating American manufacturing:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">🇺🇸 Patriotic color scheme (USA Red #B22234, USA Blue #3C3B6E, Gold #FFD700)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🎇 Red, white, and blue striped borders throughout UI</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🏭 Industrial aesthetic with steel and orange accents</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🚩 Animated American flag waving effect</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📊 USA-themed stats header styling</li>
+                </ul>
+            </li>
+
+            <li class="theme">
+                <strong>250th Anniversary Celebration</strong><span class="badge badge-theme">Theme</span>
+                <p style="margin-top: 10px;">Game renamed to "American Manufacturing 2026" commemorating America's 250th anniversary (1776-2026). Year badges added with updated colors and styling.</p>
+            </li>
+
+            <li class="theme">
+                <strong>Credits & Attribution</strong><span class="badge badge-theme">Theme</span>
+                <p style="margin-top: 10px;">Added credit to Aaron Slodev for original concept and game structure.</p>
+            </li>
+
+            <li class="theme">
+                <strong>Codebase Cleanup</strong><span class="badge badge-theme">Theme</span>
+                <p style="margin-top: 10px;">Removed Google boilerplate scripts, cleaned up unused code.</p>
+            </li>
+        </ul>
+
+        <h2>🔧 Technical Details</h2>
+
+        <h3>Direction System</h3>
+        <p>The game uses the following direction constants:</p>
+        <ul style="margin-top: 10px;">
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>0 = RIGHT</code> (x+1, y)</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>1 = DOWN</code> (x, y+1)</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>2 = LEFT</code> (x-1, y)</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>3 = UP</code> (x, y-1)</li>
+        </ul>
+
+        <h3>Building Properties</h3>
+        <p>New ARM building properties:</p>
+        <ul style="margin-top: 10px;">
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>canFilter</code> - Enables item type filtering (FILTER ARM, SMART ARM, MEGA ARM)</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>canDirectDeliver</code> - Enables omni-directional delivery (MEGA ARM only)</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>filter</code> - Currently selected item filter (null = all items)</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;"><code>deliverDir</code> - Delivery direction for MEGA ARM (0-3, defaults to rotation)</li>
+        </ul>
+
+        <h3>Save Data</h3>
+        <p>Saved game state now includes:</p>
+        <ul style="margin-top: 10px;">
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;">Building properties: type, position, rotation, <strong>deliverDir</strong>, inventory, timers, mold state</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;">Item states: type, position, progress</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;">Economy: money, lifetime revenue, parts sold</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;">Resources: total plastic/steel/molds used</li>
+            <li style="background: rgba(255,255,255,0.1); padding: 10px;">Progression: level, elapsed time, metrics history</li>
+        </ul>
+
+        <h2>📊 Statistics</h2>
+        <ul>
+            <li class="improvement">Total Commits: <strong>40</strong></li>
+            <li class="improvement">New Features: <strong>8 major features</strong></li>
+            <li class="improvement">Bug Fixes: <strong>7 critical and minor fixes</strong></li>
+            <li class="improvement">New Equipment: <strong>4 MEGA tier variants</strong></li>
+            <li class="improvement">UI/UX Improvements: <strong>Complete theme overhaul + 6 improvements</strong></li>
+        </ul>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="../index.html" class="back-link">← BACK TO GAME</a>
+        </div>
+
+        <div style="margin-top: 60px; padding-top: 20px; border-top: 2px solid var(--usa-blue); text-align: center; color: #888; font-size: 0.9em;">
+            <p>🏭 AMERICAN MANUFACTURING 2026 - Celebrating 250 Years of American Innovation 🏭</p>
+            <p>Based on original concept by Aaron Slodev</p>
+        </div>
+    </div>
+</body>
+</html>
