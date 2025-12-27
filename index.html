@@ -969,7 +969,11 @@
                         if (itemType === ITEM.PLASTIC && b.inventory[ITEM.PLASTIC] >= 20) return false;
                         if (itemType === ITEM.MOLD && b.inventory[ITEM.MOLD] >= 5) return false;
                         if (itemType === ITEM.MOLD_QUAD && b.inventory[ITEM.MOLD_QUAD] >= 5) return false;
-                        if (![ITEM.PLASTIC, ITEM.MOLD, ITEM.MOLD_QUAD].includes(itemType)) return false;
+                        // Only MEGA PRESS can accept MOLD_QUAD
+                        const acceptableItems = b.type.id === 'press_mega'
+                            ? [ITEM.PLASTIC, ITEM.MOLD, ITEM.MOLD_QUAD]
+                            : [ITEM.PLASTIC, ITEM.MOLD];
+                        if (!acceptableItems.includes(itemType)) return false;
                     }
                     return true;
                 };
@@ -1016,7 +1020,8 @@
                 if (b.type.id.includes('press')) {
                     if (itemType === ITEM.PLASTIC && b.inventory[ITEM.PLASTIC] < 20) { b.inventory[ITEM.PLASTIC]++; return true; }
                     if (itemType === ITEM.MOLD && b.inventory[ITEM.MOLD] < 5) { b.inventory[ITEM.MOLD]++; return true; }
-                    if (itemType === ITEM.MOLD_QUAD && b.inventory[ITEM.MOLD_QUAD] < 5) { b.inventory[ITEM.MOLD_QUAD]++; return true; }
+                    // Only MEGA PRESS can accept MOLD_QUAD
+                    if (itemType === ITEM.MOLD_QUAD && b.type.id === 'press_mega' && b.inventory[ITEM.MOLD_QUAD] < 5) { b.inventory[ITEM.MOLD_QUAD]++; return true; }
                 }
                 if (b.type.transportSpeed) {
                     if (isSpaceFree(pos.x, pos.y)) { 
