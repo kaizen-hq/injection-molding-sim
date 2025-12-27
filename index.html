@@ -1039,7 +1039,11 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 <li>🖱️ <strong>Click Machines</strong> to manage inventory.</li>
                 <li>⌨️ <strong>Press I</strong> anytime for help.</li>
             </ul>
-            <button class="btn-primary" onclick="startGame()">START PRODUCTION</button>
+            <div id="intro-buttons" style="display: flex; gap: 10px; justify-content: center;">
+                <button id="btn-start" class="btn-primary" onclick="startGame()">START PRODUCTION</button>
+                <button id="btn-continue" class="btn-primary" onclick="continueGame()" style="display: none;">CONTINUE</button>
+                <button id="btn-reset" class="btn-secondary" onclick="resetGame()" style="display: none;">RESET GAME</button>
+            </div>
         </div>
 
         <!-- Victory Report -->
@@ -1472,10 +1476,19 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             canvas.addEventListener('mouseup', () => isDragging = false);
             canvas.addEventListener('contextmenu', e => e.preventDefault());
 
+            // Auto-save before page unload
+            window.addEventListener('beforeunload', saveGameState);
+
             setInterval(update, TICK_RATE);
             setInterval(updateMetrics, 1000);
             setInterval(updateInspectorUI, 200);
             requestAnimationFrame(draw);
+
+            // Auto-load saved game if exists
+            if (loadGameState()) {
+                gameRunning = true;
+                document.getElementById('modal-overlay').style.display = 'none';
+            }
         }
 
         function startGame() {
@@ -1486,6 +1499,110 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         function continueGame() {
              document.getElementById('modal-overlay').style.display = 'none';
              gameRunning = true;
+        }
+
+        // --- Save/Load System ---
+        function saveGameState() {
+            const state = {
+                buildings: buildings.map(b => ({
+                    type: b.type.id,
+                    x: b.x,
+                    y: b.y,
+                    rot: b.rot,
+                    inventory: b.inventory,
+                    outputBuffer: b.outputBuffer,
+                    outputCount: b.outputCount,
+                    timer: b.timer,
+                    moldLife: b.moldLife,
+                    currentMoldType: b.currentMoldType
+                })),
+                items: items.map(i => ({
+                    type: i.type,
+                    x: i.x,
+                    y: i.y,
+                    targetX: i.targetX,
+                    targetY: i.targetY,
+                    progress: i.progress
+                })),
+                money,
+                lifetimeRevenue,
+                partsSoldTotal,
+                totalPlasticUsed,
+                totalSteelUsed,
+                totalMoldsMade,
+                level,
+                currentTab,
+                elapsedTime: Date.now() - startTime,
+                metricsHistory: metrics.history
+            };
+            localStorage.setItem('injectionMoldingSave', JSON.stringify(state));
+        }
+
+        function loadGameState() {
+            const saved = localStorage.getItem('injectionMoldingSave');
+            if (!saved) return false;
+
+            try {
+                const state = JSON.parse(saved);
+
+                // Don't load if save is empty (no buildings placed)
+                if (!state.buildings || state.buildings.length === 0) {
+                    localStorage.removeItem('injectionMoldingSave');
+                    return false;
+                }
+
+                // Restore buildings
+                buildings = state.buildings.map(b => {
+                    const type = Object.values(BUILDINGS).find(t => t.id === b.type);
+                    if (!type) return null;
+                    const building = new Building(type, b.x, b.y, b.rot);
+                    building.inventory = b.inventory || {};
+                    building.outputBuffer = b.outputBuffer;
+                    building.outputCount = b.outputCount || 0;
+                    building.timer = b.timer || 0;
+                    building.moldLife = b.moldLife || 0;
+                    building.currentMoldType = b.currentMoldType;
+                    grid[b.y][b.x].building = building;
+                    return building;
+                }).filter(b => b !== null);
+
+                // Restore items
+                items = state.items.map(i => {
+                    const item = new Item(i.type, i.x, i.y);
+                    item.targetX = i.targetX;
+                    item.targetY = i.targetY;
+                    item.progress = i.progress || 0;
+                    return item;
+                });
+
+                // Restore game state
+                money = state.money;
+                lifetimeRevenue = state.lifetimeRevenue;
+                partsSoldTotal = state.partsSoldTotal;
+                totalPlasticUsed = state.totalPlasticUsed;
+                totalSteelUsed = state.totalSteelUsed;
+                totalMoldsMade = state.totalMoldsMade;
+                level = state.level;
+                currentTab = state.currentTab || 1;
+                switchTab(currentTab);
+                metrics.history = state.metricsHistory || [];
+
+                // Restore time (adjust startTime to account for elapsed time)
+                startTime = Date.now() - (state.elapsedTime || 0);
+
+                updateUI();
+                return true;
+            } catch (e) {
+                console.error('Failed to load save:', e);
+                return false;
+            }
+        }
+
+        function resetGame() {
+            // Remove auto-save listener to prevent re-saving during reload
+            window.removeEventListener('beforeunload', saveGameState);
+            localStorage.removeItem('injectionMoldingSave');
+            location.reload();
         }
 
         function sellItem(type) {
@@ -1612,6 +1729,12 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
         function handleKey(e) {
             if (e.key.toLowerCase() === 'i') {
+                // Update button visibility based on game state
+                const isGameActive = gameRunning || startTime > 0;
+                document.getElementById('btn-start').style.display = isGameActive ? 'none' : 'block';
+                document.getElementById('btn-continue').style.display = isGameActive ? 'block' : 'none';
+                document.getElementById('btn-reset').style.display = isGameActive ? 'block' : 'none';
+
                 document.getElementById('intro-modal').parentElement.style.display = 'flex';
                 document.getElementById('intro-modal').style.display = 'block';
                 return;
