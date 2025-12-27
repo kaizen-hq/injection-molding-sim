@@ -1555,6 +1555,13 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 buildings = state.buildings.map(b => {
                     const type = Object.values(BUILDINGS).find(t => t.id === b.type);
                     if (!type) return null;
+
+                    // Skip buildings outside current grid bounds
+                    if (b.y < 0 || b.y >= GRID_H || b.x < 0 || b.x >= GRID_W) {
+                        console.warn(`Skipping building at (${b.x}, ${b.y}) - outside grid bounds`);
+                        return null;
+                    }
+
                     const building = new Building(type, b.x, b.y, b.rot);
                     building.inventory = b.inventory || {};
                     building.outputBuffer = b.outputBuffer;
@@ -1568,12 +1575,19 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
                 // Restore items
                 items = state.items.map(i => {
+                    // Skip items outside grid bounds (in pixels)
+                    const maxX = GRID_W * TILE_SIZE;
+                    const maxY = GRID_H * TILE_SIZE;
+                    if (i.x < 0 || i.x > maxX || i.y < 0 || i.y > maxY) {
+                        return null;
+                    }
+
                     const item = new Item(i.type, i.x, i.y);
                     item.targetX = i.targetX;
                     item.targetY = i.targetY;
                     item.progress = i.progress || 0;
                     return item;
-                });
+                }).filter(i => i !== null);
 
                 // Restore game state
                 money = state.money;
