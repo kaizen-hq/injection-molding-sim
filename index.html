@@ -694,30 +694,51 @@
             4: { reqParts: 1000 },
         };
 
-        const BUILDINGS = {
-            // TAB 1
-            BELT: { id: 'belt', name: 'BELT', cost: 10, color: '#37474f', icon: '➡', reqLevel: 1, transportSpeed: 0.05, tab: 1, desc: "Standard Conveyor. Moves items forward continuously." },
-            ARM: { id: 'arm_basic', name: 'ARM', cost: 30, color: '#fbc02d', icon: '🦾', reqLevel: 1, isArm: true, speed: 1.0, tab: 1, desc: "Robot Arm. Moves items from BELTS to MACHINES. Essential for automation." },
-            SRC_P: { id: 'src_p', name: 'PLASTIC', cost: 100, color: '#c62828', icon: '🔴', reqLevel: 1, output: ITEM.PLASTIC, speed: 60, tab: 1, desc: "Infinite source of Red Plastic Pellets. Used in Injection Presses." },
-            SRC_S: { id: 'src_s', name: 'STEEL', cost: 150, color: '#78909c', icon: '⬜', reqLevel: 1, output: ITEM.STEEL, speed: 120, tab: 1, desc: "Infinite source of Steel Blocks. Used to cut Molds." },
-            CNC: { id: 'cnc', name: 'MILL', cost: 500, color: '#0277bd', icon: '⚙️', reqLevel: 1, recipe: { in: ITEM.STEEL, out: ITEM.MOLD, time: 180 }, tab: 1, desc: "Subtractive Manufacturing. Cuts 1 Steel into 1 Mold." },
-            PRESS: { id: 'press', name: 'PRESS', cost: 800, color: '#ef6c00', icon: '🏭', reqLevel: 1, recipe: { in: ITEM.PLASTIC, out: ITEM.PART, time: 60 }, maxLife: 20, tab: 1, desc: "Injection Molding Machine. Requires 1 Plastic + 1 Mold. Molds degrade after 20 cycles." },
-            BIN: { id: 'bin', name: 'SELL', cost: 100, color: '#2e7d32', icon: '💲', reqLevel: 1, tab: 1, desc: "Market Export. Sells items. PRICES: Part=$45, Mold=$20, Raw=$1." },
+        // Define all building variants
+        const ALL_BUILDINGS = {
+            // BELT variants
+            BELT: { id: 'belt', name: 'BELT', cost: 10, color: '#37474f', icon: '➡', reqLevel: 1, transportSpeed: 0.05, desc: "Standard Conveyor. Moves items forward continuously." },
+            BELT_F: { id: 'belt_fast', name: 'FAST BELT', cost: 50, color: '#b71c1c', icon: '⏩', reqLevel: 2, transportSpeed: 0.10, desc: "High Speed Conveyor. Moves items 2x faster than standard belts." },
 
-            // TAB 2
-            BELT_F: { id: 'belt_fast', name: 'FAST BELT', cost: 50, color: '#b71c1c', icon: '⏩', reqLevel: 2, transportSpeed: 0.10, tab: 2, desc: "High Speed Conveyor. Moves items 2x faster than standard belts." },
-            ARM_F: { id: 'arm_filter', name: 'FILTER ARM', cost: 100, color: '#8e24aa', icon: '🔬', reqLevel: 2, isArm: true, speed: 1.5, canFilter: true, tab: 2, desc: "Smart Filter Arm. Click placed arm to select item type. Ignores other items." },
-            SRC_P_F: { id: 'src_p_fast', name: 'HI-FLOW PLASTIC', cost: 250, color: '#d32f2f', icon: '🔴+', reqLevel: 2, output: ITEM.PLASTIC, speed: 30, tab: 2, desc: "High-Volume Plastic Hopper. Outputs 2x faster." },
+            // ARM variants
+            ARM: { id: 'arm_basic', name: 'ARM', cost: 30, color: '#fbc02d', icon: '🦾', reqLevel: 1, isArm: true, speed: 1.0, desc: "Robot Arm. Moves items from BELTS to MACHINES. Essential for automation." },
+            ARM_F: { id: 'arm_filter', name: 'FILTER ARM', cost: 100, color: '#8e24aa', icon: '🔬', reqLevel: 2, isArm: true, speed: 1.5, canFilter: true, desc: "Smart Filter Arm. Click placed arm to select item type. Ignores other items." },
+            ARM_S: { id: 'arm_smart', name: 'SMART ARM', cost: 200, color: '#006064', icon: '⚡', reqLevel: 3, isArm: true, speed: 3.0, canFilter: true, desc: "High-Speed Servo Arm. Transfers items 3x faster." },
 
-            // TAB 3
-            ARM_S: { id: 'arm_smart', name: 'SMART ARM', cost: 200, color: '#006064', icon: '⚡', reqLevel: 3, isArm: true, speed: 3.0, canFilter: true, tab: 3, desc: "High-Speed Servo Arm. Transfers items 3x faster." },
-            CNC_F: { id: 'cnc_fast', name: 'TURBO MILL', cost: 1500, color: '#1565c0', icon: '⚙️+', reqLevel: 3, recipe: { in: ITEM.STEEL, out: ITEM.MOLD, time: 90 }, tab: 3, desc: "High-RPM CNC Mill. Cuts molds 2x faster." },
-            SRC_S_F: { id: 'src_s_fast', name: 'HEAVY STEEL', cost: 350, color: '#546e7a', icon: '⬜+', reqLevel: 3, output: ITEM.STEEL, speed: 60, tab: 3, desc: "Heavy Duty Steel Stock. Outputs 2x faster." },
+            // PLASTIC SOURCE variants
+            SRC_P: { id: 'src_p', name: 'PLASTIC', cost: 100, color: '#c62828', icon: '🔴', reqLevel: 1, output: ITEM.PLASTIC, speed: 60, desc: "Infinite source of Red Plastic Pellets. Used in Injection Presses." },
+            SRC_P_F: { id: 'src_p_fast', name: 'HI-FLOW PLASTIC', cost: 250, color: '#d32f2f', icon: '🔴+', reqLevel: 2, output: ITEM.PLASTIC, speed: 30, desc: "High-Volume Plastic Hopper. Outputs 2x faster." },
 
-            // TAB 4
-            PRESS_F: { id: 'press_fast', name: 'MEGA PRESS', cost: 2500, color: '#e65100', icon: '🏭+', reqLevel: 4, recipe: { in: ITEM.PLASTIC, out: ITEM.PART, time: 30 }, maxLife: 40, tab: 4, desc: "Industrial Press. 2x Speed. Supports Quad-Molds (4x output). Molds last 40 cycles." },
-            CNC_M: { id: 'cnc_mega', name: 'MEGA CNC', cost: 3000, color: '#004d40', icon: '⚙️M', reqLevel: 4, recipe: { in: ITEM.STEEL, out: ITEM.MOLD_QUAD, time: 180 }, tab: 4, desc: "5-Axis Mega Mill. Cuts Steel into Quad-Cavity Molds (4x Output potential)." }
+            // STEEL SOURCE variants
+            SRC_S: { id: 'src_s', name: 'STEEL', cost: 150, color: '#78909c', icon: '⬜', reqLevel: 1, output: ITEM.STEEL, speed: 120, desc: "Infinite source of Steel Blocks. Used to cut Molds." },
+            SRC_S_F: { id: 'src_s_fast', name: 'HEAVY STEEL', cost: 350, color: '#546e7a', icon: '⬜+', reqLevel: 3, output: ITEM.STEEL, speed: 60, desc: "Heavy Duty Steel Stock. Outputs 2x faster." },
+
+            // MILL variants
+            CNC: { id: 'cnc', name: 'MILL', cost: 500, color: '#0277bd', icon: '⚙️', reqLevel: 1, recipe: { in: ITEM.STEEL, out: ITEM.MOLD, time: 180 }, desc: "Subtractive Manufacturing. Cuts 1 Steel into 1 Mold." },
+            CNC_F: { id: 'cnc_fast', name: 'TURBO MILL', cost: 1500, color: '#1565c0', icon: '⚙️+', reqLevel: 3, recipe: { in: ITEM.STEEL, out: ITEM.MOLD, time: 90 }, desc: "High-RPM CNC Mill. Cuts molds 2x faster." },
+            CNC_M: { id: 'cnc_mega', name: 'MEGA CNC', cost: 3000, color: '#004d40', icon: '⚙️M', reqLevel: 4, recipe: { in: ITEM.STEEL, out: ITEM.MOLD_QUAD, time: 180 }, desc: "5-Axis Mega Mill. Cuts Steel into Quad-Cavity Molds (4x Output potential)." },
+
+            // PRESS variants
+            PRESS: { id: 'press', name: 'PRESS', cost: 800, color: '#ef6c00', icon: '🏭', reqLevel: 1, recipe: { in: ITEM.PLASTIC, out: ITEM.PART, time: 60 }, maxLife: 20, desc: "Injection Molding Machine. Requires 1 Plastic + 1 Mold. Molds degrade after 20 cycles." },
+            PRESS_F: { id: 'press_fast', name: 'MEGA PRESS', cost: 2500, color: '#e65100', icon: '🏭+', reqLevel: 4, recipe: { in: ITEM.PLASTIC, out: ITEM.PART, time: 30 }, maxLife: 40, desc: "Industrial Press. 2x Speed. Supports Quad-Molds (4x output). Molds last 40 cycles." },
+
+            // SELL
+            BIN: { id: 'bin', name: 'SELL', cost: 100, color: '#2e7d32', icon: '💲', reqLevel: 1, desc: "Market Export. Sells items. PRICES: Part=$45, Mold=$20, Raw=$1." },
         };
+
+        // Define tool slots - each slot shows the best version available at each level
+        const TOOL_SLOTS = [
+            { slot: 1, variants: ['BELT', 'BELT_F'] },               // Hotkey 1
+            { slot: 2, variants: ['ARM', 'ARM_F', 'ARM_S'] },        // Hotkey 2
+            { slot: 3, variants: ['SRC_P', 'SRC_P_F'] },             // Hotkey 3
+            { slot: 4, variants: ['SRC_S', 'SRC_S_F'] },             // Hotkey 4
+            { slot: 5, variants: ['CNC', 'CNC_F', 'CNC_M'] },        // Hotkey 5
+            { slot: 6, variants: ['PRESS', 'PRESS_F'] },             // Hotkey 6
+            { slot: 7, variants: ['BIN'] },                          // Hotkey 7
+        ];
+
+        // Legacy BUILDINGS object for backward compatibility
+        const BUILDINGS = ALL_BUILDINGS;
 
         const SELL_PRICES = { [ITEM.PART]: 45, [ITEM.MOLD]: 20, [ITEM.STEEL]: 1, [ITEM.PLASTIC]: 1, [ITEM.MOLD_QUAD]: 100 };
 
@@ -1035,8 +1056,23 @@
                 let row = []; for (let x = 0; x < GRID_W; x++) row.push(new Tile(x, y));
                 grid.push(row);
             }
-            switchTab(1);
-            updateInfoCard(BUILDINGS.BELT); 
+            setupToolbar();
+            // Select first available tool
+            let firstSlot = TOOL_SLOTS[0];
+            let firstTool = null;
+            for (let variantKey of firstSlot.variants) {
+                let variant = ALL_BUILDINGS[variantKey];
+                if (variant.reqLevel <= level) {
+                    if (!firstTool || variant.reqLevel > firstTool.reqLevel) {
+                        firstTool = variant;
+                    }
+                }
+            }
+            if (firstTool) {
+                selectedTool = firstTool.id;
+                updateInfoCard(firstTool);
+            }
+            switchTab(1); 
 
             // Initialize click listeners for tabs
             document.getElementById('tab-1').onclick = () => switchTab(1);
@@ -1235,25 +1271,28 @@
 
         // --- Interaction ---
         function switchTab(t) {
+            // Can't switch to locked tabs
+            if (t > level) {
+                return;
+            }
+
             currentTab = t;
-            let locked = (t > 1 && level < t);
-            
-            if (locked) {
-                // Determine number of items in this tab for placeholders
-                let count = Object.values(BUILDINGS).filter(b => b.tab === t).length;
-                let req = LEVELS[t].reqParts;
-                // Render Locked Toolbar
-                renderLockedToolbar(count);
-                // Update Info Card with Lock Msg
-                document.getElementById('card-icon').innerText = '🔒';
-                document.getElementById('card-icon').style.color = '#555';
-                document.getElementById('card-title').innerText = `LEVEL ${t} LOCKED`;
-                document.getElementById('card-desc').innerText = `SECURITY CLEARANCE REQUIRED.\n\nSELL ${req} PARTS TO DECLASSIFY.`;
-                document.getElementById('status-legend').style.display = 'none';
-            } else {
-                setupToolbar();
-                // Default info
-                updateInfoCard(Object.values(BUILDINGS).find(b => b.id === selectedTool) || Object.values(BUILDINGS)[0]);
+            setupToolbar();
+
+            // Update selected tool to first available in this tab
+            let firstSlot = TOOL_SLOTS[0];
+            let firstTool = null;
+            for (let variantKey of firstSlot.variants) {
+                let variant = ALL_BUILDINGS[variantKey];
+                if (variant.reqLevel <= currentTab) {
+                    if (!firstTool || variant.reqLevel > firstTool.reqLevel) {
+                        firstTool = variant;
+                    }
+                }
+            }
+            if (firstTool) {
+                selectedTool = firstTool.id;
+                updateInfoCard(firstTool);
             }
 
             document.querySelectorAll('.tab-btn').forEach((el, idx) => {
@@ -1279,25 +1318,45 @@
         function setupToolbar() {
             const tb = document.getElementById('toolbar-container');
             tb.innerHTML = '';
-            let tabItems = Object.values(BUILDINGS).filter(b => b.tab === currentTab);
-            
-            tabItems.forEach((b, i) => {
-                let div = document.createElement('div');
-                div.className = `tool-btn ${selectedTool === b.id ? 'active' : ''}`;
-                div.onclick = () => { selectedTool = b.id; setupToolbar(); updateInfoCard(b); };
-                div.innerHTML = `
-                    <div class="tool-key">${i+1}</div>
-                    <div class="tool-icon" style="color:${b.color}">${b.icon}</div>
-                    <div class="tool-name">${b.name}</div>
-                    <div class="tool-cost">$${b.cost}</div>
-                `;
-                tb.appendChild(div);
+
+            // For each slot, find the best variant available up to current tab
+            TOOL_SLOTS.forEach((slot, i) => {
+                // Find the highest reqLevel variant that's available up to current tab
+                let bestVariant = null;
+                for (let variantKey of slot.variants) {
+                    let variant = ALL_BUILDINGS[variantKey];
+                    if (variant.reqLevel <= currentTab) {
+                        if (!bestVariant || variant.reqLevel > bestVariant.reqLevel) {
+                            bestVariant = variant;
+                        }
+                    }
+                }
+
+                if (bestVariant) {
+                    let div = document.createElement('div');
+                    div.className = `tool-btn ${selectedTool === bestVariant.id ? 'active' : ''}`;
+                    div.onclick = () => { selectedTool = bestVariant.id; setupToolbar(); updateInfoCard(bestVariant); };
+                    div.innerHTML = `
+                        <div class="tool-key">${slot.slot}</div>
+                        <div class="tool-icon" style="color:${bestVariant.color}">${bestVariant.icon}</div>
+                        <div class="tool-name">${bestVariant.name}</div>
+                        <div class="tool-cost">$${bestVariant.cost}</div>
+                    `;
+                    tb.appendChild(div);
+                }
             });
-            
-            for(let i=2; i<=4; i++) {
+
+            // Update tab lock states
+            for(let i=1; i<=4; i++) {
                 let el = document.getElementById(`tab-${i}`);
-                if (level >= i) el.querySelector('.lock-icon').style.display = 'none';
-                else el.querySelector('.lock-icon').style.display = 'inline';
+                let lockIcon = el.querySelector('.lock-icon');
+                if (lockIcon) {
+                    if (level >= i) {
+                        lockIcon.style.display = 'none';
+                    } else {
+                        lockIcon.style.display = 'inline';
+                    }
+                }
             }
         }
         
@@ -1354,11 +1413,23 @@
             if (e.code.startsWith('Digit')) {
                 let num = parseInt(e.code.replace('Digit',''));
                 if (!isNaN(num) && num >= 1 && num <= 9) {
-                    if (level >= currentTab) {
-                        let tabItems = Object.values(BUILDINGS).filter(b => b.tab === currentTab);
-                        if (num <= tabItems.length) {
-                            let b = tabItems[num-1];
-                            selectedTool = b.id; setupToolbar(); updateInfoCard(b);
+                    // Find the slot for this number
+                    let slot = TOOL_SLOTS.find(s => s.slot === num);
+                    if (slot) {
+                        // Find the best variant available at current tab
+                        let bestVariant = null;
+                        for (let variantKey of slot.variants) {
+                            let variant = ALL_BUILDINGS[variantKey];
+                            if (variant.reqLevel <= currentTab) {
+                                if (!bestVariant || variant.reqLevel > bestVariant.reqLevel) {
+                                    bestVariant = variant;
+                                }
+                            }
+                        }
+                        if (bestVariant) {
+                            selectedTool = bestVariant.id;
+                            setupToolbar();
+                            updateInfoCard(bestVariant);
                         }
                     }
                 }
