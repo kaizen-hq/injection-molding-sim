@@ -1224,8 +1224,9 @@
                 document.getElementById('btn-continue').style.display = isGameActive ? 'block' : 'none';
                 document.getElementById('btn-reset').style.display = isGameActive ? 'block' : 'none';
 
-                document.getElementById('intro-modal').parentElement.style.display = 'flex';
+                document.getElementById('modal-overlay').style.display = 'flex';
                 document.getElementById('intro-modal').style.display = 'block';
+                document.getElementById('win-modal').style.display = 'none';
                 return;
             }
             if (e.key.toLowerCase() === 'v') {
