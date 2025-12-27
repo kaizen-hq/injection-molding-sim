@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atomic Industries Christmas 2025</title>
+    <title>American Manufacturing 2026</title>
     <style>
         :root {
             --bg-color: #1a2634;
@@ -10,9 +10,11 @@
             --led-green: #39ff14;
             --led-red: #ff0000;
             --gold: #ffd700;
-            --xmas-green: #165b33;
-            --xmas-red: #bb2528;
-            --xmas-gold: #f8b229;
+            --usa-red: #B22234;
+            --usa-blue: #3C3B6E;
+            --usa-white: #FFFFFF;
+            --industrial-steel: #71797E;
+            --industrial-orange: #FF6600;
             --paper-white: #e0e0e0;
         }
         body {
@@ -45,22 +47,23 @@
 
         @media (max-width: 1050px), (max-height: 700px) {
             #mobile-warning { display: flex; }
-            #game-wrapper, #stats-sidebar, .snow { display: none !important; }
+            #game-wrapper, #stats-sidebar, .sparks { display: none !important; }
         }
 
-        /* --- Snow --- */
-        .snow {
+        /* --- Welding Sparks --- */
+        .sparks {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 5;
-            background-image: 
-                radial-gradient(3px 3px at 100px 50px, #fff, transparent), 
-                radial-gradient(4px 4px at 200px 150px, #fff, transparent), 
-                radial-gradient(2px 2px at 300px 250px, #fff, transparent);
+            background-image:
+                radial-gradient(2px 2px at 100px 50px, var(--industrial-orange), transparent),
+                radial-gradient(3px 3px at 200px 150px, #FFD700, transparent),
+                radial-gradient(1px 1px at 300px 250px, var(--industrial-orange), transparent),
+                radial-gradient(2px 2px at 400px 100px, #FFA500, transparent);
             background-size: 550px 550px;
-            animation: snowAnim 15s linear infinite;
-            opacity: 0.2;
+            animation: sparksAnim 8s linear infinite;
+            opacity: 0.4;
         }
-        @keyframes snowAnim { 100% { transform: translateY(550px); } }
+        @keyframes sparksAnim { 100% { transform: translateY(550px); } }
 
         /* --- Layout --- */
         #game-wrapper {
@@ -73,18 +76,29 @@
             overflow: auto;
         }
 
-        /* Wreath Border Container */
+        /* Patriotic Border Container */
         #game-frame {
             position: relative;
-            border: 12px solid var(--xmas-green);
-            border-image: repeating-linear-gradient(45deg, var(--xmas-red), var(--xmas-red) 10px, var(--xmas-green) 10px, var(--xmas-green) 20px) 20;
+            border: 12px solid var(--usa-blue);
+            border-image: repeating-linear-gradient(45deg, var(--usa-red), var(--usa-red) 10px, var(--usa-white) 10px, var(--usa-white) 20px, var(--usa-blue) 20px, var(--usa-blue) 30px) 20;
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
             margin: 10px 0;
             flex-shrink: 0;
         }
-        
+
         #game-frame::before {
-            content: '🎀'; font-size: 40px; position: absolute; top: -25px; left: 50%; transform: translateX(-50%); z-index: 20;
+            content: '';
+            width: 60px;
+            height: 40px;
+            background-image: url('american_flag.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
         }
 
@@ -112,7 +126,7 @@
         }
 
         .panel-header {
-            background: repeating-linear-gradient(45deg, var(--xmas-red), var(--xmas-red) 10px, #fff 10px, #fff 20px);
+            background: repeating-linear-gradient(45deg, var(--usa-red), var(--usa-red) 10px, #fff 10px, #fff 20px);
             padding: 4px; margin-bottom: 10px; text-align: center; border: 2px solid #000; flex-shrink: 0;
         }
         h1 { 
@@ -272,9 +286,9 @@
         
         /* Intro Modal */
         .modal-content {
-            background: #1a2634; border: 4px solid var(--xmas-red); padding: 30px;
+            background: #1a2634; border: 4px solid var(--usa-red); padding: 30px;
             max-width: 450px; text-align: center; color: #fff; border-radius: 8px;
-            box-shadow: 0 0 30px var(--xmas-red);
+            box-shadow: 0 0 30px var(--usa-red);
         }
         
         /* Victory Report Card Styling */
@@ -291,10 +305,15 @@
             transform: rotate(-1deg);
         }
         #victory-report::before {
-            content: '🎄 NORTH POLE FACTORY 🎄';
-            display: block; text-align: center; font-weight: bold; font-size: 18px; 
+            display: none;
+        }
+        .victory-header {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-weight: bold; font-size: 18px; color: var(--usa-blue);
             border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 15px;
-            color: var(--xmas-green);
+        }
+        .victory-header img {
+            width: 30px; height: 20px;
         }
         .report-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
         .report-divider { border-bottom: 1px solid #ccc; margin: 10px 0; }
@@ -315,7 +334,7 @@
         .refresh-btn:hover { background: #ccc; }
 
         .btn-primary {
-            background: var(--xmas-green); color: #fff; border: 2px solid #fff;
+            background: var(--usa-blue); color: #fff; border: 2px solid #aaa;
             padding: 10px 20px; font-size: 16px; font-family: monospace; font-weight: bold;
             cursor: pointer; margin-top: 20px; box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
             margin-right: 10px;
@@ -332,11 +351,11 @@
     <div id="mobile-warning">
         <h1>TERMINAL ERROR</h1>
         <p>MOBILE DEVICE DETECTED.</p>
-        <p>ATOMIC INDUSTRIES PROTOCOLS REQUIRE A DESKTOP WORKSTATION.</p>
+        <p>MANUFACTURING PROTOCOLS REQUIRE A DESKTOP WORKSTATION.</p>
         <p style="margin-top:20px; color:#555;">[CONNECTION TERMINATED]</p>
     </div>
 
-    <div class="snow"></div>
+    <div class="sparks"></div>
 
     <div id="game-wrapper">
         <div id="game-frame">
@@ -402,7 +421,7 @@
 
     <div id="stats-sidebar">
         <div class="panel-header">
-            <h1>ATOMIC INDUSTRIES XMAS</h1>
+            <h1>AMERICAN MANUFACTURING 2026</h1>
         </div>
         
         <div class="stat-card">
@@ -479,7 +498,7 @@
         <!-- Intro -->
         <div id="intro-modal" class="modal-content">
             <h2 style="color: var(--gold); margin-top:0;">INJECTION MOLDING SIM</h2>
-            <p style="color: #ccc; font-size: 12px; margin-bottom: 20px;">ATOMIC INDUSTRIES // CHRISTMAS 2025</p>
+            <p style="color: #ccc; font-size: 12px; margin-bottom: 20px;">AMERICAN MANUFACTURING 2026</p>
             <p><strong>MISSION: MANUFACTURE PARTS</strong></p>
             <ul style="text-align: left; margin: 20px 0; font-size: 13px; line-height: 1.6; list-style: none; padding-left: 10px;">
                 <li>🔴 <strong>Plastic</strong> + 🧊 <strong>Mold</strong> = ⭐ <strong>Part</strong></li>
@@ -487,6 +506,7 @@
                 <li>🦾 <strong>Arms</strong> are required to move items.</li>
                 <li>🖱️ <strong>Click Machines</strong> to manage inventory.</li>
                 <li>⌨️ <strong>Press I</strong> anytime for help.</li>
+                <li>📊 <strong>Press V</strong> to view victory report.</li>
             </ul>
             <div id="intro-buttons" style="display: flex; gap: 10px; justify-content: center;">
                 <button id="btn-start" class="btn-primary" onclick="startGame()">START PRODUCTION</button>
@@ -498,6 +518,11 @@
         <!-- Victory Report -->
         <div id="win-modal" style="display:none; justify-content:center; align-items:center; height:100%;">
             <div id="victory-report">
+                <div class="victory-header">
+                    <img src="american_flag.svg" alt="USA">
+                    USA FACTORY
+                    <img src="american_flag.svg" alt="USA">
+                </div>
                 <button class="refresh-btn" onclick="populateVictoryReport()">↻</button>
                 <div class="grade-stamp" id="gradeStamp">A</div>
                 <div class="report-row">
@@ -538,7 +563,8 @@
 
                 <div class="report-divider"></div>
                 <div style="text-align:center; font-size:11px; margin-top:15px; color:#555;">
-                    Atomic Industries, Inc.<br>MERRY CHRISTMAS &amp; HAPPY NEW YEAR
+                    <a href="https://www.kaizen.io>">kaizen.io</a><br>MADE IN USA <img src="american_flag.svg" alt="USA" style="width:12px; vertical-align:middle;">
+                2026 © All Rights Reserved.
                 </div>
                 
                 <div style="text-align:center;">
@@ -1200,6 +1226,17 @@
 
                 document.getElementById('intro-modal').parentElement.style.display = 'flex';
                 document.getElementById('intro-modal').style.display = 'block';
+                return;
+            }
+            if (e.key.toLowerCase() === 'v') {
+                // Show victory report card
+                if (gameRunning || startTime > 0) {
+                    populateVictoryReport();
+                    document.getElementById('modal-overlay').style.display = 'flex';
+                    document.getElementById('intro-modal').style.display = 'none';
+                    document.getElementById('win-modal').style.display = 'flex';
+                    gameRunning = false;
+                }
                 return;
             }
             if (e.key === 'Shift') return;
