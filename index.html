@@ -103,6 +103,33 @@
         }
 
         /* Year Badges */
+        @keyframes colorCycle {
+            0%, 22% {
+                border-color: var(--usa-red);
+                background: var(--usa-blue);
+                color: var(--usa-white);
+                box-shadow: 0 0 15px var(--usa-red);
+            }
+            33%, 55% {
+                border-color: var(--usa-blue);
+                background: var(--usa-white);
+                color: var(--usa-blue);
+                box-shadow: 0 0 15px var(--usa-blue);
+            }
+            66%, 89% {
+                border-color: var(--usa-red);
+                background: var(--usa-white);
+                color: var(--usa-blue);
+                box-shadow: 0 0 15px var(--usa-red);
+            }
+            100% {
+                border-color: var(--usa-red);
+                background: var(--usa-blue);
+                color: var(--usa-white);
+                box-shadow: 0 0 15px var(--usa-red);
+            }
+        }
+
         .year-badge {
             position: absolute;
             top: -20px;
@@ -113,13 +140,14 @@
             justify-content: center;
             font-size: 14px;
             font-weight: bold;
-            color: white;
+            color: var(--usa-white);
             background: var(--usa-blue);
             border: 3px solid var(--usa-red);
             border-radius: 50%;
             box-shadow: 0 0 15px var(--usa-red);
             z-index: 20;
             font-family: 'Courier New', monospace;
+            animation: colorCycle 18s linear infinite;
         }
         .year-badge-left {
             left: -40px;
