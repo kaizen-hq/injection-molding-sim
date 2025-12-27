@@ -1661,11 +1661,12 @@
                 const pickupDir = (building.rot + 2) % 4;
                 const currentDir = building.deliverDir;
 
+                // Map buttons to actual direction constants: 0=RIGHT, 1=DOWN, 2=LEFT, 3=UP
                 const dirButtons = [
-                    document.getElementById('dir-up'),
-                    document.getElementById('dir-right'),
-                    document.getElementById('dir-down'),
-                    document.getElementById('dir-left')
+                    document.getElementById('dir-right'),  // dir=0 = RIGHT
+                    document.getElementById('dir-down'),   // dir=1 = DOWN
+                    document.getElementById('dir-left'),   // dir=2 = LEFT
+                    document.getElementById('dir-up')      // dir=3 = UP
                 ];
 
                 dirButtons.forEach((btn, dir) => {
@@ -1707,7 +1708,7 @@
         function setArmDirection(dir) {
             if (selectedArm) {
                 selectedArm.deliverDir = dir;
-                const dirNames = ['UP', 'RIGHT', 'DOWN', 'LEFT'];
+                const dirNames = ['RIGHT', 'DOWN', 'LEFT', 'UP'];
                 showNotification(`ARM DIRECTION: ${dirNames[dir]}`);
                 // Update button highlighting
                 openArmConfig(selectedArm);
