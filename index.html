@@ -672,6 +672,27 @@
                 </div>
             </div>
         </div>
+
+    </div>
+
+    <!-- Direction Picker for MEGA ARM -->
+    <div id="direction-picker" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#1a2634; padding:30px; border-radius:12px; border:4px solid var(--usa-red); box-shadow:0 0 30px var(--usa-red); z-index:1000;">
+        <h3 style="color:var(--gold); margin-top:0; text-align:center;">MEGA ARM DELIVERY DIRECTION</h3>
+        <p style="color:#aaa; font-size:12px; text-align:center; margin-bottom:20px;">Click a direction to set where this arm delivers items:</p>
+        <div style="display:grid; grid-template-columns:repeat(3, 80px); gap:10px; margin:20px auto; width:fit-content;">
+            <div></div>
+            <button id="dir-up" class="btn-secondary" style="padding:20px; font-size:24px;">↑</button>
+            <div></div>
+            <button id="dir-left" class="btn-secondary" style="padding:20px; font-size:24px;">←</button>
+            <div style="display:flex; align-items:center; justify-content:center; color:#555;">🦾M</div>
+            <button id="dir-right" class="btn-secondary" style="padding:20px; font-size:24px;">→</button>
+            <div></div>
+            <button id="dir-down" class="btn-secondary" style="padding:20px; font-size:24px;">↓</button>
+            <div></div>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+            <button class="btn-secondary" onclick="closeDirectionPicker()" style="padding:10px 20px;">CANCEL</button>
+        </div>
     </div>
 
     <script>
@@ -704,6 +725,7 @@
             ARM: { id: 'arm_basic', name: 'ARM', cost: 30, color: '#fbc02d', icon: '🦾', reqLevel: 1, isArm: true, speed: 1.0, desc: "Robot Arm. Moves items from BELTS to MACHINES. Essential for automation." },
             ARM_F: { id: 'arm_filter', name: 'FILTER ARM', cost: 100, color: '#8e24aa', icon: '🔬', reqLevel: 2, isArm: true, speed: 1.5, canFilter: true, desc: "Smart Filter Arm. Click placed arm to select item type. Ignores other items." },
             ARM_S: { id: 'arm_smart', name: 'SMART ARM', cost: 200, color: '#006064', icon: '⚡', reqLevel: 3, isArm: true, speed: 3.0, canFilter: true, desc: "High-Speed Servo Arm. Transfers items 3x faster." },
+            ARM_M: { id: 'arm_mega', name: 'MEGA ARM', cost: 1000, color: '#64b5f6', icon: '🦾M', reqLevel: 4, isArm: true, speed: 3.0, canFilter: true, canDirectDeliver: true, desc: "Omni-Directional Mega Arm. Click to set delivery direction (Up/Down/Left/Right). 3x speed." },
 
             // PLASTIC SOURCE variants
             SRC_P: { id: 'src_p', name: 'PLASTIC', cost: 100, color: '#c62828', icon: '🔴', reqLevel: 1, output: ITEM.PLASTIC, speed: 60, desc: "Infinite source of Red Plastic Pellets. Used in Injection Presses." },
@@ -729,13 +751,13 @@
 
         // Define tool slots - each slot shows the best version available at each level
         const TOOL_SLOTS = [
-            { slot: 1, variants: ['BELT', 'BELT_F'] },               // Hotkey 1
-            { slot: 2, variants: ['ARM', 'ARM_F', 'ARM_S'] },        // Hotkey 2
-            { slot: 3, variants: ['SRC_P', 'SRC_P_F', 'SRC_P_M'] },  // Hotkey 3
-            { slot: 4, variants: ['SRC_S', 'SRC_S_F'] },             // Hotkey 4
-            { slot: 5, variants: ['CNC', 'CNC_F', 'CNC_M'] },        // Hotkey 5
-            { slot: 6, variants: ['PRESS', 'PRESS_M'] },             // Hotkey 6
-            { slot: 7, variants: ['BIN'] },                          // Hotkey 7
+            { slot: 1, variants: ['BELT', 'BELT_F'] },                    // Hotkey 1
+            { slot: 2, variants: ['ARM', 'ARM_F', 'ARM_S', 'ARM_M'] },    // Hotkey 2
+            { slot: 3, variants: ['SRC_P', 'SRC_P_F', 'SRC_P_M'] },       // Hotkey 3
+            { slot: 4, variants: ['SRC_S', 'SRC_S_F'] },                  // Hotkey 4
+            { slot: 5, variants: ['CNC', 'CNC_F', 'CNC_M'] },             // Hotkey 5
+            { slot: 6, variants: ['PRESS', 'PRESS_M'] },                  // Hotkey 6
+            { slot: 7, variants: ['BIN'] },                               // Hotkey 7
         ];
 
         // Legacy BUILDINGS object for backward compatibility
@@ -775,13 +797,14 @@
                 this.timer = 0;
                 this.inventory = { [ITEM.PLASTIC]: 0, [ITEM.STEEL]: 0, [ITEM.MOLD]: 0, [ITEM.MOLD_QUAD]: 0 };
                 this.outputBuffer = null;
-                this.outputCount = 0; 
+                this.outputCount = 0;
                 this.moldLife = 0;
                 this.maxMoldLife = type.maxLife || 0;
                 this.heldItem = null;
                 this.armAnim = 0;
                 this.filter = null;
                 this.lastSoldTime = 0;
+                this.deliverDir = rot; // For MEGA ARM - delivery direction (default: forward)
             }
             cycleFilter() {
                 if (!this.type.canFilter) return;
@@ -795,17 +818,20 @@
             }
             updateArm() {
                 let speed = this.type.speed * 0.05;
+                // Use deliverDir for delivery target (MEGA ARM can deliver in any cardinal direction)
+                let deliveryDirection = this.type.canDirectDeliver ? this.deliverDir : this.rot;
+
                 if (this.heldItem) {
                     if (this.armAnim < 1.0) this.armAnim = Math.min(1.0, this.armAnim + speed);
                     else {
-                        let targetXY = getNeighbor(this.x, this.y, this.rot);
+                        let targetXY = getNeighbor(this.x, this.y, deliveryDirection);
                         if (this.attemptDrop(targetXY, this.heldItem)) this.heldItem = null;
                     }
                 } else {
                     if (this.armAnim > 0) this.armAnim = Math.max(0, this.armAnim - speed);
                     else {
                         let sourceXY = getNeighbor(this.x, this.y, (this.rot + 2) % 4);
-                        let targetXY = getNeighbor(this.x, this.y, this.rot);
+                        let targetXY = getNeighbor(this.x, this.y, deliveryDirection);
                         let item = this.attemptPickup(sourceXY, targetXY);
                         if (item) this.heldItem = item;
                     }
@@ -1120,6 +1146,7 @@
                     x: b.x,
                     y: b.y,
                     rot: b.rot,
+                    deliverDir: b.deliverDir,
                     inventory: b.inventory,
                     outputBuffer: b.outputBuffer,
                     outputCount: b.outputCount,
@@ -1174,6 +1201,7 @@
                     }
 
                     const building = new Building(type, b.x, b.y, b.rot);
+                    building.deliverDir = b.deliverDir !== undefined ? b.deliverDir : b.rot;
                     building.inventory = b.inventory || {};
                     building.outputBuffer = b.outputBuffer;
                     building.outputCount = b.outputCount || 0;
@@ -1448,9 +1476,13 @@
         function handleMouse(e) {
             if (!gameRunning) return;
             const pos = getMouseGridPos(e);
-            if (e.button === 0) { 
+            if (e.button === 0) {
                 if (grid[pos.y] && grid[pos.y][pos.x]) {
                     const tile = grid[pos.y][pos.x];
+                    if (tile.building && tile.building.type.canDirectDeliver) {
+                        openDirectionPicker(tile.building);
+                        return;
+                    }
                     if (tile.building && tile.building.type.canFilter) {
                         tile.building.cycleFilter();
                         showNotification("FILTER: " + (tile.building.filter || "NONE"));
@@ -1461,7 +1493,7 @@
                     }
                     placeBuilding(pos.x, pos.y); isDragging = true;
                 }
-            } else if (e.button === 2) { 
+            } else if (e.button === 2) {
                 removeBuilding(pos.x, pos.y); if (inspectedBuilding) closeInspector();
             }
         }
@@ -1548,6 +1580,63 @@
             let n = document.getElementById('notification');
             n.innerText = msg; n.style.opacity = 1;
             setTimeout(()=>n.style.opacity=0, 2000);
+        }
+
+        let selectedMegaArm = null;
+        function openDirectionPicker(building) {
+            selectedMegaArm = building;
+            document.getElementById('direction-picker').style.display = 'block';
+
+            // Calculate pickup direction (always behind the arm)
+            const pickupDir = (building.rot + 2) % 4;
+            const currentDir = building.deliverDir;
+
+            // Get all direction buttons
+            const dirButtons = [
+                document.getElementById('dir-up'),
+                document.getElementById('dir-right'),
+                document.getElementById('dir-down'),
+                document.getElementById('dir-left')
+            ];
+
+            // Reset all buttons and set up handlers
+            dirButtons.forEach((btn, dir) => {
+                // Reset styles
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.border = '2px solid #444';
+                btn.style.background = '';
+
+                // Disable pickup direction
+                if (dir === pickupDir) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.3';
+                    btn.style.cursor = 'not-allowed';
+                }
+
+                // Highlight current delivery direction
+                if (dir === currentDir) {
+                    btn.style.border = '3px solid var(--usa-red)';
+                    btn.style.background = 'rgba(220, 53, 69, 0.2)';
+                }
+
+                // Set click handler
+                btn.onclick = () => setArmDirection(dir);
+            });
+        }
+
+        function setArmDirection(dir) {
+            if (selectedMegaArm) {
+                selectedMegaArm.deliverDir = dir;
+                const dirNames = ['UP', 'RIGHT', 'DOWN', 'LEFT'];
+                showNotification(`MEGA ARM → ${dirNames[dir]}`);
+            }
+            closeDirectionPicker();
+        }
+
+        function closeDirectionPicker() {
+            selectedMegaArm = null;
+            document.getElementById('direction-picker').style.display = 'none';
         }
 
         function populateVictoryReport() {
