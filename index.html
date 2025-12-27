@@ -86,6 +86,18 @@
             flex-shrink: 0;
         }
 
+        @keyframes flagWave {
+            0%, 100% {
+                transform: translateX(-50%) rotateY(0deg) skewY(0deg);
+            }
+            25% {
+                transform: translateX(-50%) rotateY(-8deg) skewY(2deg);
+            }
+            75% {
+                transform: translateX(-50%) rotateY(8deg) skewY(-2deg);
+            }
+        }
+
         #game-frame::before {
             content: '';
             width: 60px;
@@ -100,6 +112,8 @@
             transform: translateX(-50%);
             z-index: 20;
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+            transform-style: preserve-3d;
+            animation: flagWave 3s ease-in-out infinite;
         }
 
         /* Year Badges */
