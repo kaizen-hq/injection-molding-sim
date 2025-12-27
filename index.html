@@ -989,14 +989,14 @@
                 }
                 
                 if (tile.building.type.transportSpeed) {
-                    let bestItem = null, bestDist = 999;
+                    let bestItem = null, bestProgress = -1;
                     for (let i = 0; i < items.length; i++) {
                         let it = items[i];
                         if (Math.floor(it.x) === pos.x && Math.floor(it.y) === pos.y) {
                             if (this.filter && it.type !== this.filter) continue;
                             if (!canAcceptFunc(it.type)) continue;
-                            let d = Math.abs(it.progress - 0.5);
-                            if (d < 0.6 && d < bestDist) { bestDist = d; bestItem = it; }
+                            // Pick item with highest progress (furthest along = FIFO order)
+                            if (it.progress > bestProgress) { bestProgress = it.progress; bestItem = it; }
                         }
                     }
                     if (bestItem) { bestItem.markedForDeletion = true; return bestItem.type; }
