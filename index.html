@@ -872,9 +872,9 @@
 
                 if (this.type.id.includes('press')) {
                     if (this.moldLife <= 0) {
-                        if (this.inventory[ITEM.MOLD_QUAD] > 0 && this.type.id === 'press_fast') {
+                        if (this.inventory[ITEM.MOLD_QUAD] > 0 && this.type.id === 'press_mega') {
                             this.inventory[ITEM.MOLD_QUAD]--;
-                            this.moldLife = this.maxMoldLife; 
+                            this.moldLife = this.maxMoldLife;
                             this.currentMoldType = ITEM.MOLD_QUAD;
                         } else if (this.inventory[ITEM.MOLD] > 0) {
                             this.inventory[ITEM.MOLD]--;
