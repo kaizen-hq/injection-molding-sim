@@ -852,6 +852,49 @@
         </div>
     </div>
 
+    <!-- Debug Panel for Local Development -->
+    <div id="debug-panel" style="display:none; position:fixed; top:20px; right:20px; background:#1a2634; padding:20px; border-radius:8px; border:3px solid var(--gold); box-shadow:0 0 20px rgba(255,215,0,0.3); z-index:10000; min-width:280px; font-family:'Courier New', monospace;">
+        <h3 style="color:var(--gold); margin:0 0 15px 0; text-align:center; font-size:16px;">🔧 DEBUG MODE</h3>
+        <div style="color:#aaa; font-size:11px; margin-bottom:15px; text-align:center;">Press ` (backtick) to toggle</div>
+
+        <div style="margin-bottom:15px;">
+            <label style="color:#ccc; display:block; margin-bottom:5px; font-size:12px;">💰 Current Money:</label>
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="debug-money" style="flex:1; background:#2b2b2b; border:1px solid #555; color:#fff; padding:5px; border-radius:4px; font-family:'Courier New', monospace;" value="0">
+                <button onclick="applyDebugMoney()" style="background:var(--usa-red); border:none; color:#fff; padding:5px 15px; border-radius:4px; cursor:pointer; font-weight:bold;">SET</button>
+            </div>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label style="color:#ccc; display:block; margin-bottom:5px; font-size:12px;">⭐ Parts Created:</label>
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="debug-parts" style="flex:1; background:#2b2b2b; border:1px solid #555; color:#fff; padding:5px; border-radius:4px; font-family:'Courier New', monospace;" value="0">
+                <button onclick="applyDebugParts()" style="background:var(--usa-red); border:none; color:#fff; padding:5px 15px; border-radius:4px; cursor:pointer; font-weight:bold;">SET</button>
+            </div>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label style="color:#ccc; display:block; margin-bottom:5px; font-size:12px;">📊 Lifetime Revenue:</label>
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="debug-revenue" style="flex:1; background:#2b2b2b; border:1px solid #555; color:#fff; padding:5px; border-radius:4px; font-family:'Courier New', monospace;" value="0">
+                <button onclick="applyDebugRevenue()" style="background:var(--usa-red); border:none; color:#fff; padding:5px 15px; border-radius:4px; cursor:pointer; font-weight:bold;">SET</button>
+            </div>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label style="color:#ccc; display:block; margin-bottom:5px; font-size:12px;">🎚️ Level (1-5):</label>
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="debug-level" min="1" max="5" style="flex:1; background:#2b2b2b; border:1px solid #555; color:#fff; padding:5px; border-radius:4px; font-family:'Courier New', monospace;" value="1">
+                <button onclick="applyDebugLevel()" style="background:var(--usa-red); border:none; color:#fff; padding:5px 15px; border-radius:4px; cursor:pointer; font-weight:bold;">SET</button>
+            </div>
+        </div>
+
+        <div style="border-top:1px solid #555; padding-top:15px; margin-top:15px;">
+            <button onclick="syncDebugValues()" style="width:100%; background:var(--usa-blue); border:none; color:#fff; padding:8px; border-radius:4px; cursor:pointer; font-weight:bold; margin-bottom:8px;">↻ SYNC FROM GAME</button>
+            <button onclick="toggleDebugPanel()" style="width:100%; background:#555; border:none; color:#fff; padding:8px; border-radius:4px; cursor:pointer;">CLOSE</button>
+        </div>
+    </div>
+
     <script>
         // Grid dimensions are defined in head script
         const TILE_SIZE = window.TILE_SIZE;
@@ -1596,6 +1639,11 @@
         }
 
         function handleKey(e) {
+            // Toggle debug panel with backtick key
+            if (e.key === '`') {
+                toggleDebugPanel();
+                return;
+            }
             if (e.key.toLowerCase() === 'i') {
                 // Update button visibility based on game state
                 const isGameActive = gameRunning || startTime > 0;
@@ -1966,6 +2014,58 @@
         function closeArmConfig() {
             selectedArm = null;
             document.getElementById('arm-config').style.display = 'none';
+        }
+
+        // Debug Panel Functions
+        function toggleDebugPanel() {
+            const panel = document.getElementById('debug-panel');
+            if (panel.style.display === 'none') {
+                syncDebugValues();
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        function syncDebugValues() {
+            document.getElementById('debug-money').value = Math.floor(money);
+            document.getElementById('debug-parts').value = partsSoldTotal;
+            document.getElementById('debug-revenue').value = Math.floor(lifetimeRevenue);
+            document.getElementById('debug-level').value = level;
+        }
+
+        function applyDebugMoney() {
+            const val = parseInt(document.getElementById('debug-money').value) || 0;
+            money = val;
+            lifetimeRevenue = Math.max(lifetimeRevenue, money);
+            updateUI();
+            showNotification(`💰 Money set to $${val.toLocaleString()}`);
+        }
+
+        function applyDebugParts() {
+            const val = parseInt(document.getElementById('debug-parts').value) || 0;
+            partsSoldTotal = val;
+            updateUI();
+            showNotification(`⭐ Parts sold set to ${val.toLocaleString()}`);
+        }
+
+        function applyDebugRevenue() {
+            const val = parseInt(document.getElementById('debug-revenue').value) || 0;
+            lifetimeRevenue = val;
+            money = Math.max(money, val); // Ensure current money isn't less than lifetime revenue
+            checkVictory();
+            updateUI();
+            showNotification(`📊 Lifetime revenue set to $${val.toLocaleString()}`);
+        }
+
+        function applyDebugLevel() {
+            const val = parseInt(document.getElementById('debug-level').value) || 1;
+            const clampedLevel = Math.max(1, Math.min(5, val));
+            level = clampedLevel;
+            document.getElementById('debug-level').value = clampedLevel;
+            updateToolbar();
+            updateUI();
+            showNotification(`🎚️ Level set to ${clampedLevel}`);
         }
 
         function populateVictoryReport() {
