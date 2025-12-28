@@ -1741,7 +1741,9 @@
                     structure += k + ',';
                 }
             }
-            structure += b.outputBuffer ? 'output' : '';
+            // Always include output row for machines that produce items
+            let hasOutput = b.type.output || b.type.recipe?.out;
+            structure += hasOutput ? 'output' : '';
 
             // If structure changed, rebuild HTML
             if (structure !== lastInspectorStructure) {
@@ -1755,8 +1757,10 @@
                 for (let k of inventoryKeys) {
                     html += `<div class="insp-row"><span id="insp-${k}">${k.toUpperCase()}: ${b.inventory[k]}</span><button class="insp-btn" data-item="${k}">DEL</button></div>`;
                 }
-                if (b.outputBuffer) {
-                    html += `<div class="insp-row"><span id="insp-output">OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})</span><button class="insp-btn" data-clear="output">DEL</button></div>`;
+                if (hasOutput) {
+                    let outType = b.outputBuffer ? b.outputBuffer.toUpperCase() : 'NONE';
+                    let outCount = b.outputCount || 0;
+                    html += `<div class="insp-row"><span id="insp-output">OUT: ${outType} (x${outCount})</span><button class="insp-btn" data-clear="output">DEL</button></div>`;
                 }
                 document.getElementById('insp-content').innerHTML = html;
                 lastInspectorStructure = structure;
@@ -1777,9 +1781,13 @@
                     let el = document.getElementById(`insp-${k}`);
                     if (el) el.textContent = `${k.toUpperCase()}: ${b.inventory[k]}`;
                 }
-                if (b.outputBuffer) {
+                if (hasOutput) {
                     let el = document.getElementById('insp-output');
-                    if (el) el.textContent = `OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})`;
+                    if (el) {
+                        let outType = b.outputBuffer ? b.outputBuffer.toUpperCase() : 'NONE';
+                        let outCount = b.outputCount || 0;
+                        el.textContent = `OUT: ${outType} (x${outCount})`;
+                    }
                 }
             }
         }
