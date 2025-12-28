@@ -445,7 +445,7 @@
 
         /* --- Modals & Notifications --- */
         #inspector {
-            position: absolute; top: 20px; right: 20px; width: 180px;
+            position: absolute; width: 180px;
             background: #1a2634; border: 4px solid var(--usa-red);
             padding: 10px; display: none; z-index: 40; box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
             font-family: 'Courier New', Courier, monospace; color: #fff;
@@ -1668,7 +1668,11 @@
                     placeBuilding(pos.x, pos.y); isDragging = true;
                 }
             } else if (e.button === 2) {
-                removeBuilding(pos.x, pos.y); if (inspectedBuilding) closeInspector();
+                if (inspectedBuilding) {
+                    closeInspector();
+                } else {
+                    removeBuilding(pos.x, pos.y);
+                }
             }
         }
 
@@ -1706,8 +1710,48 @@
 
         function openInspector(b) {
             inspectedBuilding = b;
-            document.getElementById('inspector').style.display = 'block';
+            let insp = document.getElementById('inspector');
+            insp.style.display = 'block';
             document.getElementById('insp-name').innerText = b.type.name;
+
+            // Position inspector near the building
+            let buildingX = b.x * TILE_SIZE;
+            let buildingY = b.y * TILE_SIZE;
+
+            // Try to position to the right of the building
+            let inspX = buildingX + TILE_SIZE + 10;
+            let inspY = buildingY;
+
+            // Get inspector dimensions (approximate if not yet rendered)
+            let inspWidth = 180;
+            let inspHeight = insp.offsetHeight || 150;
+
+            // Check if inspector would go off-screen to the right
+            if (inspX + inspWidth > GRID_W * TILE_SIZE) {
+                // Position to the left instead
+                inspX = buildingX - inspWidth - 10;
+            }
+
+            // Check if inspector would go off-screen to the left
+            if (inspX < 0) {
+                // Position below the building instead
+                inspX = buildingX;
+                inspY = buildingY + TILE_SIZE + 10;
+            }
+
+            // Check if inspector would go off-screen at the bottom
+            if (inspY + inspHeight > GRID_H * TILE_SIZE) {
+                // Move up to fit
+                inspY = GRID_H * TILE_SIZE - inspHeight - 10;
+            }
+
+            // Ensure it doesn't go above the top
+            if (inspY < 0) inspY = 10;
+
+            insp.style.left = inspX + 'px';
+            insp.style.top = inspY + 'px';
+            insp.style.right = 'auto'; // Clear the fixed right position
+
             updateInspectorUI();
         }
         function closeInspector() { inspectedBuilding = null; document.getElementById('inspector').style.display = 'none'; }
