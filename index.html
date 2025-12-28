@@ -446,11 +446,11 @@
         /* --- Modals & Notifications --- */
         #inspector {
             position: absolute; top: 20px; right: 20px; width: 180px;
-            background: #ddd; border: 4px solid #333; border-top: 15px solid #333;
+            background: #1a2634; border: 4px solid var(--usa-red);
             padding: 10px; display: none; z-index: 40; box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-            font-family: 'Courier New', Courier, monospace; color: #000;
+            font-family: 'Courier New', Courier, monospace; color: #fff;
         }
-        .insp-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px dotted #999; }
+        .insp-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px dotted #666; }
         .insp-btn { background: #c00; color: #fff; border: none; font-size: 9px; cursor: pointer; padding: 1px 4px; }
 
         .notification {
@@ -1727,7 +1727,7 @@
                 }
             }
             if (b.outputBuffer) {
-                html += `<div class="insp-row"><span style="color:#000;">OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})</span><button class="insp-btn" onclick="clearOutput()">DEL</button></div>`;
+                html += `<div class="insp-row"><span>OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})</span><button class="insp-btn" onclick="clearOutput()">DEL</button></div>`;
             }
             document.getElementById('insp-content').innerHTML = html;
         }
