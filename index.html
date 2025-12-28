@@ -1287,6 +1287,7 @@
                 totalMoldsMade,
                 level,
                 currentTab,
+                hasWon,
                 elapsedTime: Date.now() - startTime,
                 metricsHistory: metrics.history
             };
@@ -1354,6 +1355,7 @@
                 totalMoldsMade = state.totalMoldsMade;
                 level = state.level;
                 currentTab = state.currentTab || 1;
+                hasWon = state.hasWon || false;
                 switchTab(currentTab);
                 metrics.history = state.metricsHistory || [];
 
