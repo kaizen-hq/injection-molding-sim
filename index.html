@@ -1931,12 +1931,23 @@
 
             if (b.type.isArm) {
                 ctx.fillStyle = '#222'; ctx.fillRect(-10, -10, 20, 20);
-                let angleOffset = (b.armAnim * Math.PI) - Math.PI; 
+
+                // Calculate target angle based on delivery direction
+                let targetAngle = 0; // default: forward
+                if (b.type.canDirectDeliver) {
+                    let dirDiff = (b.deliverDir - b.rot + 4) % 4;
+                    if (dirDiff === 1) targetAngle = Math.PI / 2; // right (90°)
+                    else if (dirDiff === 3) targetAngle = -Math.PI / 2; // left (-90°)
+                    // dirDiff === 0 stays at 0 (forward)
+                }
+
+                // Swing from -π (behind) to targetAngle (delivery direction)
+                let angleOffset = -Math.PI + b.armAnim * (targetAngle + Math.PI);
                 ctx.rotate(angleOffset);
-                ctx.fillStyle = b.type.color; ctx.fillRect(0, -5, 24, 10); 
-                ctx.fillStyle = '#ccc'; ctx.fillRect(22, -6, 6, 12); 
+                ctx.fillStyle = b.type.color; ctx.fillRect(0, -5, 24, 10);
+                ctx.fillStyle = '#ccc'; ctx.fillRect(22, -6, 6, 12);
                 if (b.heldItem) {
-                    ctx.save(); ctx.translate(24, 0); ctx.rotate(-(b.rot*Math.PI/2 + angleOffset)); 
+                    ctx.save(); ctx.translate(24, 0); ctx.rotate(-(b.rot*Math.PI/2 + angleOffset));
                     drawItemShape(ctx, b.heldItem); ctx.restore();
                 }
             } else if (b.type.id.includes('belt')) {
