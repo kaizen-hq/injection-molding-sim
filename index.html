@@ -655,11 +655,19 @@
 
         <div class="graph-section">
             <div class="graph-container">
-                <div class="graph-label">INPUT RATE (Plastic/Steel)</div>
+                <div class="graph-label">PLASTIC RATE</div>
                 <canvas id="graphResources" width="240" height="80"></canvas>
             </div>
             <div class="graph-container">
-                <div class="graph-label">OUTPUT RATE (Parts)</div>
+                <div class="graph-label">STEEL RATE</div>
+                <canvas id="graphSteel" width="240" height="80"></canvas>
+            </div>
+            <div class="graph-container">
+                <div class="graph-label">TOOLING RATE (Molds)</div>
+                <canvas id="graphTooling" width="240" height="80"></canvas>
+            </div>
+            <div class="graph-container">
+                <div class="graph-label">PARTS RATE</div>
                 <canvas id="graphProduction" width="240" height="80"></canvas>
             </div>
             <div class="graph-container">
@@ -915,7 +923,7 @@
 
         const SELL_PRICES = { [ITEM.PART]: 45, [ITEM.MOLD]: 20, [ITEM.STEEL]: 1, [ITEM.PLASTIC]: 1, [ITEM.MOLD_QUAD]: 100 };
 
-        let canvas, ctx, gResCanvas, gResCtx, gProdCanvas, gProdCtx, gRevCanvas, gRevCtx;
+        let canvas, ctx, gPlasticCanvas, gPlasticCtx, gSteelCanvas, gSteelCtx, gToolCanvas, gToolCtx, gPartsCanvas, gPartsCtx, gRevCanvas, gRevCtx;
         let money = 600;
         let lifetimeRevenue = 600;
         let partsSoldTotal = 0;
@@ -1013,8 +1021,8 @@
                                 this.outputBuffer = ITEM.MOLD_QUAD;
                             } else {
                                 this.outputBuffer = ITEM.MOLD;
-                                metrics.current.mold++;
                             }
+                            metrics.current.mold++;
                             totalMoldsMade++;
                             this.outputCount = 1;
                             this.timer = 0;
@@ -1232,8 +1240,10 @@
             canvas.width = TILE_SIZE * GRID_W;
             canvas.height = TILE_SIZE * GRID_H;
             ctx = canvas.getContext('2d');
-            gResCanvas = document.getElementById('graphResources'); gResCtx = gResCanvas.getContext('2d');
-            gProdCanvas = document.getElementById('graphProduction'); gProdCtx = gProdCanvas.getContext('2d');
+            gPlasticCanvas = document.getElementById('graphResources'); gPlasticCtx = gPlasticCanvas.getContext('2d');
+            gSteelCanvas = document.getElementById('graphSteel'); gSteelCtx = gSteelCanvas.getContext('2d');
+            gToolCanvas = document.getElementById('graphTooling'); gToolCtx = gToolCanvas.getContext('2d');
+            gPartsCanvas = document.getElementById('graphProduction'); gPartsCtx = gPartsCanvas.getContext('2d');
             gRevCanvas = document.getElementById('graphRevenue'); gRevCtx = gRevCanvas.getContext('2d');
 
             for (let y = 0; y < GRID_H; y++) {
@@ -2028,15 +2038,27 @@
             }
 
             let plastics = metrics.history.map(m => m.plastic * 60);
+            let steels = metrics.history.map(m => m.steel * 60);
+            let molds = metrics.history.map(m => m.mold * 60);
             let parts = metrics.history.map(m => m.part * 60);
             let dollars = metrics.history.map(m => m.dollars * 60);
-            let currentMax = Math.max(...plastics, ...parts, 10);
-            let scale = Math.ceil(currentMax / 10) * 10;
+
+            let plasticsMax = Math.max(...plastics, 10);
+            let plasticsScale = Math.ceil(plasticsMax / 10) * 10;
+
+            let steelsMax = Math.max(...steels, 10);
+            let steelsScale = Math.ceil(steelsMax / 10) * 10;
+
+            let moldsMax = Math.max(...molds, 10);
+            let moldsScale = Math.ceil(moldsMax / 10) * 10;
+
+            let partsMax = Math.max(...parts, 10);
+            let partsScale = Math.ceil(partsMax / 10) * 10;
 
             let dollarsMax = Math.max(...dollars, 10);
             let dollarsScale = Math.ceil(dollarsMax / 10) * 10;
 
-            [gResCtx, gProdCtx, gRevCtx].forEach(c => {
+            [gPlasticCtx, gSteelCtx, gToolCtx, gPartsCtx, gRevCtx].forEach(c => {
                 c.fillStyle = '#051005'; c.fillRect(0,0,240,100);
                 c.strokeStyle = '#0f200f'; c.beginPath();
                 for(let i=0;i<240;i+=20) { c.moveTo(i,0); c.lineTo(i,100); }
@@ -2045,22 +2067,47 @@
             });
 
             // Draw graph lines first
-            drawBezier(gResCtx, plastics, C_PLASTIC, scale);
-            drawBezier(gProdCtx, parts, C_PART, scale);
+            drawBezier(gPlasticCtx, plastics, C_PLASTIC, plasticsScale);
+            drawBezier(gSteelCtx, steels, '#c0c0c0', steelsScale);
+            drawBezier(gToolCtx, molds, '#2196f3', moldsScale);
+            drawBezier(gPartsCtx, parts, C_PART, partsScale);
             drawBezier(gRevCtx, dollars, '#00ff00', dollarsScale);
 
-            // Draw scale labels on top so they're not obscured
-            [gResCtx, gProdCtx].forEach(c => {
-                c.font = '8px monospace';
-                // Draw dark background behind text for contrast
-                c.fillStyle = '#051005';
-                c.fillRect(0, 2, 25, 10);
-                c.fillRect(0, 47, 25, 10);
-                // Draw text
-                c.fillStyle = '#00ff00';
-                c.fillText(scale, 2, 10);
-                c.fillText(scale/2, 2, 55);
-            });
+            // Draw scale labels for plastic graph
+            gPlasticCtx.font = '8px monospace';
+            gPlasticCtx.fillStyle = '#051005';
+            gPlasticCtx.fillRect(0, 2, 25, 10);
+            gPlasticCtx.fillRect(0, 47, 25, 10);
+            gPlasticCtx.fillStyle = '#00ff00';
+            gPlasticCtx.fillText(plasticsScale, 2, 10);
+            gPlasticCtx.fillText(plasticsScale/2, 2, 55);
+
+            // Draw scale labels for steel graph
+            gSteelCtx.font = '8px monospace';
+            gSteelCtx.fillStyle = '#051005';
+            gSteelCtx.fillRect(0, 2, 25, 10);
+            gSteelCtx.fillRect(0, 47, 25, 10);
+            gSteelCtx.fillStyle = '#00ff00';
+            gSteelCtx.fillText(steelsScale, 2, 10);
+            gSteelCtx.fillText(steelsScale/2, 2, 55);
+
+            // Draw scale labels for tooling graph
+            gToolCtx.font = '8px monospace';
+            gToolCtx.fillStyle = '#051005';
+            gToolCtx.fillRect(0, 2, 25, 10);
+            gToolCtx.fillRect(0, 47, 25, 10);
+            gToolCtx.fillStyle = '#00ff00';
+            gToolCtx.fillText(moldsScale, 2, 10);
+            gToolCtx.fillText(moldsScale/2, 2, 55);
+
+            // Draw scale labels for parts graph
+            gPartsCtx.font = '8px monospace';
+            gPartsCtx.fillStyle = '#051005';
+            gPartsCtx.fillRect(0, 2, 25, 10);
+            gPartsCtx.fillRect(0, 47, 25, 10);
+            gPartsCtx.fillStyle = '#00ff00';
+            gPartsCtx.fillText(partsScale, 2, 10);
+            gPartsCtx.fillText(partsScale/2, 2, 55);
 
             // Draw scale labels for revenue graph
             gRevCtx.font = '8px monospace';
