@@ -450,8 +450,8 @@
             padding: 10px; display: none; z-index: 40; box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
             font-family: 'Courier New', Courier, monospace; color: #fff;
         }
-        .insp-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px dotted #666; }
-        .insp-btn { background: #c00; color: #fff; border: none; font-size: 9px; cursor: pointer; padding: 1px 4px; }
+        .insp-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px dotted #666; align-items: center; }
+        .insp-btn { background: #c00; color: #fff; border: none; font-size: 10px; cursor: pointer; padding: 4px 8px; border-radius: 3px; }
 
         .notification {
             position: absolute; top: 15%; left: 50%; transform: translateX(-50%);
@@ -937,6 +937,7 @@
         let buildings = [];
         let items = [];
         let inspectedBuilding = null;
+        let lastInspectorStructure = '';
         let metrics = { history: [], current: { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 } };
 
         class Tile { constructor(x, y) { this.x = x; this.y = y; this.building = null; } }
@@ -1268,6 +1269,17 @@
             canvas.addEventListener('mousemove', handleMouseMove);
             canvas.addEventListener('mouseup', () => isDragging = false);
             canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Event delegation for inspector delete buttons
+            document.getElementById('insp-content').addEventListener('click', (e) => {
+                if (e.target.classList.contains('insp-btn')) {
+                    if (e.target.dataset.item) {
+                        clearInv(e.target.dataset.item);
+                    } else if (e.target.dataset.clear === 'output') {
+                        clearOutput();
+                    }
+                }
+            });
 
             // Auto-save before page unload
             window.addEventListener('beforeunload', saveGameState);
@@ -1699,7 +1711,12 @@
             updateInspectorUI();
         }
         function closeInspector() { inspectedBuilding = null; document.getElementById('inspector').style.display = 'none'; }
-        function clearInv(type) { if (inspectedBuilding) inspectedBuilding.inventory[type] = 0; updateInspectorUI(); }
+        function clearInv(type) {
+            if (inspectedBuilding && inspectedBuilding.inventory.hasOwnProperty(type)) {
+                inspectedBuilding.inventory[type] = 0;
+                updateInspectorUI();
+            }
+        }
         function clearOutput() { 
             if (inspectedBuilding) {
                 inspectedBuilding.outputBuffer = null; 
@@ -1711,25 +1728,60 @@
         function updateInspectorUI() {
             if (!inspectedBuilding) return;
             let b = inspectedBuilding;
-            let html = '';
-            let status = "OPERATIONAL", statusColor = "#4caf50";
-            if (b.outputBuffer && b.outputCount >= 5) { status = "OUTPUT FULL"; statusColor = "#ffd700"; }
-            else if (b.type.id.includes('press') && b.inventory[ITEM.PLASTIC] === 0) { status = "NO PLASTIC"; statusColor = "#f44336"; }
-            else if (b.type.id.includes('press') && b.moldLife <= 0 && b.inventory[ITEM.MOLD] === 0) { status = "NO MOLD"; statusColor = "#f44336"; }
-            
-            html += `<div style="color:${statusColor}; font-weight:bold; margin-bottom:10px;">${status}</div>`;
+
+            // Determine structure (what items exist, not their values)
+            let structure = '';
+            let inventoryKeys = [];
             if (Object.keys(b.inventory).length > 0) {
                 for (let k in b.inventory) {
-                    if (b.type.id.includes('src')) continue; 
+                    if (b.type.id.includes('src')) continue;
                     if (b.type.id.includes('cnc') && k !== ITEM.STEEL) continue;
                     if (b.type.id.includes('press') && k === ITEM.STEEL) continue;
-                    html += `<div class="insp-row"><span>${k.toUpperCase()}: ${b.inventory[k]}</span><button class="insp-btn" onclick="clearInv('${k}')">DEL</button></div>`;
+                    inventoryKeys.push(k);
+                    structure += k + ',';
                 }
             }
-            if (b.outputBuffer) {
-                html += `<div class="insp-row"><span>OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})</span><button class="insp-btn" onclick="clearOutput()">DEL</button></div>`;
+            structure += b.outputBuffer ? 'output' : '';
+
+            // If structure changed, rebuild HTML
+            if (structure !== lastInspectorStructure) {
+                let html = '';
+                let status = "OPERATIONAL", statusColor = "#4caf50";
+                if (b.outputBuffer && b.outputCount >= 5) { status = "OUTPUT FULL"; statusColor = "#ffd700"; }
+                else if (b.type.id.includes('press') && b.inventory[ITEM.PLASTIC] === 0) { status = "NO PLASTIC"; statusColor = "#f44336"; }
+                else if (b.type.id.includes('press') && b.moldLife <= 0 && b.inventory[ITEM.MOLD] === 0) { status = "NO MOLD"; statusColor = "#f44336"; }
+
+                html += `<div id="insp-status" style="color:${statusColor}; font-weight:bold; margin-bottom:10px;">${status}</div>`;
+                for (let k of inventoryKeys) {
+                    html += `<div class="insp-row"><span id="insp-${k}">${k.toUpperCase()}: ${b.inventory[k]}</span><button class="insp-btn" data-item="${k}">DEL</button></div>`;
+                }
+                if (b.outputBuffer) {
+                    html += `<div class="insp-row"><span id="insp-output">OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})</span><button class="insp-btn" data-clear="output">DEL</button></div>`;
+                }
+                document.getElementById('insp-content').innerHTML = html;
+                lastInspectorStructure = structure;
+            } else {
+                // Just update the values
+                let status = "OPERATIONAL", statusColor = "#4caf50";
+                if (b.outputBuffer && b.outputCount >= 5) { status = "OUTPUT FULL"; statusColor = "#ffd700"; }
+                else if (b.type.id.includes('press') && b.inventory[ITEM.PLASTIC] === 0) { status = "NO PLASTIC"; statusColor = "#f44336"; }
+                else if (b.type.id.includes('press') && b.moldLife <= 0 && b.inventory[ITEM.MOLD] === 0) { status = "NO MOLD"; statusColor = "#f44336"; }
+
+                let statusEl = document.getElementById('insp-status');
+                if (statusEl) {
+                    statusEl.textContent = status;
+                    statusEl.style.color = statusColor;
+                }
+
+                for (let k of inventoryKeys) {
+                    let el = document.getElementById(`insp-${k}`);
+                    if (el) el.textContent = `${k.toUpperCase()}: ${b.inventory[k]}`;
+                }
+                if (b.outputBuffer) {
+                    let el = document.getElementById('insp-output');
+                    if (el) el.textContent = `OUT: ${b.outputBuffer.toUpperCase()} (x${b.outputCount})`;
+                }
             }
-            document.getElementById('insp-content').innerHTML = html;
         }
 
         function updateUI() {
