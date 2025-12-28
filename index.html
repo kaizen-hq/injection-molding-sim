@@ -193,20 +193,19 @@
             justify-content: center;
             font-size: 20px;
             font-weight: bold;
-            color: var(--usa-white);
-            background: var(--usa-blue);
             border: 3px solid var(--usa-red);
             border-radius: 50%;
             box-shadow: 0 0 15px var(--usa-red);
             z-index: 20;
             font-family: 'Courier New', monospace;
-            animation: colorCycle 18s linear infinite;
         }
         .year-badge-left {
             left: calc(var(--tile-size) * -1px);
+            animation: yearColorSwitchReverse 12s ease-in-out infinite;
         }
         .year-badge-right {
             right: calc(var(--tile-size) * -1px);
+            animation: yearColorSwitch 12s ease-in-out infinite;
         }
 
         .logo-badge {
@@ -254,6 +253,34 @@
             0%, 20% { opacity: 0; }
             30%, 70% { opacity: 1; }
             80%, 100% { opacity: 0; }
+        }
+        @keyframes yearColorSwitch {
+            0%, 20% {
+                background: var(--usa-blue);
+                color: var(--usa-white);
+            }
+            30%, 70% {
+                background: var(--usa-white);
+                color: var(--usa-blue);
+            }
+            80%, 100% {
+                background: var(--usa-blue);
+                color: var(--usa-white);
+            }
+        }
+        @keyframes yearColorSwitchReverse {
+            0%, 20% {
+                background: var(--usa-white);
+                color: var(--usa-blue);
+            }
+            30%, 70% {
+                background: var(--usa-blue);
+                color: var(--usa-white);
+            }
+            80%, 100% {
+                background: var(--usa-white);
+                color: var(--usa-blue);
+            }
         }
 
         #game-container {
