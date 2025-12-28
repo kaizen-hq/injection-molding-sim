@@ -2018,7 +2018,9 @@
                     }
 
                     // Warning Check
-                    if (b.outputBuffer && b.outputCount >= (b.type.id.includes('mega')?5:1)) warning = true; // Mega holds 5
+                    // Sources always hold 1, mega machines (CNC/PRESS) hold 5, regular machines hold 1
+                    let threshold = b.type.output ? 1 : (b.type.id.includes('mega') ? 5 : 1);
+                    if (b.outputBuffer && b.outputCount >= threshold) warning = true;
 
                     // Blinking Logic
                     let blinkOn = Math.floor(Date.now() / 300) % 2 === 0;
