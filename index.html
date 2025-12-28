@@ -1303,6 +1303,10 @@
             if (loadGameState()) {
                 gameRunning = true;
                 document.getElementById('modal-overlay').style.display = 'none';
+            } else {
+                // No saved game, show intro modal so user can start fresh
+                document.getElementById('modal-overlay').style.display = 'flex';
+                document.getElementById('intro-modal').style.display = 'block';
             }
         }
 
