@@ -192,6 +192,23 @@
                 <strong>SMART ARM Filter System</strong><span class="badge badge-new">New</span>
                 <p style="margin-top: 10px;">SMART ARMs can filter items by type, only picking up selected item types (PLASTIC, STEEL, MOLD, or PART).</p>
             </li>
+
+            <li class="feature">
+                <strong>Enhanced Production Metrics Dashboard</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Expanded from 3 to 5 independent real-time graphs, each with auto-scaling:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">📊 <strong>PLASTIC RATE</strong> - Cyan line tracking plastic pellet production rate</li>
+                    <li style="background: none; border: none; padding: 5px 0;">⚙️ <strong>STEEL RATE</strong> - Silver line (#c0c0c0) tracking steel block production rate</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🔧 <strong>TOOLING RATE</strong> - Blue line tracking combined mold production (regular + quad molds)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">⭐ <strong>PARTS RATE</strong> - Yellow line tracking finished parts output rate</li>
+                    <li style="background: none; border: none; padding: 5px 0;">💰 <strong>REVENUE RATE</strong> - Green line tracking income per minute</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>Dynamic Inspector Positioning</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Building inspector now positions itself intelligently near the inspected building instead of fixed corner placement. Automatically adjusts position to stay within grid bounds, preferring right, then left, then below placement.</p>
+            </li>
         </ul>
 
         <h2>🐛 Bug Fixes</h2>
@@ -230,6 +247,11 @@
                 <strong>Fixed Victory Report Element</strong><span class="badge badge-fix">Fix</span>
                 <p style="margin-top: 10px;">Removed errant element in end game that was breaking the victory report display.</p>
             </li>
+
+            <li class="fix">
+                <strong>Fixed Quad Mold Metrics Tracking</strong><span class="badge badge-fix">Fix</span>
+                <p style="margin-top: 10px;">MEGA CNC quad mold production now correctly tracked in tooling rate metrics. Previously only regular molds from standard CNCs were counted.</p>
+            </li>
         </ul>
 
         <h2>⚡ Gameplay Improvements</h2>
@@ -262,6 +284,21 @@
             <li class="improvement">
                 <strong>Naming Convention Consistency</strong><span class="badge badge-improved">Improved</span>
                 <p style="margin-top: 10px;">MEGA tier equipment standardized with '_M' suffix and 'M' icon (PRESS_F renamed to PRESS_M, icon changed from 🏭+ to 🏭M).</p>
+            </li>
+
+            <li class="improvement">
+                <strong>Inspector Right-Click UX</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">Right-clicking when inspector is open now closes the inspector instead of deleting the building. Prevents accidental deletions and provides more intuitive two-step interaction (first close inspector, then delete if desired).</p>
+            </li>
+
+            <li class="improvement">
+                <strong>Independent Graph Scaling</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">Each production graph now auto-scales independently based on its own data range, making trends easier to visualize regardless of relative magnitudes between different metrics.</p>
+            </li>
+
+            <li class="improvement">
+                <strong>Code Quality: Descriptive Variable Names</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">Refactored graph variables and canvas IDs for clarity: <code>gResCanvas → gPlasticCanvas</code>, <code>gProdCanvas → gPartsCanvas</code>, <code>graphResources → graphPlastic</code>, <code>graphProduction → graphParts</code>.</p>
             </li>
         </ul>
 
@@ -327,11 +364,11 @@
 
         <h2>📊 Statistics</h2>
         <ul>
-            <li class="improvement">Total Commits: <strong>40</strong></li>
-            <li class="improvement">New Features: <strong>8 major features</strong></li>
-            <li class="improvement">Bug Fixes: <strong>7 critical and minor fixes</strong></li>
+            <li class="improvement">Total Commits: <strong>40+</strong></li>
+            <li class="improvement">New Features: <strong>10 major features</strong></li>
+            <li class="improvement">Bug Fixes: <strong>8 critical and minor fixes</strong></li>
             <li class="improvement">New Equipment: <strong>4 MEGA tier variants</strong></li>
-            <li class="improvement">UI/UX Improvements: <strong>Complete theme overhaul + 6 improvements</strong></li>
+            <li class="improvement">UI/UX Improvements: <strong>Complete theme overhaul + 9 improvements</strong></li>
         </ul>
 
         <div style="text-align: center; margin-top: 40px;">
