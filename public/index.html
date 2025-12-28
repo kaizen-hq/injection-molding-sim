@@ -71,7 +71,7 @@
 
         @media (max-width: 1050px), (max-height: 700px) {
             #mobile-warning { display: flex; }
-            #game-wrapper, #stats-sidebar, .sparks, #modal-overlay { display: none !important; }
+            #game-wrapper, #stats-sidebar, #left-toolbar, #flyout-panel, .sparks, #modal-overlay { display: none !important; }
         }
 
         /* --- Fireworks Canvas --- */
@@ -443,6 +443,192 @@
         .tool-name { font-size: 9px; color: #fff; text-transform: uppercase; margin-bottom: 2px; }
         .tool-cost { font-size: 9px; color: var(--gold); background: #000; padding: 0 3px; border-radius: 2px; }
 
+        /* --- Left Toolbar & Flyout --- */
+        #left-toolbar {
+            width: 150px;
+            background: linear-gradient(180deg, #333 0%, #222 100%);
+            border-right: 4px solid #444;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .toolbar-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--gold);
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+            margin-bottom: 10px;
+        }
+
+        .tool-slot {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tool-slot:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--usa-blue);
+        }
+
+        .tool-slot.selected {
+            border-color: var(--industrial-orange);
+            background: rgba(255, 102, 0, 0.2);
+        }
+
+        .tool-slot .tool-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .tool-slot .tool-name {
+            flex: 1;
+            font-size: 11px;
+            font-weight: bold;
+            color: #eee;
+        }
+
+        .tool-slot .tool-hotkey {
+            font-size: 9px;
+            color: #888;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        /* Flyout Panel */
+        #flyout-panel {
+            width: 280px;
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-right: 4px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 15px;
+            flex-shrink: 0;
+            transition: opacity 0.1s ease-in-out;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        #flyout-panel.fading {
+            opacity: 0;
+        }
+
+        #flyout-header {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--gold);
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #333;
+            margin-bottom: 15px;
+        }
+
+        #flyout-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .flyout-variant {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 1;
+        }
+
+        /* Hide variants not in active slot */
+        .flyout-variant.hidden {
+            display: none;
+        }
+
+        /* Locked variants (not unlocked yet) */
+        .flyout-variant.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .flyout-variant.locked:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: transparent;
+        }
+
+        /* Selected variant (currently active) */
+        .flyout-variant.selected {
+            border-color: var(--industrial-orange);
+            background: rgba(255, 102, 0, 0.2);
+        }
+
+        /* Hover (unlocked only) */
+        .flyout-variant:not(.locked):hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--usa-blue);
+        }
+
+        .variant-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .variant-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .variant-name {
+            flex: 1;
+            font-weight: bold;
+            color: #eee;
+            font-size: 12px;
+        }
+
+        .variant-hotkey {
+            font-size: 10px;
+            color: #888;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .variant-info {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+            font-size: 10px;
+        }
+
+        .variant-cost {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .variant-level {
+            color: #888;
+        }
+
+        .variant-desc {
+            font-size: 10px;
+            color: #aaa;
+            font-style: italic;
+        }
+
         /* --- Modals & Notifications --- */
         #inspector {
             position: absolute; width: 180px;
@@ -549,6 +735,289 @@
         <canvas id="fireworksCanvas"></canvas>
     </div>
 
+    <!-- Left Toolbar -->
+    <div id="left-toolbar">
+        <div class="toolbar-header">TOOLS</div>
+
+        <!-- Tool Slots -->
+        <div class="tool-slot selected" data-slot="1" data-type="BELT">
+            <div class="tool-icon">▶</div>
+            <div class="tool-name">BELT</div>
+            <div class="tool-hotkey">1</div>
+        </div>
+
+        <div class="tool-slot" data-slot="2" data-type="ARM">
+            <div class="tool-icon">🦾</div>
+            <div class="tool-name">ARM</div>
+            <div class="tool-hotkey">2</div>
+        </div>
+
+        <div class="tool-slot" data-slot="3" data-type="PLASTIC">
+            <div class="tool-icon">🔴</div>
+            <div class="tool-name">PLASTIC</div>
+            <div class="tool-hotkey">3</div>
+        </div>
+
+        <div class="tool-slot" data-slot="4" data-type="STEEL">
+            <div class="tool-icon">⬜</div>
+            <div class="tool-name">STEEL</div>
+            <div class="tool-hotkey">4</div>
+        </div>
+
+        <div class="tool-slot" data-slot="5" data-type="CNC">
+            <div class="tool-icon">⚙️</div>
+            <div class="tool-name">CNC</div>
+            <div class="tool-hotkey">5</div>
+        </div>
+
+        <div class="tool-slot" data-slot="6" data-type="PRESS">
+            <div class="tool-icon">🏭</div>
+            <div class="tool-name">PRESS</div>
+            <div class="tool-hotkey">6</div>
+        </div>
+
+        <div class="tool-slot" data-slot="7" data-type="SELL">
+            <div class="tool-icon">💲</div>
+            <div class="tool-name">SELL</div>
+            <div class="tool-hotkey">7</div>
+        </div>
+    </div>
+
+    <!-- Flyout Panel (Always Visible, Next to Toolbar) -->
+    <div id="flyout-panel">
+        <div id="flyout-header">BELT VARIANTS</div>
+        <div id="flyout-content">
+            <!-- All variants pre-rendered -->
+            <!-- BELT Variants (Slot 1) -->
+            <div class="flyout-variant" data-slot="1" data-building="BELT">
+                <div class="variant-header">
+                    <span class="variant-icon">▶</span>
+                    <span class="variant-name">BELT</span>
+                    <span class="variant-hotkey">Alt+1</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$10</span>
+                    <span class="variant-level">Level 1</span>
+                </div>
+                <div class="variant-desc">Standard Conveyor</div>
+            </div>
+
+            <div class="flyout-variant" data-slot="1" data-building="BELT_F">
+                <div class="variant-header">
+                    <span class="variant-icon">▶▶</span>
+                    <span class="variant-name">FAST BELT</span>
+                    <span class="variant-hotkey">Alt+2</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$50</span>
+                    <span class="variant-level">Level 2</span>
+                </div>
+                <div class="variant-desc">2x Speed</div>
+            </div>
+
+            <!-- ARM Variants (Slot 2) -->
+            <div class="flyout-variant hidden" data-slot="2" data-building="ARM">
+                <div class="variant-header">
+                    <span class="variant-icon">🦾</span>
+                    <span class="variant-name">ARM</span>
+                    <span class="variant-hotkey">Alt+1</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$30</span>
+                    <span class="variant-level">Level 1</span>
+                </div>
+                <div class="variant-desc">Robot Arm</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="2" data-building="ARM_F">
+                <div class="variant-header">
+                    <span class="variant-icon">🔬</span>
+                    <span class="variant-name">FILTER ARM</span>
+                    <span class="variant-hotkey">Alt+2</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$100</span>
+                    <span class="variant-level">Level 2</span>
+                </div>
+                <div class="variant-desc">Item Filtering + 1.5x Speed</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="2" data-building="ARM_S">
+                <div class="variant-header">
+                    <span class="variant-icon">⚡</span>
+                    <span class="variant-name">SMART ARM</span>
+                    <span class="variant-hotkey">Alt+3</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$200</span>
+                    <span class="variant-level">Level 3</span>
+                </div>
+                <div class="variant-desc">Smart Filter + 3x Speed</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="2" data-building="ARM_M">
+                <div class="variant-header">
+                    <span class="variant-icon">🦾M</span>
+                    <span class="variant-name">MEGA ARM</span>
+                    <span class="variant-hotkey">Alt+4</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$2,000</span>
+                    <span class="variant-level">Level 4</span>
+                </div>
+                <div class="variant-desc">Fast + Hyper Reach</div>
+            </div>
+
+            <!-- PLASTIC Variants (Slot 3) -->
+            <div class="flyout-variant hidden" data-slot="3" data-building="SRC_P">
+                <div class="variant-header">
+                    <span class="variant-icon">🔴</span>
+                    <span class="variant-name">PLASTIC</span>
+                    <span class="variant-hotkey">Alt+1</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$100</span>
+                    <span class="variant-level">Level 1</span>
+                </div>
+                <div class="variant-desc">Plastic Pellet Source</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="3" data-building="SRC_P_F">
+                <div class="variant-header">
+                    <span class="variant-icon">🔴+</span>
+                    <span class="variant-name">HI-FLOW PLASTIC</span>
+                    <span class="variant-hotkey">Alt+2</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$250</span>
+                    <span class="variant-level">Level 2</span>
+                </div>
+                <div class="variant-desc">2x Speed</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="3" data-building="SRC_P_M">
+                <div class="variant-header">
+                    <span class="variant-icon">🔴M</span>
+                    <span class="variant-name">MEGA PLASTIC</span>
+                    <span class="variant-hotkey">Alt+3</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$500</span>
+                    <span class="variant-level">Level 4</span>
+                </div>
+                <div class="variant-desc">4x Speed</div>
+            </div>
+
+            <!-- STEEL Variants (Slot 4) -->
+            <div class="flyout-variant hidden" data-slot="4" data-building="SRC_S">
+                <div class="variant-header">
+                    <span class="variant-icon">⬜</span>
+                    <span class="variant-name">STEEL</span>
+                    <span class="variant-hotkey">Alt+1</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$150</span>
+                    <span class="variant-level">Level 1</span>
+                </div>
+                <div class="variant-desc">Steel Block Source</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="4" data-building="SRC_S_F">
+                <div class="variant-header">
+                    <span class="variant-icon">⬜+</span>
+                    <span class="variant-name">HEAVY STEEL</span>
+                    <span class="variant-hotkey">Alt+2</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$350</span>
+                    <span class="variant-level">Level 3</span>
+                </div>
+                <div class="variant-desc">2x Speed</div>
+            </div>
+
+            <!-- CNC Variants (Slot 5) -->
+            <div class="flyout-variant hidden" data-slot="5" data-building="CNC">
+                <div class="variant-header">
+                    <span class="variant-icon">⚙️</span>
+                    <span class="variant-name">MILL</span>
+                    <span class="variant-hotkey">Alt+1</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$500</span>
+                    <span class="variant-level">Level 1</span>
+                </div>
+                <div class="variant-desc">Cuts Steel → Mold</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="5" data-building="CNC_F">
+                <div class="variant-header">
+                    <span class="variant-icon">⚙️+</span>
+                    <span class="variant-name">TURBO MILL</span>
+                    <span class="variant-hotkey">Alt+2</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$1,500</span>
+                    <span class="variant-level">Level 3</span>
+                </div>
+                <div class="variant-desc">2x Speed</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="5" data-building="CNC_M">
+                <div class="variant-header">
+                    <span class="variant-icon">⚙️M</span>
+                    <span class="variant-name">MEGA CNC</span>
+                    <span class="variant-hotkey">Alt+3</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$3,000</span>
+                    <span class="variant-level">Level 4</span>
+                </div>
+                <div class="variant-desc">Cuts Quad-Mold (4x)</div>
+            </div>
+
+            <!-- PRESS Variants (Slot 6) -->
+            <div class="flyout-variant hidden" data-slot="6" data-building="PRESS">
+                <div class="variant-header">
+                    <span class="variant-icon">🏭</span>
+                    <span class="variant-name">PRESS</span>
+                    <span class="variant-hotkey">Alt+1</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$800</span>
+                    <span class="variant-level">Level 1</span>
+                </div>
+                <div class="variant-desc">Plastic + Mold → Part</div>
+            </div>
+
+            <div class="flyout-variant hidden" data-slot="6" data-building="PRESS_M">
+                <div class="variant-header">
+                    <span class="variant-icon">🏭M</span>
+                    <span class="variant-name">MEGA PRESS</span>
+                    <span class="variant-hotkey">Alt+2</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$2,500</span>
+                    <span class="variant-level">Level 4</span>
+                </div>
+                <div class="variant-desc">2x Speed + Quad-Mold</div>
+            </div>
+
+            <!-- SELL Variants (Slot 7) -->
+            <div class="flyout-variant hidden" data-slot="7" data-building="BIN">
+                <div class="variant-header">
+                    <span class="variant-icon">💲</span>
+                    <span class="variant-name">SELL</span>
+                    <span class="variant-hotkey">Alt+1</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$100</span>
+                    <span class="variant-level">Level 1</span>
+                </div>
+                <div class="variant-desc">Market Export</div>
+            </div>
+        </div>
+    </div>
+
     <div id="game-wrapper">
         <div id="game-frame">
             <div class="year-badge year-badge-left">1776</div>
@@ -573,51 +1042,6 @@
                     <div id="insp-content"></div>
                 </div>
             </div>
-        </div>
-
-        <div id="toolbar-wrapper">
-            <div id="tabs">
-                <div class="tab-btn active" id="tab-1">LVL 1</div>
-                <div class="tab-btn" id="tab-2">LVL 2 <span class="lock-icon" style="display: inline;">🔒</span></div>
-                <div class="tab-btn" id="tab-3">LVL 3 <span class="lock-icon" style="display: inline;">🔒</span></div>
-                <div class="tab-btn" id="tab-4">LVL 4 <span class="lock-icon" style="display: inline;">🔒</span></div>
-            </div>
-            <div id="toolbar-container"><div class="tool-btn active">
-                    <div class="tool-key">1</div>
-                    <div class="tool-icon" style="color:#37474f">➡</div>
-                    <div class="tool-name">BELT</div>
-                    <div class="tool-cost">$10</div>
-                </div><div class="tool-btn ">
-                    <div class="tool-key">2</div>
-                    <div class="tool-icon" style="color:#fbc02d">🦾</div>
-                    <div class="tool-name">ARM</div>
-                    <div class="tool-cost">$30</div>
-                </div><div class="tool-btn ">
-                    <div class="tool-key">3</div>
-                    <div class="tool-icon" style="color:#c62828">🔴</div>
-                    <div class="tool-name">PLASTIC</div>
-                    <div class="tool-cost">$100</div>
-                </div><div class="tool-btn ">
-                    <div class="tool-key">4</div>
-                    <div class="tool-icon" style="color:#78909c">⬜</div>
-                    <div class="tool-name">STEEL</div>
-                    <div class="tool-cost">$150</div>
-                </div><div class="tool-btn ">
-                    <div class="tool-key">5</div>
-                    <div class="tool-icon" style="color:#0277bd">⚙️</div>
-                    <div class="tool-name">MILL</div>
-                    <div class="tool-cost">$500</div>
-                </div><div class="tool-btn ">
-                    <div class="tool-key">6</div>
-                    <div class="tool-icon" style="color:#ef6c00">🏭</div>
-                    <div class="tool-name">PRESS</div>
-                    <div class="tool-cost">$800</div>
-                </div><div class="tool-btn ">
-                    <div class="tool-key">7</div>
-                    <div class="tool-icon" style="color:#2e7d32">💲</div>
-                    <div class="tool-name">SELL</div>
-                    <div class="tool-cost">$100</div>
-                </div></div>
         </div>
     </div>
 
@@ -950,16 +1374,19 @@
             BIN: { id: 'bin', name: 'SELL', cost: 100, color: '#2e7d32', icon: '💲', reqLevel: 1, desc: "Market Export. Sells items. PRICES: Part=$45, Mold=$20, Raw=$1." },
         };
 
-        // Define tool slots - each slot shows the best version available at each level
+        // Define tool slots - each slot represents a building type with its variants
         const TOOL_SLOTS = [
-            { slot: 1, variants: ['BELT', 'BELT_F'] },                    // Hotkey 1
-            { slot: 2, variants: ['ARM', 'ARM_F', 'ARM_S', 'ARM_M'] },    // Hotkey 2
-            { slot: 3, variants: ['SRC_P', 'SRC_P_F', 'SRC_P_M'] },       // Hotkey 3
-            { slot: 4, variants: ['SRC_S', 'SRC_S_F'] },                  // Hotkey 4
-            { slot: 5, variants: ['CNC', 'CNC_F', 'CNC_M'] },             // Hotkey 5
-            { slot: 6, variants: ['PRESS', 'PRESS_M'] },                  // Hotkey 6
-            { slot: 7, variants: ['BIN'] },                               // Hotkey 7
+            { slot: 1, type: 'BELT', name: 'BELT', icon: '▶', variants: ['BELT', 'BELT_F'] },
+            { slot: 2, type: 'ARM', name: 'ARM', icon: '🦾', variants: ['ARM', 'ARM_F', 'ARM_S', 'ARM_M'] },
+            { slot: 3, type: 'PLASTIC', name: 'PLASTIC', icon: '🔴', variants: ['SRC_P', 'SRC_P_F', 'SRC_P_M'] },
+            { slot: 4, type: 'STEEL', name: 'STEEL', icon: '⬜', variants: ['SRC_S', 'SRC_S_F'] },
+            { slot: 5, type: 'CNC', name: 'CNC', icon: '⚙️', variants: ['CNC', 'CNC_F', 'CNC_M'] },
+            { slot: 6, type: 'PRESS', name: 'PRESS', icon: '🏭', variants: ['PRESS', 'PRESS_M'] },
+            { slot: 7, type: 'SELL', name: 'SELL', icon: '💲', variants: ['BIN'] },
         ];
+
+        // Alias for clarity in new toolbar code
+        const BUILDING_SLOTS = TOOL_SLOTS;
 
         // Legacy BUILDINGS object for backward compatibility
         const BUILDINGS = ALL_BUILDINGS;
@@ -980,6 +1407,18 @@
         let startTime = 0;
         let selectedTool = 'belt';
         let selectedSlot = 1; // Track which slot number is selected (1-7)
+
+        // Track currently selected variant for each slot
+        let selectedVariants = {
+            1: 'BELT',      // Slot 1: Basic belt
+            2: 'ARM',       // Slot 2: Basic arm
+            3: 'SRC_P',     // Slot 3: Basic plastic source
+            4: 'SRC_S',     // Slot 4: Basic steel source
+            5: 'CNC',       // Slot 5: Basic CNC
+            6: 'PRESS',     // Slot 6: Basic press
+            7: 'BIN'        // Slot 7: Sell bin
+        };
+
         let rotation = 0;
         let isDragging = false;
         let mouseGridPos = { x: -1, y: -1 };
@@ -1293,29 +1732,9 @@
                 let row = []; for (let x = 0; x < GRID_W; x++) row.push(new Tile(x, y));
                 grid.push(row);
             }
-            setupToolbar();
-            // Select first available tool
-            let firstSlot = TOOL_SLOTS[0];
-            let firstTool = null;
-            for (let variantKey of firstSlot.variants) {
-                let variant = ALL_BUILDINGS[variantKey];
-                if (variant.reqLevel <= level) {
-                    if (!firstTool || variant.reqLevel > firstTool.reqLevel) {
-                        firstTool = variant;
-                    }
-                }
-            }
-            if (firstTool) {
-                selectedTool = firstTool.id;
-                updateInfoCard(firstTool);
-            }
-            switchTab(1); 
 
-            // Initialize click listeners for tabs
-            document.getElementById('tab-1').onclick = () => switchTab(1);
-            document.getElementById('tab-2').onclick = () => switchTab(2);
-            document.getElementById('tab-3').onclick = () => switchTab(3);
-            document.getElementById('tab-4').onclick = () => switchTab(4);
+            // Initialize new toolbar system
+            initToolbar();
 
             window.addEventListener('keydown', handleKey);
             canvas.addEventListener('mousedown', handleMouse);
@@ -1396,6 +1815,7 @@
                 level,
                 currentTab,
                 selectedSlot,
+                selectedVariants,
                 hasWon,
                 elapsedTime: Date.now() - startTime,
                 metricsHistory: metrics.history
@@ -1465,8 +1885,13 @@
                 level = state.level;
                 currentTab = state.currentTab || 1;
                 selectedSlot = state.selectedSlot || 1;
+                selectedVariants = state.selectedVariants || selectedVariants;
                 hasWon = state.hasWon || false;
-                switchTab(currentTab);
+
+                // Update toolbar to reflect loaded state
+                updateVariantLockStatus();
+                updateToolbarDisplay();
+
                 metrics.history = state.metricsHistory || [];
 
                 // Restore time (adjust startTime to account for elapsed time)
@@ -1503,8 +1928,11 @@
         function checkLevelUp() {
             let nextLvl = level + 1;
             if (LEVELS[nextLvl] && partsSoldTotal >= LEVELS[nextLvl].reqParts) {
-                level = nextLvl; showNotification(`LEVEL ${level} UNLOCKED`);
-                switchTab(currentTab); 
+                level = nextLvl;
+                showNotification(`LEVEL ${level} UNLOCKED`);
+
+                // Update toolbar to show newly unlocked variants
+                updateVariantLockStatus();
             }
         }
 
@@ -1528,102 +1956,189 @@
         }
 
         // --- Interaction ---
-        function switchTab(t) {
-            // Can't switch to locked tabs
-            if (t > level) {
+        // OLD TOOLBAR FUNCTIONS - NO LONGER USED
+        // function switchTab(t) { ... }  // Removed - tabs no longer exist
+        // function renderLockedToolbar(count) { ... }  // Removed - old toolbar system
+        // function setupToolbar() { ... }  // Removed - replaced by initToolbar
+
+        // ============================================
+        // NEW TOOLBAR SYSTEM FUNCTIONS
+        // ============================================
+
+        function switchToSlot(slotNumber) {
+            selectedSlot = slotNumber;
+            const flyout = document.getElementById('flyout-panel');
+
+            // Fade out animation
+            flyout.classList.add('fading');
+
+            // Wait for fade, then update
+            setTimeout(() => {
+                updateFlyoutDisplay(slotNumber);
+                flyout.classList.remove('fading');  // Fade in
+            }, 100);
+
+            updateToolbarDisplay();
+
+            // Update selectedTool to the currently selected variant for this slot
+            const variantId = selectedVariants[slotNumber];
+            const building = ALL_BUILDINGS[variantId];
+            if (building) {
+                selectedTool = building.id;
+                updateInfoCard(building);
+            }
+        }
+
+        function selectVariant(slotNumber, buildingId) {
+            const building = ALL_BUILDINGS[buildingId];
+
+            // Check if unlocked
+            if (building.reqLevel > level) {
+                showNotification(`UNLOCK AT LEVEL ${building.reqLevel}`);
                 return;
             }
 
-            currentTab = t;
+            // Update selection
+            selectedVariants[slotNumber] = buildingId;
+            selectedTool = building.id;
 
-            document.querySelectorAll('.tab-btn').forEach((el, idx) => {
-                if (idx + 1 === t) el.classList.add('active'); else el.classList.remove('active');
+            // Update displays
+            updateToolbarDisplay();
+            updateVariantSelection();
+            updateInfoCard(building);
+
+            // Save to localStorage
+            saveGameState();
+
+            // Show feedback
+            showNotification(`${building.name} SELECTED`);
+        }
+
+        function cycleVariant(slotNumber) {
+            const slot = BUILDING_SLOTS.find(s => s.slot === slotNumber);
+            if (!slot) return;
+
+            // Get unlocked variants only
+            const unlockedVariants = slot.variants.filter(vId => {
+                const variant = ALL_BUILDINGS[vId];
+                return variant.reqLevel <= level;
             });
 
-            setupToolbar();
+            if (unlockedVariants.length === 0) return;
+
+            // Find current index
+            const currentVariant = selectedVariants[slotNumber];
+            const currentIndex = unlockedVariants.indexOf(currentVariant);
+
+            // Cycle to next
+            const nextIndex = (currentIndex + 1) % unlockedVariants.length;
+            const nextVariant = unlockedVariants[nextIndex];
+
+            // Select it
+            selectVariant(slotNumber, nextVariant);
         }
 
-        function renderLockedToolbar(count) {
-            const tb = document.getElementById('toolbar-container');
-            tb.innerHTML = '';
-            for(let i=0; i<count; i++) {
-                let div = document.createElement('div');
-                div.className = `tool-btn mystery`;
-                div.innerHTML = `
-                    <div class="tool-key">${i+1}</div>
-                    <div class="tool-icon">❓</div>
-                    <div class="tool-name">???</div>
-                `;
-                tb.appendChild(div);
-            }
-        }
+        function updateFlyoutDisplay(slotNumber) {
+            // Update header
+            const slot = BUILDING_SLOTS.find(s => s.slot === slotNumber);
+            if (!slot) return;
 
-        function setupToolbar() {
-            const tb = document.getElementById('toolbar-container');
-            tb.innerHTML = '';
+            document.getElementById('flyout-header').textContent = `${slot.name} VARIANTS`;
 
-            // First, figure out which tool should be selected for the saved slot
-            let targetSlot = TOOL_SLOTS.find(s => s.slot === selectedSlot);
-            if (targetSlot) {
-                let bestVariant = null;
-                for (let variantKey of targetSlot.variants) {
-                    let variant = ALL_BUILDINGS[variantKey];
-                    if (variant.reqLevel <= currentTab) {
-                        if (!bestVariant || variant.reqLevel > bestVariant.reqLevel) {
-                            bestVariant = variant;
-                        }
-                    }
-                }
-                if (bestVariant) {
-                    selectedTool = bestVariant.id;
-                    updateInfoCard(bestVariant);
-                }
-            }
-
-            // Now build the toolbar buttons with correct active state
-            TOOL_SLOTS.forEach((slot, i) => {
-                // Find the highest reqLevel variant that's available up to current tab
-                let bestVariant = null;
-                for (let variantKey of slot.variants) {
-                    let variant = ALL_BUILDINGS[variantKey];
-                    if (variant.reqLevel <= currentTab) {
-                        if (!bestVariant || variant.reqLevel > bestVariant.reqLevel) {
-                            bestVariant = variant;
-                        }
-                    }
-                }
-
-                if (bestVariant) {
-                    let div = document.createElement('div');
-                    div.className = `tool-btn ${selectedTool === bestVariant.id ? 'active' : ''}`;
-                    div.onclick = () => {
-                        selectedSlot = slot.slot;
-                        setupToolbar();
-                    };
-                    div.innerHTML = `
-                        <div class="tool-key">${slot.slot}</div>
-                        <div class="tool-icon" style="color:${bestVariant.color}">${bestVariant.icon}</div>
-                        <div class="tool-name">${bestVariant.name}</div>
-                        <div class="tool-cost">$${bestVariant.cost}</div>
-                    `;
-                    tb.appendChild(div);
+            // Show/hide variants based on slot
+            document.querySelectorAll('.flyout-variant').forEach(variant => {
+                if (parseInt(variant.dataset.slot) === slotNumber) {
+                    variant.classList.remove('hidden');
+                } else {
+                    variant.classList.add('hidden');
                 }
             });
 
-            // Update tab lock states
-            for(let i=1; i<=4; i++) {
-                let el = document.getElementById(`tab-${i}`);
-                let lockIcon = el.querySelector('.lock-icon');
-                if (lockIcon) {
-                    if (level >= i) {
-                        lockIcon.style.display = 'none';
-                    } else {
-                        lockIcon.style.display = 'inline';
-                    }
-                }
-            }
+            // Update lock status based on current level
+            updateVariantLockStatus();
+
+            // Update selection indicators
+            updateVariantSelection();
         }
-        
+
+        function updateVariantLockStatus() {
+            document.querySelectorAll('.flyout-variant').forEach(variant => {
+                const buildingId = variant.dataset.building;
+                const building = ALL_BUILDINGS[buildingId];
+
+                if (building.reqLevel > level) {
+                    variant.classList.add('locked');
+                } else {
+                    variant.classList.remove('locked');
+                }
+            });
+        }
+
+        function updateVariantSelection() {
+            document.querySelectorAll('.flyout-variant').forEach(variant => {
+                const slotNum = parseInt(variant.dataset.slot);
+                const buildingId = variant.dataset.building;
+
+                if (selectedVariants[slotNum] === buildingId) {
+                    variant.classList.add('selected');
+                } else {
+                    variant.classList.remove('selected');
+                }
+            });
+        }
+
+        function updateToolbarDisplay() {
+            document.querySelectorAll('.tool-slot').forEach(slotEl => {
+                const slotNum = parseInt(slotEl.dataset.slot);
+                const selectedBuildingId = selectedVariants[slotNum];
+                const building = ALL_BUILDINGS[selectedBuildingId];
+
+                if (building) {
+                    // Update icon and name to show selected variant
+                    slotEl.querySelector('.tool-icon').textContent = building.icon;
+                    slotEl.querySelector('.tool-name').textContent = building.name;
+                }
+
+                // Highlight active slot
+                if (slotNum === selectedSlot) {
+                    slotEl.classList.add('selected');
+                } else {
+                    slotEl.classList.remove('selected');
+                }
+            });
+        }
+
+        function initToolbar() {
+            // Tool slot clicks
+            document.querySelectorAll('.tool-slot').forEach(slotEl => {
+                slotEl.addEventListener('click', () => {
+                    const slotNum = parseInt(slotEl.dataset.slot);
+                    switchToSlot(slotNum);
+                });
+            });
+
+            // Variant clicks
+            document.querySelectorAll('.flyout-variant').forEach(variantEl => {
+                variantEl.addEventListener('click', () => {
+                    if (variantEl.classList.contains('locked')) return;
+
+                    const slotNum = parseInt(variantEl.dataset.slot);
+                    const buildingId = variantEl.dataset.building;
+                    selectVariant(slotNum, buildingId);
+                });
+            });
+
+            // Initialize display
+            switchToSlot(selectedSlot || 1);  // Start with saved slot or slot 1
+            updateVariantLockStatus();
+        }
+
+        // ============================================
+        // OLD TOOLBAR SYSTEM - FUNCTIONS REMOVED
+        // ============================================
+        // renderLockedToolbar() - removed
+        // setupToolbar() - removed
+
         function updateInfoCard(b) {
             document.getElementById('card-icon').innerText = b.icon;
             document.getElementById('card-icon').style.color = b.color;
@@ -1667,40 +2182,38 @@
                 }
                 return;
             }
-            if (e.key === 'Shift') return;
-            if (e.shiftKey) {
-                if (e.code === 'Digit1') switchTab(1);
-                else if (e.code === 'Digit2') switchTab(2);
-                else if (e.code === 'Digit3') switchTab(3);
-                else if (e.code === 'Digit4') switchTab(4);
-                return;
-            }
+            if (e.key === 'Shift' || e.key === 'Alt') return;
+
             if (e.key.toLowerCase() === 'r') rotation = (rotation + 1) % 4;
             if (e.key === 'Escape') closeInspector();
-            
-            // Use e.code to reliably get digits 1-9
+
+            // New toolbar keyboard controls
             if (e.code.startsWith('Digit')) {
                 let num = parseInt(e.code.replace('Digit',''));
-                if (!isNaN(num) && num >= 1 && num <= 9) {
-                    // Find the slot for this number
-                    let slot = TOOL_SLOTS.find(s => s.slot === num);
-                    if (slot) {
-                        // Find the best variant available at current tab
-                        let bestVariant = null;
-                        for (let variantKey of slot.variants) {
-                            let variant = ALL_BUILDINGS[variantKey];
-                            if (variant.reqLevel <= currentTab) {
-                                if (!bestVariant || variant.reqLevel > bestVariant.reqLevel) {
-                                    bestVariant = variant;
-                                }
-                            }
+                if (!isNaN(num) && num >= 1 && num <= 7) {
+                    // Shift+Number: Quick cycle variant within slot
+                    if (e.shiftKey && !e.altKey) {
+                        cycleVariant(num);
+                        return;
+                    }
+
+                    // Alt+Number: Select variant from current flyout (1-4)
+                    if (e.altKey && !e.shiftKey && num >= 1 && num <= 4) {
+                        e.preventDefault();  // Prevent browser Alt shortcuts
+
+                        const currentSlot = BUILDING_SLOTS.find(s => s.slot === selectedSlot);
+                        if (currentSlot && currentSlot.variants[num - 1]) {
+                            selectVariant(selectedSlot, currentSlot.variants[num - 1]);
+                        } else {
+                            showNotification("VARIANT NOT AVAILABLE");
                         }
-                        if (bestVariant) {
-                            selectedTool = bestVariant.id;
-                            selectedSlot = num;
-                            setupToolbar();
-                            updateInfoCard(bestVariant);
-                        }
+                        return;
+                    }
+
+                    // Plain Number (1-7): Switch slot (updates flyout)
+                    if (!e.shiftKey && !e.altKey) {
+                        switchToSlot(num);
+                        return;
                     }
                 }
             }
