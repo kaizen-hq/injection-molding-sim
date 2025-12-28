@@ -11,19 +11,26 @@
    - Slot 5 is always "CNC" (shows all CNC variants)
    - etc.
 
-2. **Click to Open Flyout**
-   - Click slot → Flyout shows all variants
-   - Press number → Select variant, close flyout
+2. **Flyout Always Visible**
+   - Flyout permanently shows variants for currently selected slot
+   - When switching slots, flyout animates to show new variants
+   - No open/close behavior - always present
 
-3. **Shift+Number Cycles Variants**
-   - Shift+2 → Next ARM variant (no flyout)
-   - Quick switching without menu
+3. **Click to Switch Slots**
+   - Click slot → Flyout updates to show that slot's variants
+   - Smooth animation between variant lists
+   - Currently selected slot highlighted
 
-4. **Currently Selected Shows on Toolbar**
+4. **Shift+Number Cycles Variants**
+   - Shift+2 → Next ARM variant
+   - Flyout updates to show new selection
+   - Quick switching without clicking
+
+5. **Currently Selected Shows on Toolbar**
    - Main button displays active variant icon/name
    - Visual feedback of current selection
 
-5. **Level/Lock Status in Flyout**
+6. **Level/Lock Status in Flyout**
    - Locked variants grayed out
    - Show "Unlock at Level X"
 
@@ -31,49 +38,133 @@
 
 ## Layout Mockup
 
-### Left Sidebar Structure
+### Left Sidebar Structure (Always-Visible Flyout)
 
 ```
-┌──────────────────┐
-│                  │
-│  TOOLS           │  ← Header
-│  ──────────      │
-│                  │
-│  [🚗] BELT    1  │  ← Click or press 1
-│  [🦾S] ARM    2  │  ← Currently: SMART ARM
-│  [🔴M] PLASTIC 3 │  ← Currently: MEGA PLASTIC
-│  [⬜] STEEL    4  │
-│  [⚙️] CNC      5  │
-│  [🏭] PRESS    6  │
-│  [💲] SELL     7  │
-│                  │
-└──────────────────┘
-    ~150px wide
+┌──────────────────┐  ┌─────────────────────┐
+│                  │  │ ARM VARIANTS        │ ← Always visible
+│  TOOLS           │  │                     │    Shows variants
+│  ──────────      │  │ [1] 🦾 ARM     $800 │    for currently
+│                  │  │     Level 1         │    selected slot
+│  [🚗] BELT    1  │  │                     │
+│  [🦾S] ARM*   2  │──│ [2] 🦾+ FAST $1,500│ ← Slot 2 selected
+│  [🔴M] PLASTIC 3 │  │     Level 2         │    (highlighted)
+│  [⬜] STEEL    4  │  │                     │
+│  [⚙️] CNC      5  │  │ [3] 🦾S SMART $1,800│ ⭐
+│  [🏭] PRESS    6  │  │     Level 3         │
+│  [💲] SELL     7  │  │                     │
+│                  │  │ [4] 🦾M MEGA $2,000 │
+└──────────────────┘  │     Level 4 🔒      │
+    ~150px wide       │                     │
+                      └─────────────────────┘
+                          ~250px wide
+
+                      Press 1-4 to select variant
+                      ⭐ = Currently selected
+                      🔒 = Locked
 ```
 
-### Flyout When Clicking ARM (Slot 2)
+### When Switching to PLASTIC (Slot 3)
 
 ```
-┌──────────────────┐         ┌─────────────────────┐
-│  [🚗] BELT    1  │         │ ARM VARIANTS        │
-│  [🦾S] ARM*   2  │────────→│                     │
-│  [🔴M] PLASTIC 3 │         │ [1] 🦾 ARM     $800 │
-│  [⬜] STEEL    4  │         │     Level 1         │
-│  [⚙️] CNC      5  │         │                     │
-│  [🏭] PRESS    6  │         │ [2] 🦾+ FAST $1,500│
-│  [💲] SELL     7  │         │     Level 2         │
-│                  │         │                     │
-└──────────────────┘         │ [3] 🦾S SMART $1,800│ ⭐
-                             │     Level 3         │
-                             │                     │
-                             │ [4] 🦾M MEGA $2,000 │
-                             │     Level 4 🔒      │
-                             │                     │
-                             └─────────────────────┘
-                                      ↑
-                              Press 1-4 to select
-                              ⭐ = Currently selected
-                              🔒 = Locked
+┌──────────────────┐  ┌─────────────────────┐
+│  TOOLS           │  │ PLASTIC VARIANTS    │ ← Animates
+│  ──────────      │  │                     │    from ARM
+│                  │  │ [1] 🔴 SOURCE  $150 │    to PLASTIC
+│  [🚗] BELT    1  │  │     Level 1         │    variants
+│  [🦾S] ARM    2  │  │                     │
+│  [🔴M] PLASTIC*3 │──│ [2] 🔴+ FAST   $300│ ← Slot 3 selected
+│  [⬜] STEEL    4  │  │     Level 2         │
+│  [⚙️] CNC      5  │  │                     │
+│  [🏭] PRESS    6  │  │ [3] 🔴M MEGA   $800│ ⭐
+│  [💲] SELL     7  │  │     Level 4         │
+│                  │  │                     │
+└──────────────────┘  └─────────────────────┘
+
+Flyout content cross-fades to new variants (0.2s animation)
+```
+
+---
+
+## Flyout Animation Behavior
+
+### Always Visible
+- Flyout is **permanently visible** (not a modal/popup)
+- Positioned to the right of the toolbar (~160px from left edge)
+- Part of the left sidebar UI, not an overlay
+
+### Switching Slots (Animated Transition)
+
+When user switches slots (press `2` → `3` or click different slot):
+
+**Animation sequence:**
+1. **Fade out** current variants (0.1s)
+2. **Update** flyout header and content
+3. **Fade in** new variants (0.1s)
+4. **Total:** 0.2s smooth cross-fade
+
+**CSS:**
+```css
+#flyout-content {
+    transition: opacity 0.1s ease-in-out;
+}
+
+/* During transition */
+#flyout-content.fading {
+    opacity: 0;
+}
+```
+
+**JavaScript:**
+```javascript
+function switchToSlot(slotNumber) {
+    activeSlot = slotNumber;
+
+    const content = document.getElementById('flyout-content');
+
+    // Fade out
+    content.classList.add('fading');
+
+    // Wait for fade out, then update content
+    setTimeout(() => {
+        updateFlyoutContent(slotNumber);
+
+        // Fade in
+        content.classList.remove('fading');
+    }, 100);
+
+    // Update toolbar highlights
+    updateToolbarDisplay();
+}
+```
+
+### Selecting Variant (No Animation)
+
+When selecting a variant (Alt+2, clicking, or Shift+cycling):
+- **No flyout animation** (content stays visible)
+- Only updates: toolbar button icon/name, selected indicator (⭐)
+- Instant feedback
+
+---
+
+### SELL Slot (Single Variant)
+
+```
+┌──────────────────┐  ┌─────────────────────┐
+│  TOOLS           │  │ SELL VARIANTS       │
+│  ──────────      │  │                     │
+│                  │  │ [1] 💲 BIN     $100 │ ⭐
+│  [🚗] BELT    1  │  │     Level 1         │
+│  [🦾S] ARM    2  │  │                     │
+│  [🔴M] PLASTIC 3 │  │ Market export.      │
+│  [⬜] STEEL    4  │  │ Sells items.        │
+│  [⚙️] CNC      5  │  │                     │
+│  [🏭] PRESS    6  │  │ (Future variants?)  │
+│  [💲] SELL*    7 │──│                     │
+│                  │  │                     │
+└──────────────────┘  └─────────────────────┘
+
+Even single-variant slots show in flyout for UI consistency
 ```
 
 ---
@@ -84,29 +175,34 @@
 
 | Key | Action |
 |-----|--------|
-| `1-7` | Select building type slot |
-| `1-4` (in flyout) | Select variant from flyout |
-| `Shift+1-7` | Cycle to next variant for that slot |
+| `1-7` | Switch to building type slot (updates flyout) |
+| `Alt+1-4` | Select variant 1-4 from current flyout (Alt = Alternative) |
+| `Shift+1-7` | Quick cycle to next variant for that slot |
 | `R` | Rotate building |
-| `Esc` | Close flyout |
 
 ### Example Workflows
 
-**Workflow 1: Select SMART ARM (with flyout)**
-1. Press `2` → ARM flyout opens
-2. Press `3` → SMART ARM selected, flyout closes
+**Workflow 1: Select SMART ARM**
+1. Press `2` → Switch to ARM slot (flyout updates to show ARM variants)
+2. Press `Alt+3` → SMART ARM selected (3rd variant)
 3. Now placing SMART ARM
 
-**Workflow 2: Cycle through ARMs (no flyout)**
+**Workflow 2: Quick cycle through ARMs**
 1. Press `Shift+2` → Next ARM variant
 2. Press `Shift+2` again → Next variant
 3. Cycles: ARM → FAST → SMART → MEGA → ARM...
 
-**Workflow 3: Quick switch**
+**Workflow 3: Quick switch to save money**
 1. Currently: SMART ARM selected
-2. Press `2` → Flyout opens (SMART ARM highlighted)
-3. Press `1` → Basic ARM selected
+2. Press `2` → ARM slot active (flyout shows ARM variants, SMART highlighted)
+3. Press `Alt+1` → Basic ARM selected
 4. Saves $1,000 for this placement
+
+**Workflow 4: One-handed operation**
+1. Press `5` → CNC slot
+2. Press `Alt+2` → FAST CNC
+3. Place building
+4. All with left hand only!
 
 ---
 
@@ -190,40 +286,76 @@ let openFlyout = null;  // 1-7 or null
 
 ## UI Implementation
 
-### Left Sidebar HTML
+### Left Sidebar HTML (Declarative - No JS String Building)
 
 ```html
-<div id="left-toolbar" style="position: fixed; left: 0; top: 0; height: 100vh; width: 150px; background: var(--panel-bg); border-right: 4px solid var(--usa-blue); display: flex; flex-direction: column; padding: 20px 10px; gap: 10px; z-index: 100;">
-
-    <div style="text-align: center; color: var(--gold); font-weight: bold; margin-bottom: 10px; font-size: 14px;">
-        TOOLS
-    </div>
+<!-- Left Toolbar -->
+<div id="left-toolbar">
+    <div class="toolbar-header">TOOLS</div>
 
     <!-- Tool Slots -->
-    <div id="tool-slot-1" class="tool-slot" data-slot="1" onclick="openFlyout(1)">
+    <div class="tool-slot" data-slot="1" data-type="BELT">
         <div class="tool-icon">🚗</div>
         <div class="tool-name">BELT</div>
         <div class="tool-hotkey">1</div>
     </div>
 
-    <div id="tool-slot-2" class="tool-slot" data-slot="2" onclick="openFlyout(2)">
+    <div class="tool-slot" data-slot="2" data-type="ARM">
         <div class="tool-icon">🦾</div>
         <div class="tool-name">ARM</div>
         <div class="tool-hotkey">2</div>
     </div>
 
     <!-- ... slots 3-7 ... -->
-
 </div>
 
-<!-- Flyout Container (positioned absolutely, appears next to toolbar) -->
-<div id="flyout-menu" style="display: none; position: fixed; left: 160px; top: 100px; background: var(--panel-bg); border: 3px solid var(--usa-red); border-radius: 8px; padding: 15px; z-index: 200; min-width: 250px;">
-    <div id="flyout-header" style="color: var(--gold); font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid var(--usa-blue); padding-bottom: 5px;">
-        ARM VARIANTS
+<!-- Flyout (Always Visible, Next to Toolbar) -->
+<div id="flyout-panel">
+    <div id="flyout-header">ARM VARIANTS</div>
+
+    <!-- All variants pre-rendered in HTML -->
+    <!-- JavaScript toggles .hidden class based on active slot -->
+
+    <!-- BELT Variants -->
+    <div class="flyout-variant" data-slot="1" data-building="BELT">
+        <div class="variant-icon">🚗</div>
+        <div class="variant-name">BELT</div>
+        <div class="variant-cost">$20</div>
+        <div class="variant-level">Level 1</div>
+        <div class="variant-hotkey">Alt+1</div>
     </div>
-    <div id="flyout-content">
-        <!-- Variants populated dynamically -->
+
+    <div class="flyout-variant" data-slot="1" data-building="BELT_F">
+        <div class="variant-icon">🚗+</div>
+        <div class="variant-name">FAST BELT</div>
+        <div class="variant-cost">$40</div>
+        <div class="variant-level">Level 2</div>
+        <div class="variant-hotkey">Alt+2</div>
     </div>
+
+    <!-- ARM Variants -->
+    <div class="flyout-variant hidden" data-slot="2" data-building="ARM">
+        <div class="variant-icon">🦾</div>
+        <div class="variant-name">ARM</div>
+        <div class="variant-cost">$800</div>
+        <div class="variant-level">Level 1</div>
+        <div class="variant-hotkey">Alt+1</div>
+    </div>
+
+    <div class="flyout-variant hidden" data-slot="2" data-building="ARM_F">
+        <div class="variant-icon">🦾+</div>
+        <div class="variant-name">FAST ARM</div>
+        <div class="variant-cost">$1,500</div>
+        <div class="variant-level">Level 2</div>
+        <div class="variant-hotkey">Alt+2</div>
+    </div>
+
+    <!-- ... all other variants ... -->
+
+    <!-- JavaScript adds/removes these classes: -->
+    <!-- .hidden - Hide variant (wrong slot) -->
+    <!-- .locked - Grayed out (not unlocked) -->
+    <!-- .selected - Highlight (currently selected) -->
 </div>
 ```
 
@@ -306,7 +438,7 @@ let openFlyout = null;  // 1-7 or null
 </div>
 ```
 
-### Flyout Variant CSS
+### Flyout Variant CSS (Class-Based Display Control)
 
 ```css
 .flyout-variant {
@@ -317,13 +449,15 @@ let openFlyout = null;  // 1-7 or null
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
+    opacity: 1;
 }
 
-.flyout-variant:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--usa-blue);
+/* Hide variants not in active slot */
+.flyout-variant.hidden {
+    display: none;
 }
 
+/* Locked variants (not unlocked yet) */
 .flyout-variant.locked {
     opacity: 0.4;
     cursor: not-allowed;
@@ -332,6 +466,27 @@ let openFlyout = null;  // 1-7 or null
 .flyout-variant.locked:hover {
     background: rgba(255, 255, 255, 0.05);
     border-color: transparent;
+}
+
+/* Selected variant (currently active) */
+.flyout-variant.selected {
+    border-color: var(--industrial-orange);
+    background: rgba(255, 102, 0, 0.2);
+}
+
+/* Hover (unlocked only) */
+.flyout-variant:not(.locked):hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--usa-blue);
+}
+
+/* Fade animation when switching slots */
+#flyout-panel {
+    transition: opacity 0.1s ease-in-out;
+}
+
+#flyout-panel.fading {
+    opacity: 0;
 }
 
 .variant-header {
@@ -436,7 +591,7 @@ function openFlyout(slotNumber) {
             <div class="variant-header">
                 <span class="variant-icon">${variant.icon}</span>
                 <span class="variant-name">${variant.name}</span>
-                <span class="variant-hotkey">[${index + 1}]</span>
+                <span class="variant-hotkey">Alt+${index + 1}</span>
             </div>
             <div class="variant-info">
                 <span class="variant-cost">$${variant.cost.toLocaleString()}</span>
@@ -451,58 +606,98 @@ function openFlyout(slotNumber) {
 }
 ```
 
-### Close Flyout
+### Switch to Slot (Pure Class Manipulation)
 
 ```javascript
-function closeFlyout() {
-    openFlyout = null;
-    document.getElementById('flyout-menu').style.display = 'none';
+function switchToSlot(slotNumber) {
+    activeSlot = slotNumber;
+    const flyout = document.getElementById('flyout-panel');
+
+    // Fade out animation
+    flyout.classList.add('fading');
+
+    // Wait for fade, then update
+    setTimeout(() => {
+        updateFlyoutDisplay(slotNumber);
+        flyout.classList.remove('fading');  // Fade in
+    }, 100);
+
+    updateToolbarDisplay();
 }
 
-// Close on Esc key
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && openFlyout !== null) {
-        closeFlyout();
-    }
-});
+function updateFlyoutDisplay(slotNumber) {
+    // Update header
+    const slotName = document.querySelector(`[data-slot="${slotNumber}"]`).dataset.type;
+    document.getElementById('flyout-header').textContent = `${slotName} VARIANTS`;
 
-// Close when clicking outside
-document.addEventListener('click', (e) => {
-    if (openFlyout !== null) {
-        const flyout = document.getElementById('flyout-menu');
-        const toolbar = document.getElementById('left-toolbar');
-
-        if (!flyout.contains(e.target) && !toolbar.contains(e.target)) {
-            closeFlyout();
+    // Show/hide variants based on slot
+    document.querySelectorAll('.flyout-variant').forEach(variant => {
+        if (parseInt(variant.dataset.slot) === slotNumber) {
+            variant.classList.remove('hidden');
+        } else {
+            variant.classList.add('hidden');
         }
-    }
-});
+    });
+
+    // Update lock status based on current level
+    updateVariantLockStatus();
+
+    // Update selection indicators
+    updateVariantSelection();
+}
+
+function updateVariantLockStatus() {
+    document.querySelectorAll('.flyout-variant').forEach(variant => {
+        const buildingId = variant.dataset.building;
+        const building = ALL_BUILDINGS[buildingId];
+
+        if (building.reqLevel > level) {
+            variant.classList.add('locked');
+        } else {
+            variant.classList.remove('locked');
+        }
+    });
+}
+
+function updateVariantSelection() {
+    document.querySelectorAll('.flyout-variant').forEach(variant => {
+        const slotNum = parseInt(variant.dataset.slot);
+        const buildingId = variant.dataset.building;
+
+        if (selectedVariants[slotNum] === buildingId) {
+            variant.classList.add('selected');
+        } else {
+            variant.classList.remove('selected');
+        }
+    });
+}
 ```
 
 ### Select Variant
 
 ```javascript
-function selectVariant(slotNumber, variantId) {
-    const variant = ALL_BUILDINGS[variantId];
+function selectVariant(slotNumber, buildingId) {
+    const building = ALL_BUILDINGS[buildingId];
 
     // Check if unlocked
-    if (variant.reqLevel > level) {
-        showNotification(`UNLOCK AT LEVEL ${variant.reqLevel}`);
+    if (building.reqLevel > level) {
+        showNotification(`UNLOCK AT LEVEL ${building.reqLevel}`);
         return;
     }
 
     // Update selection
-    selectedVariants[slotNumber] = variantId;
-    selectedTool = variantId;
+    selectedVariants[slotNumber] = buildingId;
+    selectedTool = buildingId;
 
-    // Update toolbar display
+    // Update displays
     updateToolbarDisplay();
-
-    // Close flyout
-    closeFlyout();
+    updateVariantSelection();
 
     // Save to localStorage
     saveToolbarSelection();
+
+    // Show feedback
+    showNotification(`${building.name} SELECTED`);
 }
 ```
 
@@ -542,25 +737,55 @@ function cycleVariant(slotNumber) {
 
 ```javascript
 function updateToolbarDisplay() {
-    BUILDING_SLOTS.forEach(slot => {
-        const slotElement = document.getElementById(`tool-slot-${slot.slot}`);
-        const selectedVariantId = selectedVariants[slot.slot];
-        const variant = ALL_BUILDINGS[selectedVariantId];
+    document.querySelectorAll('.tool-slot').forEach(slotEl => {
+        const slotNum = parseInt(slotEl.dataset.slot);
+        const selectedBuildingId = selectedVariants[slotNum];
+        const building = ALL_BUILDINGS[selectedBuildingId];
 
-        // Update icon
-        slotElement.querySelector('.tool-icon').textContent = variant.icon;
+        // Update icon and name
+        slotEl.querySelector('.tool-icon').textContent = building.icon;
+        slotEl.querySelector('.tool-name').textContent = building.name;
 
-        // Update name (show variant name, not type name)
-        slotElement.querySelector('.tool-name').textContent = variant.name;
-
-        // Highlight if selected for placement
-        if (selectedTool === selectedVariantId) {
-            slotElement.classList.add('selected');
+        // Highlight active slot
+        if (slotNum === activeSlot) {
+            slotEl.classList.add('active');
         } else {
-            slotElement.classList.remove('selected');
+            slotEl.classList.remove('active');
         }
     });
 }
+```
+
+### Event Listeners Setup (Declarative)
+
+```javascript
+function initToolbar() {
+    // Tool slot clicks
+    document.querySelectorAll('.tool-slot').forEach(slotEl => {
+        slotEl.addEventListener('click', () => {
+            const slotNum = parseInt(slotEl.dataset.slot);
+            switchToSlot(slotNum);
+        });
+    });
+
+    // Variant clicks
+    document.querySelectorAll('.flyout-variant').forEach(variantEl => {
+        variantEl.addEventListener('click', () => {
+            if (variantEl.classList.contains('locked')) return;
+
+            const slotNum = parseInt(variantEl.dataset.slot);
+            const buildingId = variantEl.dataset.building;
+            selectVariant(slotNum, buildingId);
+        });
+    });
+
+    // Initialize display
+    switchToSlot(1);  // Start with BELT slot
+    updateVariantLockStatus();
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', initToolbar);
 ```
 
 ### Keyboard Handling
@@ -569,37 +794,31 @@ function updateToolbarDisplay() {
 function handleKey(e) {
     // Existing keys (I, V, R, etc.) ...
 
-    // Number keys 1-7 (without Shift)
-    if (!e.shiftKey && e.key >= '1' && e.key <= '7') {
+    // Number keys 1-7: Switch slot (updates flyout)
+    if (!e.shiftKey && !e.altKey && e.key >= '1' && e.key <= '7') {
         const slotNumber = parseInt(e.key);
-
-        if (openFlyout === slotNumber) {
-            // Flyout already open for this slot, close it
-            closeFlyout();
-        } else if (openFlyout !== null) {
-            // Different flyout open, switch to this one
-            openFlyout(slotNumber);
-        } else {
-            // No flyout open, open this one
-            openFlyout(slotNumber);
-        }
+        switchToSlot(slotNumber);  // Updates flyout to show this slot's variants
         return;
     }
 
-    // Shift+Number: Cycle variant
-    if (e.shiftKey && e.key >= '1' && e.key <= '7') {
+    // Shift+Number: Quick cycle variant
+    if (e.shiftKey && !e.altKey && e.key >= '1' && e.key <= '7') {
         const slotNumber = parseInt(e.key);
         cycleVariant(slotNumber);
         return;
     }
 
-    // Number keys 1-4 inside flyout (select variant)
-    if (openFlyout !== null && e.key >= '1' && e.key <= '4') {
-        const variantIndex = parseInt(e.key) - 1;
-        const slot = BUILDING_SLOTS.find(s => s.slot === openFlyout);
+    // Alt+Number: Select variant from current flyout (Alt = Alternative)
+    if (e.altKey && e.key >= '1' && e.key <= '4') {
+        e.preventDefault();  // Prevent browser Alt shortcuts
 
-        if (slot && slot.variants[variantIndex]) {
-            selectVariant(openFlyout, slot.variants[variantIndex]);
+        const variantIndex = parseInt(e.key) - 1;
+        const currentSlot = BUILDING_SLOTS.find(s => s.slot === activeSlot);
+
+        if (currentSlot && currentSlot.variants[variantIndex]) {
+            selectVariant(activeSlot, currentSlot.variants[variantIndex]);
+        } else {
+            showNotification("VARIANT NOT AVAILABLE");
         }
         return;
     }
