@@ -656,7 +656,7 @@
         <div class="graph-section">
             <div class="graph-container">
                 <div class="graph-label">PLASTIC RATE</div>
-                <canvas id="graphResources" width="240" height="80"></canvas>
+                <canvas id="graphPlastic" width="240" height="80"></canvas>
             </div>
             <div class="graph-container">
                 <div class="graph-label">STEEL RATE</div>
@@ -668,7 +668,7 @@
             </div>
             <div class="graph-container">
                 <div class="graph-label">PARTS RATE</div>
-                <canvas id="graphProduction" width="240" height="80"></canvas>
+                <canvas id="graphParts" width="240" height="80"></canvas>
             </div>
             <div class="graph-container">
                 <div class="graph-label">REVENUE RATE ($/min)</div>
@@ -1240,10 +1240,10 @@
             canvas.width = TILE_SIZE * GRID_W;
             canvas.height = TILE_SIZE * GRID_H;
             ctx = canvas.getContext('2d');
-            gPlasticCanvas = document.getElementById('graphResources'); gPlasticCtx = gPlasticCanvas.getContext('2d');
+            gPlasticCanvas = document.getElementById('graphPlastic'); gPlasticCtx = gPlasticCanvas.getContext('2d');
             gSteelCanvas = document.getElementById('graphSteel'); gSteelCtx = gSteelCanvas.getContext('2d');
             gToolCanvas = document.getElementById('graphTooling'); gToolCtx = gToolCanvas.getContext('2d');
-            gPartsCanvas = document.getElementById('graphProduction'); gPartsCtx = gPartsCanvas.getContext('2d');
+            gPartsCanvas = document.getElementById('graphParts'); gPartsCtx = gPartsCanvas.getContext('2d');
             gRevCanvas = document.getElementById('graphRevenue'); gRevCtx = gRevCanvas.getContext('2d');
 
             for (let y = 0; y < GRID_H; y++) {
