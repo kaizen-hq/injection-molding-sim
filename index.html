@@ -928,6 +928,7 @@
         let hasWon = false;
         let startTime = 0;
         let selectedTool = 'belt';
+        let selectedSlot = 1; // Track which slot number is selected (1-7)
         let rotation = 0;
         let isDragging = false;
         let mouseGridPos = { x: -1, y: -1 };
@@ -1325,6 +1326,7 @@
                 totalMoldsMade,
                 level,
                 currentTab,
+                selectedSlot,
                 hasWon,
                 elapsedTime: Date.now() - startTime,
                 metricsHistory: metrics.history
@@ -1393,6 +1395,7 @@
                 totalMoldsMade = state.totalMoldsMade;
                 level = state.level;
                 currentTab = state.currentTab || 1;
+                selectedSlot = state.selectedSlot || 1;
                 hasWon = state.hasWon || false;
                 switchTab(currentTab);
                 metrics.history = state.metricsHistory || [];
@@ -1463,27 +1466,12 @@
             }
 
             currentTab = t;
-            setupToolbar();
-
-            // Update selected tool to first available in this tab
-            let firstSlot = TOOL_SLOTS[0];
-            let firstTool = null;
-            for (let variantKey of firstSlot.variants) {
-                let variant = ALL_BUILDINGS[variantKey];
-                if (variant.reqLevel <= currentTab) {
-                    if (!firstTool || variant.reqLevel > firstTool.reqLevel) {
-                        firstTool = variant;
-                    }
-                }
-            }
-            if (firstTool) {
-                selectedTool = firstTool.id;
-                updateInfoCard(firstTool);
-            }
 
             document.querySelectorAll('.tab-btn').forEach((el, idx) => {
                 if (idx + 1 === t) el.classList.add('active'); else el.classList.remove('active');
             });
+
+            setupToolbar();
         }
 
         function renderLockedToolbar(count) {
@@ -1505,7 +1493,25 @@
             const tb = document.getElementById('toolbar-container');
             tb.innerHTML = '';
 
-            // For each slot, find the best variant available up to current tab
+            // First, figure out which tool should be selected for the saved slot
+            let targetSlot = TOOL_SLOTS.find(s => s.slot === selectedSlot);
+            if (targetSlot) {
+                let bestVariant = null;
+                for (let variantKey of targetSlot.variants) {
+                    let variant = ALL_BUILDINGS[variantKey];
+                    if (variant.reqLevel <= currentTab) {
+                        if (!bestVariant || variant.reqLevel > bestVariant.reqLevel) {
+                            bestVariant = variant;
+                        }
+                    }
+                }
+                if (bestVariant) {
+                    selectedTool = bestVariant.id;
+                    updateInfoCard(bestVariant);
+                }
+            }
+
+            // Now build the toolbar buttons with correct active state
             TOOL_SLOTS.forEach((slot, i) => {
                 // Find the highest reqLevel variant that's available up to current tab
                 let bestVariant = null;
@@ -1521,7 +1527,10 @@
                 if (bestVariant) {
                     let div = document.createElement('div');
                     div.className = `tool-btn ${selectedTool === bestVariant.id ? 'active' : ''}`;
-                    div.onclick = () => { selectedTool = bestVariant.id; setupToolbar(); updateInfoCard(bestVariant); };
+                    div.onclick = () => {
+                        selectedSlot = slot.slot;
+                        setupToolbar();
+                    };
                     div.innerHTML = `
                         <div class="tool-key">${slot.slot}</div>
                         <div class="tool-icon" style="color:${bestVariant.color}">${bestVariant.icon}</div>
@@ -1614,6 +1623,7 @@
                         }
                         if (bestVariant) {
                             selectedTool = bestVariant.id;
+                            selectedSlot = num;
                             setupToolbar();
                             updateInfoCard(bestVariant);
                         }
