@@ -5,6 +5,16 @@
     <title>American Manufacturing 2026</title>
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <link rel="icon" type="image/png" href="images/favicon.png">
+    <script>
+        // Set grid dimensions as CSS variables before page renders
+        // Define as global constants for use throughout the app
+        window.TILE_SIZE = 40;
+        window.GRID_W = 35;
+        window.GRID_H = 32;
+        document.documentElement.style.setProperty('--tile-size', TILE_SIZE);
+        document.documentElement.style.setProperty('--grid-w', GRID_W);
+        document.documentElement.style.setProperty('--grid-h', GRID_H);
+    </script>
     <style>
         :root {
             --bg-color: #1a2634;
@@ -247,8 +257,8 @@
         }
 
         #game-container {
-            width: TILE_SIZE * GRID_W;
-            height: TILE_SIZE * GRID_H;
+            width: calc(var(--tile-size) * var(--grid-w) * 1px);
+            height: calc(var(--tile-size) * var(--grid-h) * 1px);
             cursor: crosshair;
             overflow: hidden;
             background: #1e2430;
@@ -808,9 +818,10 @@
     </div>
 
     <script>
-        const TILE_SIZE = 40; 
-        const GRID_W = 35;
-        const GRID_H = 32;
+        // Grid dimensions are defined in head script
+        const TILE_SIZE = window.TILE_SIZE;
+        const GRID_W = window.GRID_W;
+        const GRID_H = window.GRID_H;
         const TICK_RATE = 1000 / 60;
 
         const C_PLASTIC = '#d32f2f';
