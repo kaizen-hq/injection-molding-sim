@@ -61,7 +61,7 @@
 
         @media (max-width: 1050px), (max-height: 700px) {
             #mobile-warning { display: flex; }
-            #game-wrapper, #stats-sidebar, .sparks { display: none !important; }
+            #game-wrapper, #stats-sidebar, .sparks, #modal-overlay { display: none !important; }
         }
 
         /* --- Fireworks Canvas --- */
@@ -425,7 +425,7 @@
 
         #modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 100;
+            background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 100;
         }
         
         /* Intro Modal */
