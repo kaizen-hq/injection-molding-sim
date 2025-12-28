@@ -185,9 +185,9 @@
 
         .year-badge {
             position: absolute;
-            top: -20px;
-            width: 60px;
-            height: 60px;
+            top: calc(var(--tile-size) * -0.5px);
+            width: calc(var(--tile-size) * 1.5px);
+            height: calc(var(--tile-size) * 1.5px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -203,17 +203,17 @@
             animation: colorCycle 18s linear infinite;
         }
         .year-badge-left {
-            left: -40px;
+            left: calc(var(--tile-size) * -1px);
         }
         .year-badge-right {
-            right: -40px;
+            right: calc(var(--tile-size) * -1px);
         }
 
         .logo-badge {
             position: absolute;
-            bottom: -20px;
-            width: 60px;
-            height: 60px;
+            bottom: calc(var(--tile-size) * -0.5px);
+            width: calc(var(--tile-size) * 1.5px);
+            height: calc(var(--tile-size) * 1.5px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -225,10 +225,10 @@
             overflow: hidden;
         }
         .logo-badge-left {
-            left: -40px;
+            left: calc(var(--tile-size) * -1px);
         }
         .logo-badge-right {
-            right: -40px;
+            right: calc(var(--tile-size) * -1px);
         }
         .logo-badge img {
             width: 100%;
