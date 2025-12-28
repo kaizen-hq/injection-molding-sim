@@ -1752,10 +1752,13 @@
 
              // Calculate Grade
              let elapsedSec = (Date.now() - startTime) / 1000;
-             let grade = 'C';
-             if(elapsedSec < 300) grade = 'S'; // 5 mins
-             else if(elapsedSec < 600) grade = 'A'; // 10 mins
-             else if(elapsedSec < 900) grade = 'B'; // 15 mins
+             let grade = 'F';
+             if(elapsedSec < 900) grade = 'S'; // 15 mins
+             else if(elapsedSec < 1500) grade = 'A'; // 25 mins
+             else if(elapsedSec < 2100) grade = 'B'; // 35 mins
+             else if(elapsedSec < 2700) grade = 'C'; // 45 mins
+             else if(elapsedSec < 3300) grade = 'D'; // 55 mins
+             // else F (65+ mins)
              console.log('Final grade:', grade);
              document.getElementById('gradeStamp').innerText = grade;
 
