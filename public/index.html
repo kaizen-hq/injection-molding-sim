@@ -295,15 +295,15 @@
 
         /* --- Sidebar --- */
         #stats-sidebar {
-            width: 300px; 
+            width: 360px;
             background: linear-gradient(180deg, #333 0%, #222 100%);
             border-left: 4px solid #444;
             display: flex;
             flex-direction: column;
-            padding: 15px;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            padding: 8px 8px 0;
             z-index: 10;
-            overflow-y: auto; 
+            overflow-y: auto;
+            height: 100vh;
         }
 
         .panel-header {
@@ -317,7 +317,6 @@
 
         .stat-card {
             background: #000; border: 2px solid #555; padding: 10px; margin-bottom: 10px;
-            box-shadow: inset 0 0 10px #000; position: relative; flex-shrink: 0;
         }
         .stat-big { font-size: 20px; font-weight: bold; color: var(--led-green); text-shadow: 0 0 4px var(--led-green); }
         .stat-label { font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 2px; }
@@ -336,16 +335,14 @@
         }
         
         #tool-info-card {
-            background: #1a1a1a; 
-            border: 2px solid #666; 
+            background: #1a1a1a;
+            border: 2px solid #666;
             border-top: 4px solid #888;
-            padding: 10px;
             margin-top: auto;
-            margin-bottom: 10px;
+            margin-bottom: 32px;
             display: flex; flex-direction: column; align-items: center;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            position: relative;
         }
         /* Blue Screen Effect */
         .info-screen {
@@ -355,7 +352,6 @@
             padding: 8px;
             box-sizing: border-box;
             display: flex; flex-direction: column; align-items: center;
-            margin-bottom: 5px;
         }
         
         .card-icon { font-size: 32px; margin-bottom: 5px; filter: drop-shadow(0 2px 4px #000); }
@@ -372,6 +368,8 @@
         .controls-panel {
             background: #111; border: 1px solid #444; padding: 10px;
             border-radius: 4px; font-size: 11px; color: #aaa;
+            margin-top: auto;
+            margin-bottom: 32px;
         }
         .control-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
         kbd { background: #333; color: #fff; padding: 1px 4px; border: 1px solid #555; border-radius: 3px; font-weight: bold; font-family: monospace;}
@@ -453,6 +451,7 @@
             padding: 20px 10px;
             gap: 8px;
             flex-shrink: 0;
+            height: 100vh;
         }
 
         .toolbar-header {
@@ -519,7 +518,7 @@
             flex-shrink: 0;
             transition: opacity 0.1s ease-in-out;
             overflow-y: auto;
-            max-height: 100vh;
+            height: 100vh;
         }
 
         #flyout-panel.fading {
@@ -1016,6 +1015,22 @@
                 <div class="variant-desc">Market Export</div>
             </div>
         </div>
+
+        <!-- Info Card -->
+        <div id="tool-info-card">
+            <div class="info-screen">
+                <div class="card-icon" id="card-icon" style="color: rgb(55, 71, 79);">➡</div>
+                <div class="card-title" id="card-title">BELT</div>
+                <div class="card-desc" id="card-desc">Standard Conveyor. Moves items forward continuously.</div>
+
+                <!-- Status Legend -->
+                <div class="status-legend" id="status-legend" style="display:none;">
+                    <div class="legend-item"><span class="dot" style="background:#39ff14"></span> OK</div>
+                    <div class="legend-item"><span class="dot" style="background:#ffd700"></span> FULL</div>
+                    <div class="legend-item"><span class="dot" style="background:#ff0000"></span> ERR</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="game-wrapper">
@@ -1100,27 +1115,12 @@
             </div>
         </div>
 
-        <!-- Info Card -->
-        <div id="tool-info-card">
-            <div class="info-screen">
-                <div class="card-icon" id="card-icon" style="color: rgb(55, 71, 79);">➡</div>
-                <div class="card-title" id="card-title">BELT</div>
-                <div class="card-desc" id="card-desc">Standard Conveyor. Moves items forward continuously.</div>
-                
-                <!-- Status Legend -->
-                <div class="status-legend" id="status-legend" style="display:none;">
-                    <div class="legend-item"><span class="dot" style="background:#39ff14"></span> OK</div>
-                    <div class="legend-item"><span class="dot" style="background:#ffd700"></span> FULL</div>
-                    <div class="legend-item"><span class="dot" style="background:#ff0000"></span> ERR</div>
-                </div>
-            </div>
-        </div>
-
         <!-- Controls -->
         <div class="controls-panel">
             <div style="margin-bottom:6px; font-weight:bold; color:#fff; border-bottom:1px solid #444; padding-bottom:2px;">OPERATOR CONTROLS</div>
-            <div class="control-row"><span>NAV TABS</span> <kbd>Shift+1-4</kbd></div>
-            <div class="control-row"><span>SELECT TOOL</span> <kbd>1-9</kbd></div>
+            <div class="control-row"><span>SELECT TOOL</span> <kbd>1-7</kbd></div>
+            <div class="control-row"><span>SELECT VARIANT</span> <kbd>Alt+1-4</kbd></div>
+            <div class="control-row"><span>CYCLE VARIANT</span> <kbd>Shift+1-7</kbd></div>
             <div class="control-row"><span>ROTATE</span> <kbd>R</kbd></div>
             <div class="control-row"><span>BUILD/CFG</span> <kbd>L-Click</kbd></div>
             <div class="control-row"><span>SCRAP</span> <kbd>R-Click</kbd></div>
