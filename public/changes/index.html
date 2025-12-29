@@ -174,8 +174,16 @@
             </li>
 
             <li class="feature">
-                <strong>Slot-Based Toolbar System</strong><span class="badge badge-new">New</span>
-                <p style="margin-top: 10px;">Redesigned toolbar shows the best available variant for each equipment type based on current level. 7 hotkey slots (1-7) automatically upgrade to show higher-tier variants as you level up.</p>
+                <strong>Left Toolbar with Flyout System</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Complete toolbar redesign with strategic variant selection:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Left Sidebar:</strong> 7 tool slots (1-7) for building categories (BELT, ARM, PLASTIC, STEEL, CNC, PRESS, SELL)</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Always-Visible Flyout:</strong> Shows all variants for selected slot with lock status, hotkeys (Alt+1-4), and current selection highlighting</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Manual Variant Selection:</strong> Players choose between variants (e.g., Basic ARM $800 vs MEGA ARM $2,000) creating strategic depth</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Quick Cycling:</strong> Shift+1-7 cycles through unlocked variants in each slot</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Smooth Transitions:</strong> Cross-fade animations when switching between slots</li>
+                    <li style="background: none; border: none; padding: 5px 0;"><strong>Tool Info Card:</strong> Moved to bottom of flyout panel with cost, description, and unlock requirements</li>
+                </ul>
             </li>
 
             <li class="feature">
@@ -304,6 +312,11 @@
             <li class="improvement">
                 <strong>Code Quality: Descriptive Variable Names</strong><span class="badge badge-improved">Improved</span>
                 <p style="margin-top: 10px;">Refactored graph variables and canvas IDs for clarity: <code>gResCanvas → gPlasticCanvas</code>, <code>gProdCanvas → gPartsCanvas</code>, <code>graphResources → graphPlastic</code>, <code>graphProduction → graphParts</code>.</p>
+            </li>
+
+            <li class="improvement">
+                <strong>Translucent UI Panels</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">All UI panels (left toolbar, flyout panel, stats sidebar) now feature translucent backgrounds with backdrop blur effects, creating a modern, cohesive aesthetic that allows visibility of game elements and visual effects (sparks, fireworks) behind the interface.</p>
             </li>
         </ul>
 
