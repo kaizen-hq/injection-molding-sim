@@ -2891,30 +2891,33 @@
                 dollars: '#39ff14'
             };
 
-            // EMA smoothing factor (lower = smoother, higher = responsive)
-            const alpha = 0.08;
-            // Hysteresis threshold - EMA must move this far from displayed value to trigger update
-            const hysteresis = 5;
+            // sliding window for responsiveness
+            const windowSize = 10;
+            const recentHistory = metrics.history.slice(-windowSize);
 
-            // Get latest sample, convert to per-minute rate
-            const latest = metrics.history.length > 0
-                ? metrics.history[metrics.history.length - 1]
-                : { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
+            const totals = recentHistory.reduce((acc, m) => {
+                acc.plastic += m.plastic;
+                acc.steel += m.steel;
+                acc.mold += m.mold;
+                acc.part += m.part;
+                acc.dollars += m.dollars;
+                return acc;
+            }, { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 });
+
+            const alpha = 0.25;  // EMA smoothing factor
 
             ['plastic', 'steel', 'mold', 'part', 'dollars'].forEach(key => {
-                const instantRate = latest[key] * 60;  // per-minute
+                const windowLen = recentHistory.length || 1;
+                const rawRate = (totals[key] / windowLen) * 60;
 
-                // Update EMA: new = α × current + (1-α) × previous
-                gaugeEMA[key] = alpha * instantRate + (1 - alpha) * gaugeEMA[key];
+                // Apply EMA to the rate for stability
+                gaugeEMA[key] = alpha * rawRate + (1 - alpha) * gaugeEMA[key];
 
-                // Hysteresis: only update displayed value if EMA moved significantly
+                // Hysteresis: only update display if EMA moved enough from current display
                 const diff = gaugeEMA[key] - gaugeDisplayed[key];
-                if (Math.abs(diff) > hysteresis) {
-                    // Use actual EMA value (rounded to integer for display)
+                if (Math.abs(diff) >= 3) {
                     gaugeDisplayed[key] = Math.round(gaugeEMA[key]);
-                    console.log(`[gauge] ${key}: EMA=${gaugeEMA[key].toFixed(1)} → display=${gaugeDisplayed[key]} (diff=${diff.toFixed(1)})`);
                 }
-
                 const value = gaugeDisplayed[key];
 
                 // Update peak (dynamic scaling)
