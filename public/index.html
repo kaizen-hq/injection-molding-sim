@@ -628,6 +628,49 @@
             font-style: italic;
         }
 
+        /* --- Gauge Column --- */
+        #gauge-column {
+            width: 140px;
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-left: 4px solid #333;
+            border-right: 4px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 8px 10px;
+            padding-top: 135px; /* Align with graphs (skip header + 2 stat cards) */
+            gap: 6px;
+            flex-shrink: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .gauge-header {
+            display: none; /* Hide header to save space for alignment */
+        }
+
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #444;
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        .gauge-canvas {
+            display: block;
+        }
+
+        .gauge-label {
+            font-size: 9px;
+            color: #888;
+            text-transform: uppercase;
+            margin-top: 2px;
+            letter-spacing: 1px;
+        }
+
         /* --- Modals & Notifications --- */
         #inspector {
             position: absolute; width: 180px;
@@ -1060,6 +1103,30 @@
         </div>
     </div>
 
+    <div id="gauge-column">
+        <div class="gauge-header">PRODUCTION</div>
+        <div class="gauge-container" id="gauge-plastic">
+            <canvas class="gauge-canvas" width="100" height="100"></canvas>
+            <div class="gauge-label">PLASTIC</div>
+        </div>
+        <div class="gauge-container" id="gauge-steel">
+            <canvas class="gauge-canvas" width="100" height="100"></canvas>
+            <div class="gauge-label">STEEL</div>
+        </div>
+        <div class="gauge-container" id="gauge-mold">
+            <canvas class="gauge-canvas" width="100" height="100"></canvas>
+            <div class="gauge-label">MOLDS</div>
+        </div>
+        <div class="gauge-container" id="gauge-part">
+            <canvas class="gauge-canvas" width="100" height="100"></canvas>
+            <div class="gauge-label">PARTS</div>
+        </div>
+        <div class="gauge-container" id="gauge-revenue">
+            <canvas class="gauge-canvas" width="100" height="100"></canvas>
+            <div class="gauge-label">$/MIN</div>
+        </div>
+    </div>
+
     <div id="stats-sidebar">
         <div class="panel-header">
             <h1>USA MANUFACTURING 1776 - 2026</h1>
@@ -1394,6 +1461,8 @@
         const SELL_PRICES = { [ITEM.PART]: 45, [ITEM.MOLD]: 20, [ITEM.STEEL]: 1, [ITEM.PLASTIC]: 1, [ITEM.MOLD_QUAD]: 100 };
 
         let canvas, ctx, gPlasticCanvas, gPlasticCtx, gSteelCanvas, gSteelCtx, gToolCanvas, gToolCtx, gPartsCanvas, gPartsCtx, gRevCanvas, gRevCtx;
+        let gaugeCtxs = {};
+        let gaugePeaks = { plastic: 10, steel: 10, mold: 10, part: 10, dollars: 100 };
         let money = 600;
         let lifetimeRevenue = 600;
         let partsSoldTotal = 0;
@@ -1728,6 +1797,14 @@
             gPartsCanvas = document.getElementById('graphParts'); gPartsCtx = gPartsCanvas.getContext('2d');
             gRevCanvas = document.getElementById('graphRevenue'); gRevCtx = gRevCanvas.getContext('2d');
 
+            // Initialize gauge canvases
+            ['plastic', 'steel', 'mold', 'part', 'revenue'].forEach(type => {
+                const key = type === 'revenue' ? 'dollars' : type;
+                const container = document.getElementById(`gauge-${type}`);
+                const canvas = container.querySelector('.gauge-canvas');
+                gaugeCtxs[key] = canvas.getContext('2d');
+            });
+
             for (let y = 0; y < GRID_H; y++) {
                 let row = []; for (let x = 0; x < GRID_W; x++) row.push(new Tile(x, y));
                 grid.push(row);
@@ -1770,6 +1847,9 @@
                 document.getElementById('modal-overlay').style.display = 'flex';
                 document.getElementById('intro-modal').style.display = 'block';
             }
+
+            // Initial gauge draw
+            drawAllGauges();
         }
 
         function startGame() {
@@ -1953,6 +2033,7 @@
             if (metrics.history.length > 60) metrics.history.shift();
             metrics.current = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
             drawGraphs();
+            drawAllGauges();
         }
 
         // --- Interaction ---
@@ -2736,6 +2817,90 @@
             gRevCtx.fillStyle = '#00ff00';
             gRevCtx.fillText(dollarsScale, 2, 10);
             gRevCtx.fillText(dollarsScale/2, 2, 55);
+        }
+
+        function drawGauge(ctx, value, maxVal, color) {
+            const w = ctx.canvas.width;
+            const h = ctx.canvas.height;
+            const cx = w / 2;
+            const cy = h / 2 + 5;
+            const radius = 40;
+            const segmentCount = 30;
+            const startAngle = Math.PI * 0.75;  // 135 degrees
+            const endAngle = Math.PI * 2.25;    // 405 degrees (270° arc)
+            const arcLength = endAngle - startAngle;
+
+            // Clear
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw segments
+            const segmentAngle = arcLength / segmentCount;
+            const filledSegments = Math.min(Math.round((value / maxVal) * segmentCount), segmentCount);
+
+            for (let i = 0; i < segmentCount; i++) {
+                const angle = startAngle + i * segmentAngle;
+                const isFilled = i < filledSegments;
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, angle, angle + segmentAngle * 0.8, false);
+                ctx.arc(cx, cy, radius - 8, angle + segmentAngle * 0.8, angle, true);
+                ctx.closePath();
+
+                if (isFilled) {
+                    ctx.fillStyle = color;
+                    ctx.shadowBlur = 4;
+                    ctx.shadowColor = color;
+                } else {
+                    ctx.fillStyle = '#333';
+                    ctx.shadowBlur = 0;
+                }
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            // Digital readout
+            ctx.fillStyle = color;
+            ctx.font = 'bold 16px "Courier New"';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = color;
+            ctx.fillText(Math.round(value), cx, cy);
+            ctx.shadowBlur = 0;
+
+            // Unit label
+            ctx.fillStyle = '#666';
+            ctx.font = '8px "Courier New"';
+            ctx.fillText('/min', cx, cy + 14);
+        }
+
+        function drawAllGauges() {
+            const colors = {
+                plastic: '#d32f2f',
+                steel: '#cfd8dc',
+                mold: '#81d4fa',
+                part: '#ffd700',
+                dollars: '#39ff14'
+            };
+
+            // Get latest values (convert to per-minute rate)
+            const latest = metrics.history.length > 0
+                ? metrics.history[metrics.history.length - 1]
+                : { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
+
+            ['plastic', 'steel', 'mold', 'part', 'dollars'].forEach(key => {
+                const value = latest[key] * 60;  // per-minute
+
+                // Update peak (dynamic scaling)
+                if (value > gaugePeaks[key]) {
+                    gaugePeaks[key] = Math.ceil(value / 10) * 10 || 10;
+                }
+
+                if (gaugeCtxs[key]) {
+                    drawGauge(gaugeCtxs[key], value, gaugePeaks[key], colors[key]);
+                }
+            });
         }
 
         // --- Drawing ---
