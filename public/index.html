@@ -1470,6 +1470,7 @@
         let gaugePeaks = { plastic: 10, steel: 10, mold: 10, part: 10, dollars: 100 };
         let gaugeEMA = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
         let gaugeDisplayed = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
+        let smoothedHistory = [];  // Stores smoothed rates for graphs
         let money = 600;
         let lifetimeRevenue = 600;
         let partsSoldTotal = 0;
@@ -2742,11 +2743,12 @@
                 ctx.shadowBlur = 4; ctx.shadowColor = color; ctx.stroke(); ctx.shadowBlur = 0;
             }
 
-            let plastics = metrics.history.map(m => m.plastic * 60);
-            let steels = metrics.history.map(m => m.steel * 60);
-            let molds = metrics.history.map(m => m.mold * 60);
-            let parts = metrics.history.map(m => m.part * 60);
-            let dollars = metrics.history.map(m => m.dollars * 60);
+            // Use smoothed EMA values for graphs (already in per-minute rate)
+            let plastics = smoothedHistory.map(m => m.plastic);
+            let steels = smoothedHistory.map(m => m.steel);
+            let molds = smoothedHistory.map(m => m.mold);
+            let parts = smoothedHistory.map(m => m.part);
+            let dollars = smoothedHistory.map(m => m.dollars);
 
             let plasticsMax = Math.max(...plastics, 10);
             let plasticsScale = Math.ceil(plasticsMax / 10) * 10;
@@ -2929,6 +2931,16 @@
                     drawGauge(gaugeCtxs[key], value, gaugePeaks[key], colors[key]);
                 }
             });
+
+            // Store smoothed values for graphs
+            smoothedHistory.push({
+                plastic: gaugeEMA.plastic,
+                steel: gaugeEMA.steel,
+                mold: gaugeEMA.mold,
+                part: gaugeEMA.part,
+                dollars: gaugeEMA.dollars
+            });
+            if (smoothedHistory.length > 60) smoothedHistory.shift();
         }
 
         // --- Drawing ---
