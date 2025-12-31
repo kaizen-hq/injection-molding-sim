@@ -3252,7 +3252,7 @@
             const rect = gameCanvas.getBoundingClientRect();
             const scale = rect.width / gameCanvas.width;
             const visualTileSize = TILE_SIZE * scale;
-            document.documentElement.style.setProperty('--tile-size', visualTileSize);
+            document.documentElement.style.setProperty('--tile-size', Math.min(visualTileSize, TILE_SIZE));
 
             // Hide all badges when they get smaller than 45px
             const badgeSize = visualTileSize * 1.5;
@@ -3261,7 +3261,10 @@
                 badge.style.display = badgeSize < 42 ? 'none' : 'flex';
             });
         }
-        updateVisualTileSize();
+
+        // Wait for layout to complete before initial size update
+        window.addEventListener('load', updateVisualTileSize);
+        requestAnimationFrame(updateVisualTileSize);
 
         window.addEventListener('resize', () => {
             resizeFireworksCanvas();
