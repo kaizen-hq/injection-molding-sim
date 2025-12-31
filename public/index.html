@@ -1470,6 +1470,8 @@
         let gaugePeaks = { plastic: 10, steel: 10, mold: 10, part: 10, dollars: 100 };
         let gaugeEMA = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
         let gaugeDisplayed = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
+        let gaugePrevEMA = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };
+        let gaugeTrendCount = { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 };  // +N = trending up, -N = trending down
         let smoothedHistory = [];  // Stores smoothed rates for graphs
         let money = 600;
         let lifetimeRevenue = 600;
@@ -2920,16 +2922,32 @@
                 // Apply EMA to the rate for stability
                 gaugeEMA[key] = alpha * rawRate + (1 - alpha) * gaugeEMA[key];
 
-                // Snap to zero quickly when window sum is zero
-                if (totals[key] === 0 && gaugeEMA[key] < 5) {
-                    gaugeEMA[key] = 0;
+                // Track trend direction (use relative threshold for small values)
+                const emaDelta = gaugeEMA[key] - gaugePrevEMA[key];
+                const deltaThreshold = Math.max(0.1, gaugeEMA[key] * 0.03);  // 3% or 0.1, whichever is larger
+
+                if (emaDelta > deltaThreshold) {
+                    gaugeTrendCount[key] = Math.max(1, gaugeTrendCount[key] + 1);  // trending up
+                } else if (emaDelta < -deltaThreshold) {
+                    gaugeTrendCount[key] = Math.min(-1, gaugeTrendCount[key] - 1);  // trending down
+                } else if (gaugeTrendCount[key] > 0 && emaDelta < 0) {
+                    gaugeTrendCount[key] = 0;  // was trending up, now reversing
+                } else if (gaugeTrendCount[key] < 0 && emaDelta > 0) {
+                    gaugeTrendCount[key] = 0;  // was trending down, now reversing
+                }
+                // Keep trend count if still moving same direction (even if slowly)
+                gaugePrevEMA[key] = gaugeEMA[key];
+
+                // Decide whether to update display
+                const diff = gaugeEMA[key] - gaugeDisplayed[key];
+                const trending = Math.abs(gaugeTrendCount[key]) >= 3;  // sustained trend for 3+ ticks
+                const threshold = trending ? 1 : 3;  // lower threshold when trending
+
+                // When EMA rounds to 0, show 0 (clean boundary)
+                if (Math.round(gaugeEMA[key]) === 0) {
                     gaugeDisplayed[key] = 0;
-                } else {
-                    // Hysteresis: only update display if EMA moved enough from current display
-                    const diff = gaugeEMA[key] - gaugeDisplayed[key];
-                    if (Math.abs(diff) >= 3) {
-                        gaugeDisplayed[key] = Math.round(gaugeEMA[key]);
-                    }
+                } else if (Math.abs(diff) >= threshold) {
+                    gaugeDisplayed[key] = Math.round(gaugeEMA[key]);
                 }
                 const value = gaugeDisplayed[key];
 
