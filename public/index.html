@@ -543,6 +543,40 @@
             font-size: 16px;
         }
 
+        .direction-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            gap: 8px;
+            margin: 10px auto 0;
+            width: fit-content;
+        }
+
+        .direction-btn {
+            padding: 15px;
+            font-size: 20px;
+            background: rgba(26, 38, 52, 0.95);
+            border: 2px solid #444;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+
+        .direction-btn:hover:not(:disabled) {
+            border-color: #666;
+            background: #333;
+        }
+
+        .direction-btn.active {
+            border: 3px solid var(--usa-red);
+            background: rgba(220, 53, 69, 0.2);
+        }
+
+        .direction-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         .delivery-toggle {
             display: flex;
             align-items: center;
@@ -1333,8 +1367,41 @@
                 <!-- Buffer Panel (show/hide based on building) -->
                 <div id="buffer-panel" class="inspect-panel" style="display: none;">
                     <div class="inspect-panel-header">INVENTORY</div>
-                    <div id="inventory-items">
-                        <!-- Dynamically populated with inventory rows: PLASTIC: 2 [DEL], MOLD: 1 [DEL], OUT: PART (x1) [DEL] -->
+
+                    <!-- Fixed inventory slots (show/hide based on actual inventory) -->
+                    <div class="stat-row inv-slot" id="inv-slot-plastic" style="display: none; padding: 4px 0;">
+                        <span class="inv-label">PLASTIC: <span class="inv-count">0</span></span>
+                        <button class="insp-btn inv-delete" data-item="plastic" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    </div>
+                    <div class="stat-row inv-slot" id="inv-slot-steel" style="display: none; padding: 4px 0;">
+                        <span class="inv-label">STEEL: <span class="inv-count">0</span></span>
+                        <button class="insp-btn inv-delete" data-item="steel" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    </div>
+                    <div class="stat-row inv-slot" id="inv-slot-mold" style="display: none; padding: 4px 0;">
+                        <span class="inv-label">MOLD: <span class="inv-count">0</span></span>
+                        <button class="insp-btn inv-delete" data-item="mold" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    </div>
+                    <div class="stat-row inv-slot" id="inv-slot-mold_quad" style="display: none; padding: 4px 0;">
+                        <span class="inv-label">MOLD QUAD: <span class="inv-count">0</span></span>
+                        <button class="insp-btn inv-delete" data-item="mold_quad" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    </div>
+                    <div class="stat-row inv-slot" id="inv-slot-part" style="display: none; padding: 4px 0;">
+                        <span class="inv-label">PART: <span class="inv-count">0</span></span>
+                        <button class="insp-btn inv-delete" data-item="part" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    </div>
+                    <div class="stat-row inv-slot" id="inv-slot-part_quad" style="display: none; padding: 4px 0;">
+                        <span class="inv-label">PART QUAD: <span class="inv-count">0</span></span>
+                        <button class="insp-btn inv-delete" data-item="part_quad" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    </div>
+
+                    <!-- Output section (show/hide based on building type) -->
+                    <div id="output-section" style="display: none;">
+                        <div style="border-top: 1px solid #444; margin: 8px 0;"></div>
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">OUTPUT</div>
+                        <div class="stat-row" style="padding: 4px 0;">
+                            <span id="output-label">NONE (x0)</span>
+                            <button class="insp-btn" id="output-delete" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                        </div>
                     </div>
                 </div>
 
@@ -1369,10 +1436,20 @@
                     </div>
                 </div>
 
-                <!-- Direction Panel (show/hide based on building) - placeholder for Phase 4 -->
+                <!-- Direction Panel (show/hide based on building) -->
                 <div id="direction-panel" class="inspect-panel" style="display: none;">
                     <div class="inspect-panel-header">DELIVERY DIRECTION</div>
-                    <!-- Will be implemented in Phase 4 -->
+                    <div class="direction-grid">
+                        <div></div>
+                        <button id="dir-btn-up" class="direction-btn" data-dir="3">↑</button>
+                        <div></div>
+                        <button id="dir-btn-left" class="direction-btn" data-dir="2">←</button>
+                        <div style="display: flex; align-items: center; justify-content: center; color: #555; font-size: 20px;">🦾</div>
+                        <button id="dir-btn-right" class="direction-btn" data-dir="0">→</button>
+                        <div></div>
+                        <button id="dir-btn-down" class="direction-btn" data-dir="1">↓</button>
+                        <div></div>
+                    </div>
                 </div>
 
             </div>
@@ -2111,6 +2188,50 @@
                 }
             });
 
+            // Attach direction button event listeners once
+            const directions = [
+                { id: 'dir-btn-right', dir: 0 },  // RIGHT
+                { id: 'dir-btn-down', dir: 1 },   // DOWN
+                { id: 'dir-btn-left', dir: 2 },   // LEFT
+                { id: 'dir-btn-up', dir: 3 }      // UP
+            ];
+            directions.forEach(d => {
+                const btn = document.getElementById(d.id);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        if (inspectedBuilding) {
+                            setArmDirection(d.dir);
+                        }
+                    });
+                }
+            });
+
+            // Attach inventory delete button event listeners once
+            const invItems = ['plastic', 'steel', 'mold', 'mold_quad', 'part', 'part_quad'];
+            invItems.forEach(item => {
+                const slot = document.getElementById(`inv-slot-${item}`);
+                if (slot) {
+                    const deleteBtn = slot.querySelector('.inv-delete');
+                    if (deleteBtn) {
+                        deleteBtn.addEventListener('click', () => {
+                            if (inspectedBuilding) {
+                                clearInv(item);
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Attach output delete button event listener once
+            const outputDeleteBtn = document.getElementById('output-delete');
+            if (outputDeleteBtn) {
+                outputDeleteBtn.addEventListener('click', () => {
+                    if (inspectedBuilding) {
+                        clearOutput();
+                    }
+                });
+            }
+
             setInterval(update, TICK_RATE);
             setInterval(updateMetrics, 1000);
             setInterval(updateInspectorUI, 200);
@@ -2779,6 +2900,16 @@
             if (isInspectMode) updateInspectPanelValues(inspectedBuilding);
         }
 
+        function setArmDirection(dir) {
+            if (inspectedBuilding) {
+                inspectedBuilding.deliverDir = dir;
+                const dirNames = ['RIGHT', 'DOWN', 'LEFT', 'UP'];
+                showNotification(`ARM DIRECTION: ${dirNames[dir]}`);
+                // Update button highlighting
+                if (isInspectMode) updateInspectPanelValues(inspectedBuilding);
+            }
+        }
+
         // Old updateInspectorUI removed - now handled by updateInspectPanels
         function updateInspectorUI() {
             // Stub - old inspector removed, new inspect panels use updateInspectPanels()
@@ -2793,12 +2924,6 @@
             // Buffer panel - show if building has inputs or outputs
             const hasBuffers = building.type.inputs || building.outputBuffer !== undefined;
             document.getElementById('buffer-panel').style.display = hasBuffers ? 'block' : 'none';
-
-            // Show/hide input/output sections within buffer panel
-            const hasInputs = building.type.inputs && !building.type.id.includes('src');
-            const hasOutput = building.outputBuffer !== undefined;
-            document.getElementById('input-buffer-section').style.display = hasInputs ? 'block' : 'none';
-            document.getElementById('output-buffer-section').style.display = hasOutput ? 'block' : 'none';
 
             // Filter panel - show if building can filter
             document.getElementById('filter-panel').style.display = building.type.canFilter ? 'block' : 'none';
@@ -2823,68 +2948,60 @@
             document.getElementById('status-position').textContent = `(${building.x}, ${building.y})`;
             document.getElementById('status-cycles').textContent = building.cycleCount || 0;
 
-            // Update Inventory Panel (like old inspector)
-            const inventoryContainer = document.getElementById('inventory-items');
-            if (inventoryContainer) {
-                inventoryContainer.innerHTML = '';
+            // Update Inventory Panel - show/hide persistent slots
+            // Determine which inventory items to show (same logic as main)
+            const invItems = ['plastic', 'steel', 'mold', 'mold_quad', 'part', 'part_quad'];
+            invItems.forEach(item => {
+                const slot = document.getElementById(`inv-slot-${item}`);
+                if (!slot) return;
 
-                // Determine which inventory items to show (same logic as main)
-                let inventoryKeys = [];
-                for (let k in building.inventory) {
-                    if (building.type.id.includes('src')) continue; // Skip source buildings
-                    if (building.type.id.includes('cnc') && k !== ITEM.STEEL) continue; // CNC only shows steel
-                    if (building.type.id.includes('press') && k === ITEM.STEEL) continue; // Press doesn't show steel
-                    inventoryKeys.push(k);
+                // Check if this item should be shown for this building type
+                let shouldShow = false;
+                if (building.inventory && building.inventory[item] !== undefined) {
+                    // Skip source buildings
+                    if (building.type.id.includes('src')) {
+                        shouldShow = false;
+                    }
+                    // CNC only shows steel
+                    else if (building.type.id.includes('cnc') && item !== ITEM.STEEL) {
+                        shouldShow = false;
+                    }
+                    // Press doesn't show steel
+                    else if (building.type.id.includes('press') && item === ITEM.STEEL) {
+                        shouldShow = false;
+                    }
+                    // Show if inventory exists for this item
+                    else if (building.inventory[item] !== undefined) {
+                        shouldShow = true;
+                    }
                 }
 
-                // Add each inventory item with delete button
-                inventoryKeys.forEach(k => {
-                    const row = document.createElement('div');
-                    row.className = 'stat-row';
-                    row.style.padding = '4px 0';
-                    row.innerHTML = `
-                        <span>${k.toUpperCase()}: ${building.inventory[k]}</span>
-                        <button class="insp-btn" data-item="${k}" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
-                    `;
-                    // Attach delete handler
-                    row.querySelector('.insp-btn').addEventListener('click', () => {
-                        clearInv(k);
-                    });
-                    inventoryContainer.appendChild(row);
-                });
+                // Show/hide slot and update count
+                if (shouldShow) {
+                    slot.style.display = 'flex';
+                    const countSpan = slot.querySelector('.inv-count');
+                    if (countSpan) {
+                        countSpan.textContent = building.inventory[item] || 0;
+                    }
+                } else {
+                    slot.style.display = 'none';
+                }
+            });
 
-                // Add output section if building produces items
-                const hasOutput = building.type.output || building.type.recipe?.out;
+            // Update output section
+            const hasOutput = building.type.output || building.type.recipe?.out;
+            const outputSection = document.getElementById('output-section');
+            if (outputSection) {
                 if (hasOutput) {
-                    // Visual separator
-                    const separator = document.createElement('div');
-                    separator.style.borderTop = '1px solid #444';
-                    separator.style.margin = '8px 0';
-                    inventoryContainer.appendChild(separator);
-
-                    // Output header
-                    const outputHeader = document.createElement('div');
-                    outputHeader.style.fontSize = '10px';
-                    outputHeader.style.color = '#888';
-                    outputHeader.style.marginBottom = '4px';
-                    outputHeader.textContent = 'OUTPUT';
-                    inventoryContainer.appendChild(outputHeader);
-
-                    // Output row
+                    outputSection.style.display = 'block';
                     const outType = building.outputBuffer ? building.outputBuffer.toUpperCase() : 'NONE';
                     const outCount = building.outputCount || 0;
-                    const row = document.createElement('div');
-                    row.className = 'stat-row';
-                    row.style.padding = '4px 0';
-                    row.innerHTML = `
-                        <span>${outType} (x${outCount})</span>
-                        <button class="insp-btn" data-clear="output" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
-                    `;
-                    // Attach delete handler
-                    row.querySelector('.insp-btn').addEventListener('click', () => {
-                        clearOutput();
-                    });
-                    inventoryContainer.appendChild(row);
+                    const outputLabel = document.getElementById('output-label');
+                    if (outputLabel) {
+                        outputLabel.textContent = `${outType} (x${outCount})`;
+                    }
+                } else {
+                    outputSection.style.display = 'none';
                 }
             }
 
@@ -2905,7 +3022,37 @@
                 });
             }
 
-            // Update Direction Panel (will be implemented in Phase 4)
+            // Update Direction Panel
+            if (building.type.canDirectDeliver) {
+                const pickupDir = (building.rot + 2) % 4;  // Opposite of rotation
+                const currentDir = building.deliverDir;
+
+                const dirButtons = [
+                    { id: 'dir-btn-right', dir: 0 },  // RIGHT
+                    { id: 'dir-btn-down', dir: 1 },   // DOWN
+                    { id: 'dir-btn-left', dir: 2 },   // LEFT
+                    { id: 'dir-btn-up', dir: 3 }      // UP
+                ];
+
+                dirButtons.forEach(({ id, dir }) => {
+                    const btn = document.getElementById(id);
+                    if (btn) {
+                        // Reset styles
+                        btn.disabled = false;
+                        btn.classList.remove('active');
+
+                        // Disable pickup direction (can't deliver back where you're picking from)
+                        if (dir === pickupDir) {
+                            btn.disabled = true;
+                        }
+
+                        // Highlight current delivery direction
+                        if (dir === currentDir) {
+                            btn.classList.add('active');
+                        }
+                    }
+                });
+            }
         }
 
         function updateUI() {

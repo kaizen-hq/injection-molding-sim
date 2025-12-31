@@ -105,3 +105,110 @@ plans/            <- Design docs (not deployed)
 ## Deployment
 
 Cloudflare Pages with build output directory set to `public`. No build command needed.
+
+## DOM Manipulation Patterns
+
+**CRITICAL**: This project follows a strict pattern for building interactive UI components to avoid DOM destruction anti-patterns.
+
+### The Anti-Pattern (NEVER DO THIS)
+
+```javascript
+// ❌ WRONG - Destroys and recreates DOM every update
+function updatePanel() {
+    container.innerHTML = '';  // Destroys all elements including buttons
+    container.appendChild(createButton());  // Recreates everything
+}
+setInterval(updatePanel, 500);  // Buttons get destroyed before clicks register
+```
+
+**Problems:**
+- Interactive elements (buttons, inputs) are destroyed before user interactions can complete
+- Event listeners must be constantly re-attached
+- Causes flickering and poor performance
+- Makes UI feel unresponsive and broken
+
+### The Correct Pattern (ALWAYS DO THIS)
+
+**Build structure with HTML/CSS, update values with JavaScript:**
+
+```javascript
+// ✅ CORRECT - Structure created once in HTML
+<div id="status-panel">
+    <span id="status-value">0</span>
+    <button id="status-btn">Click Me</button>
+</div>
+
+// ✅ CORRECT - JavaScript only updates text/values
+function updatePanel(value) {
+    document.getElementById('status-value').textContent = value;
+    // Button persists - no destruction, clicks work reliably
+}
+
+// ✅ CORRECT - Event listeners attached once during init
+document.getElementById('status-btn').addEventListener('click', handler);
+```
+
+### Implementation Rules
+
+1. **Structure in HTML**: Create the full HTML structure with all containers, buttons, and interactive elements
+2. **Style in CSS**: Use CSS classes for all styling, states, and visibility
+3. **JavaScript for values only**: Use JavaScript to:
+   - Update `textContent`, `classList`, `style` properties
+   - Show/hide elements with `display: none/block` or classes
+   - Enable/disable buttons with `disabled` property
+   - NEVER use `innerHTML = ''` or `appendChild()` on elements that update frequently
+
+4. **Event listeners once**: Attach all event listeners during initialization, never in update functions
+
+### Example: Dynamic List Pattern
+
+When you need a dynamic list (like inventory items), use this pattern:
+
+```javascript
+// ✅ CORRECT - Pre-create max slots in HTML
+<div id="inventory">
+    <div class="inv-slot" id="slot-0" style="display: none;">
+        <span class="inv-name"></span>
+        <span class="inv-count"></span>
+        <button class="inv-delete">DEL</button>
+    </div>
+    <div class="inv-slot" id="slot-1" style="display: none;">...</div>
+    <!-- Create enough slots for max items -->
+</div>
+
+// ✅ CORRECT - Show/hide and update slots
+function updateInventory(items) {
+    items.forEach((item, i) => {
+        const slot = document.getElementById(`slot-${i}`);
+        slot.style.display = 'block';
+        slot.querySelector('.inv-name').textContent = item.name;
+        slot.querySelector('.inv-count').textContent = item.count;
+        // Button persists, event listener stays attached
+    });
+    // Hide unused slots
+    for (let i = items.length; i < MAX_SLOTS; i++) {
+        document.getElementById(`slot-${i}`).style.display = 'none';
+    }
+}
+```
+
+### When This Pattern Applies
+
+Use the persistent DOM pattern for:
+- ✅ Panels that update frequently (every 200-500ms)
+- ✅ Interactive elements (buttons, inputs, checkboxes)
+- ✅ Status displays that change in real-time
+- ✅ Any UI that responds to user clicks
+
+You can use dynamic DOM creation for:
+- ✅ One-time initialization
+- ✅ Modals/dialogs that are created once and destroyed on close
+- ✅ Elements that don't update frequently (< once per 5 seconds)
+
+### Debugging DOM Issues
+
+If buttons aren't clickable or UI feels unresponsive:
+1. Check for `innerHTML = ''` in any update functions
+2. Check for `appendChild()` in setInterval or frequent update loops
+3. Verify event listeners are attached during init, not in update functions
+4. Use browser DevTools to watch elements - they shouldn't disappear/reappear

@@ -211,47 +211,51 @@ function showRelevantPanels(building) {
 
 - [x] Update button click handlers
   - [x] Filter buttons: Update building.filter, call updateInspectPanelValues (line 2989-2991)
-  - [ ] Direction buttons: Will be implemented in Phase 4
+  - [x] Direction buttons: Implemented in Phase 4 (lines 2158-2174)
   - [x] clearInv/clearOutput now call updateInspectPanelValues (lines 2879, 2887)
 
 - [x] Update setInterval on line 2027
   - [x] Change from `updateInspectPanels` to custom function
   - [x] Custom function: `if (isInspectMode && inspectedBuilding) updateInspectPanelValues(inspectedBuilding)`
 
-- [ ] Clean up old functions (keeping for reference during transition)
-  - [ ] Remove or stub out `updateInspectPanels()` function (can remove later)
-  - [ ] Remove or refactor `renderInspectPanels()` function (can remove later)
-  - [ ] Keep individual render functions temporarily (renderStatusPanel, etc.) for reference
+- [x] Clean up old functions
+  - [x] Removed `updateInspectPanels()` function
+  - [x] Removed `renderInspectPanels()` function
+  - [x] Removed all old render functions (renderStatusPanel, renderBufferPanel, renderFilterPanel, renderDeliveryPanel, getItemIcon)
+  - [x] Kept `getBuildingStatus()` function (still used by updateInspectPanelValues)
 
-### Phase 2: Restore Insufficient Funds Notification
-1. Verify `#notification` element exists in HTML (line 1320 in unified-inspector)
-2. Verify CSS `.notification` styles are present
-3. Check z-index conflicts (notification is z-index: 50)
-4. Test that `showNotification("INSUFFICIENT FUNDS")` fires on placement failure
+### Phase 2: Restore Insufficient Funds Notification ✅ COMPLETED
+- [x] Verified `#notification` element exists in HTML (line 1446)
+- [x] Verified CSS `.notification` styles are present (lines 945-950)
+- [x] Checked z-index: notification is z-index 50
+- [x] Verified `showNotification("INSUFFICIENT FUNDS")` fires on placement failure (line 2718)
+- [x] Function implementation correct (lines 3019-3023)
 
-### Phase 3: Add Delete Buttons to Buffer Panel
-1. Restore `clearInv(type)` function from main (lines 2478-2483)
-2. Restore `clearOutput()` function from main (lines 2484-2490)
-3. Add delete buttons next to each input item type
-4. Add delete button for output buffer
-5. Wire up buttons to call clearInv/clearOutput (see main lines 1880-1886)
+### Phase 3: Add Delete Buttons to Buffer Panel ✅ COMPLETED
+- [x] Restored `clearInv(type)` function (lines 2830-2835)
+- [x] Restored `clearOutput()` function (lines 2836-2842)
+- [x] Added delete buttons next to each input item type in updateInspectPanelValues (lines 2913-2926)
+- [x] Added delete button for output buffer (lines 2928-2960)
+- [x] Wired up buttons to call clearInv/clearOutput with event listeners
 
-### Phase 4: Replace Delivery Panel with Direction Panel
-1. **REMOVE** `renderDeliveryPanel()` (direct delivery to seller feature)
-2. **REMOVE** `directDeliver` and `deliverTarget` properties/logic
-3. **CREATE** `createDirectionPanel()` based on main lines 1376-1390
-4. Add 3x3 grid with ↑↓←→ buttons
-5. Center cell shows 🦾 icon
-6. Restore `setArmDirection(dir)` function from main (lines 2662-2669)
-7. Disable pickup direction button (opposite of building.rot)
-8. Highlight current `building.deliverDir` selection
-9. Show notification when direction changes
+### Phase 4: Replace Delivery Panel with Direction Panel ✅ COMPLETED
+- [x] **REMOVED** `renderDeliveryPanel()` function
+- [x] **REMOVED** all references to `directDeliver` and `deliverTarget` properties
+- [x] **ADDED** Direction panel HTML structure (lines 1372-1386)
+- [x] Added 3x3 grid with ↑↓←→ buttons using `.direction-grid` and `.direction-btn` classes
+- [x] Center cell shows 🦾 icon
+- [x] Restored `setArmDirection(dir)` function (lines 2844-2852)
+- [x] Added CSS for direction panel (lines 546-578)
+- [x] Attached direction button event listeners once during init (lines 2158-2174)
+- [x] Implemented logic to disable pickup direction button (lines 2999-3001)
+- [x] Implemented logic to highlight current `building.deliverDir` selection (lines 3004-3007)
+- [x] Shows notification when direction changes (line 2848)
 
-### Phase 5: Cleanup
-1. Remove old `#inspector` from canvas ✓ (already done)
-2. Remove old `#arm-config` modal ✓ (already done)
-3. Remove directDeliver/deliverTarget code (incorrect feature)
-4. Ensure all panels use persistent DOM pattern
+### Phase 5: Cleanup ✅ COMPLETED
+- [x] Removed old `#inspector` from canvas (already done)
+- [x] Removed old `#arm-config` modal (already done)
+- [x] Removed renderDeliveryPanel and all directDeliver/deliverTarget code
+- [x] All panels now use persistent DOM pattern (no innerHTML destruction)
 
 ## Visual Style (compact, 280px width)
 
