@@ -1242,6 +1242,19 @@
                 <div class="variant-desc">Fast + Hyper Reach</div>
             </div>
 
+            <div class="flyout-variant hidden" data-slot="2" data-building="ARM_H">
+                <div class="variant-header">
+                    <span class="variant-icon">🦾H</span>
+                    <span class="variant-name">HYPER ARM</span>
+                    <span class="variant-hotkey">Alt+5</span>
+                </div>
+                <div class="variant-info">
+                    <span class="variant-cost">$5,000</span>
+                    <span class="variant-level">Level 5</span>
+                </div>
+                <div class="variant-desc">Extended-Reach (2 tiles) • 75% speed</div>
+            </div>
+
             <!-- PLASTIC Variants (Slot 3) -->
             <div class="flyout-variant hidden" data-slot="3" data-building="SRC_P">
                 <div class="variant-header">
@@ -1823,7 +1836,9 @@
             2: { reqParts: 50 },
             3: { reqParts: 250 },
             4: { reqParts: 1000 },
+            5: { reqParts: 5000 },
         };
+        const MAX_LEVEL = 5;
 
         // Define all building variants
         const ALL_BUILDINGS = {
@@ -1836,6 +1851,7 @@
             ARM_F: { id: 'arm_filter', name: 'FILTER ARM', cost: 100, color: '#8e24aa', icon: '🔬', reqLevel: 2, isArm: true, speed: 1.5, canFilter: true, desc: "Smart Filter Arm. Click placed arm to select item type. Ignores other items." },
             ARM_S: { id: 'arm_smart', name: 'SMART ARM', cost: 200, color: '#006064', icon: '⚡', reqLevel: 3, isArm: true, speed: 3.0, canFilter: true, desc: "High-Speed Servo Arm. Transfers items 3x faster." },
             ARM_M: { id: 'arm_mega', name: 'MEGA ARM', cost: 1000, color: '#64b5f6', icon: '🦾M', reqLevel: 4, isArm: true, speed: 3.0, canFilter: true, canDirectDeliver: true, desc: "Omni-Directional Mega Arm. Click to set delivery direction (Up/Down/Left/Right). 3x speed." },
+            ARM_H: { id: 'arm_hyper', name: 'HYPER ARM', cost: 5000, color: '#00D4FF', icon: '🦾H', reqLevel: 5, isArm: true, speed: 0.75, canFilter: true, canDirectDeliver: false, reachDistance: 2, desc: "Extended-Reach Robotic Arm. Picks up from 2 squares behind, delivers 2 squares forward. 75% speed due to longer travel distance." },
 
             // PLASTIC SOURCE variants
             SRC_P: { id: 'src_p', name: 'PLASTIC', cost: 100, color: '#c62828', icon: '🔴', reqLevel: 1, output: ITEM.PLASTIC, speed: 60, desc: "Infinite source of Red Plastic Pellets. Used in Injection Presses." },
@@ -1862,7 +1878,7 @@
         // Define tool slots - each slot represents a building type with its variants
         const TOOL_SLOTS = [
             { slot: 1, type: 'BELT', name: 'BELT', icon: '▶', variants: ['BELT', 'BELT_F'] },
-            { slot: 2, type: 'ARM', name: 'ARM', icon: '🦾', variants: ['ARM', 'ARM_F', 'ARM_S', 'ARM_M'] },
+            { slot: 2, type: 'ARM', name: 'ARM', icon: '🦾', variants: ['ARM', 'ARM_F', 'ARM_S', 'ARM_M', 'ARM_H'] },
             { slot: 3, type: 'PLASTIC', name: 'PLASTIC', icon: '🔴', variants: ['SRC_P', 'SRC_P_F', 'SRC_P_M'] },
             { slot: 4, type: 'STEEL', name: 'STEEL', icon: '⬜', variants: ['SRC_S', 'SRC_S_F'] },
             { slot: 5, type: 'CNC', name: 'CNC', icon: '⚙️', variants: ['CNC', 'CNC_F', 'CNC_M'] },
@@ -1955,18 +1971,20 @@
                 let speed = this.type.speed * 0.05;
                 // Use deliverDir for delivery target (MEGA ARM can deliver in any cardinal direction)
                 let deliveryDirection = this.type.canDirectDeliver ? this.deliverDir : this.rot;
+                // Use reachDistance for HYPER ARM (2 tiles) or default to 1 for regular ARMs
+                const reachDistance = this.type.reachDistance || 1;
 
                 if (this.heldItem) {
                     if (this.armAnim < 1.0) this.armAnim = Math.min(1.0, this.armAnim + speed);
                     else {
-                        let targetXY = getNeighbor(this.x, this.y, deliveryDirection);
+                        let targetXY = getNeighborAtDistance(this.x, this.y, deliveryDirection, reachDistance);
                         if (this.attemptDrop(targetXY, this.heldItem)) this.heldItem = null;
                     }
                 } else {
                     if (this.armAnim > 0) this.armAnim = Math.max(0, this.armAnim - speed);
                     else {
-                        let sourceXY = getNeighbor(this.x, this.y, (this.rot + 2) % 4);
-                        let targetXY = getNeighbor(this.x, this.y, deliveryDirection);
+                        let sourceXY = getNeighborAtDistance(this.x, this.y, (this.rot + 2) % 4, reachDistance);
+                        let targetXY = getNeighborAtDistance(this.x, this.y, deliveryDirection, reachDistance);
                         let item = this.attemptPickup(sourceXY, targetXY);
                         if (item) this.heldItem = item;
                     }
@@ -2201,6 +2219,14 @@
             if (rot === 1) return { x: x, y: y + 1 };
             if (rot === 2) return { x: x - 1, y: y };
             if (rot === 3) return { x: x, y: y - 1 };
+            return { x, y };
+        }
+        function getNeighborAtDistance(x, y, rot, distance) {
+            // Get neighbor at specified distance (1 = adjacent, 2 = 2 tiles away, etc.)
+            if (rot === 0) return { x: x + distance, y: y };
+            if (rot === 1) return { x: x, y: y + distance };
+            if (rot === 2) return { x: x - distance, y: y };
+            if (rot === 3) return { x: x, y: y - distance };
             return { x, y };
         }
         function isSpaceFree(x, y) {
@@ -3647,11 +3673,23 @@
                 // Swing from -π (behind) to targetAngle (delivery direction)
                 let angleOffset = -Math.PI + b.armAnim * (targetAngle + Math.PI);
                 ctx.rotate(angleOffset);
-                ctx.fillStyle = b.type.color; ctx.fillRect(0, -5, 24, 10);
-                ctx.fillStyle = '#ccc'; ctx.fillRect(22, -6, 6, 12);
+
+                // Scale arm length based on reachDistance (HYPER ARM = 2 tiles)
+                const reachDistance = b.type.reachDistance || 1;
+                const armLength = 24 * reachDistance;
+                const armThickness = Math.min(10, 10 / reachDistance); // Thinner for longer arms
+                const handPos = armLength - 2;
+
+                ctx.fillStyle = b.type.color;
+                ctx.fillRect(0, -armThickness/2, armLength, armThickness);
+                ctx.fillStyle = '#ccc';
+                ctx.fillRect(handPos, -6, 6, 12);
                 if (b.heldItem) {
-                    ctx.save(); ctx.translate(24, 0); ctx.rotate(-(b.rot*Math.PI/2 + angleOffset));
-                    drawItemShape(ctx, b.heldItem); ctx.restore();
+                    ctx.save();
+                    ctx.translate(armLength, 0);
+                    ctx.rotate(-(b.rot*Math.PI/2 + angleOffset));
+                    drawItemShape(ctx, b.heldItem);
+                    ctx.restore();
                 }
             } else if (b.type.id.includes('belt')) {
                 // Horizontal Belt Body (aligned with Right arrow)
@@ -3798,16 +3836,31 @@
             if (!b) return;
             let cx = mouseGridPos.x * TILE_SIZE + TILE_SIZE/2;
             let cy = mouseGridPos.y * TILE_SIZE + TILE_SIZE/2;
-            
+
             ctx.save(); ctx.translate(cx, cy);
-            
+
             ctx.save();
             ctx.rotate(rotation * Math.PI / 2);
             let s = 1 + Math.sin(Date.now()/200)*0.1;
             ctx.scale(s, s);
+
+            // Show pickup/delivery zones at correct distance for HYPER ARM
+            const reachDistance = b.reachDistance || 1;
+            const reachOffset = TILE_SIZE * reachDistance;
+
+            // Green arrow (delivery zone)
             ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-            ctx.beginPath(); ctx.moveTo(10, -8); ctx.lineTo(22, 0); ctx.lineTo(10, 8); ctx.fill();
-            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)'; ctx.beginPath(); ctx.arc(-15, 0, 4, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(reachOffset - 10, -8);
+            ctx.lineTo(reachOffset + 2, 0);
+            ctx.lineTo(reachOffset - 10, 8);
+            ctx.fill();
+
+            // Red circle (pickup zone)
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.beginPath();
+            ctx.arc(-reachOffset, 0, 4, 0, Math.PI*2);
+            ctx.fill();
             ctx.restore();
 
             ctx.globalAlpha = 0.5;
