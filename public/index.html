@@ -59,6 +59,7 @@
             justify-content: center;
             align-items: center; */
             background: var(--bg-color);
+            box-sizing: border-box;
         }
 
         .right-column {
@@ -136,11 +137,13 @@
         /* --- Layout --- */
         #game-wrapper {
             display: flex;
-            padding: 0 2rem;
+            padding: 1rem 2rem;
             /* flex-direction: column;
-            align-items: center;
+            align-items: center;*/
             justify-content: center;
-            position: relative; */
+            /*position: relative;
+            max-width: 100%;
+            max-height: 100%;*/
         }
 
         /* Patriotic Border Container */
@@ -149,8 +152,11 @@
             border: 12px solid var(--usa-blue);
             border-image: repeating-linear-gradient(45deg, var(--usa-red), var(--usa-red) 10px, var(--usa-white) 10px, var(--usa-white) 20px, var(--usa-blue) 20px, var(--usa-blue) 30px) 20;
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            margin: 10px auto;
-            flex-shrink: 0;
+            /* Natural size: 1400x1280 canvas + 24px border = 1424x1304 */
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 35 / 32;
+            width: min(calc(100% - 24px), 1400px);
         }
 
         @keyframes flagWave {
@@ -312,14 +318,18 @@
         }
 
         #game-container {
-            width: calc(var(--tile-size) * var(--grid-w) * 1px);
-            height: calc(var(--tile-size) * var(--grid-h) * 1px);
+            width: 100%;
+            height: 100%;
             cursor: crosshair;
             overflow: hidden;
             background: #1e2430;
             position: relative;
         }
         canvas { display: block; }
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+        }
 
         /* --- Sidebar --- */
         #stats-sidebar {
