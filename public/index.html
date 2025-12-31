@@ -1854,6 +1854,8 @@
                 // No saved game, show intro modal so user can start fresh
                 document.getElementById('modal-overlay').style.display = 'flex';
                 document.getElementById('intro-modal').style.display = 'block';
+                // Initialize toolbar to slot 1 for fresh game
+                switchToSlot(1);
             }
 
             // Initial gauge draw
@@ -1979,6 +1981,9 @@
                 // Update toolbar to reflect loaded state
                 updateVariantLockStatus();
                 updateToolbarDisplay();
+
+                // Restore full toolbar state (selectedTool, info card, flyout)
+                switchToSlot(selectedSlot);
 
                 metrics.history = state.metricsHistory || [];
 
@@ -2217,8 +2222,8 @@
                 });
             });
 
-            // Initialize display
-            switchToSlot(selectedSlot || 1);  // Start with saved slot or slot 1
+            // Initialize display - don't call switchToSlot here, let loadGameState handle it
+            // If no saved game, init() will call switchToSlot(1) after checking
             updateVariantLockStatus();
         }
 
