@@ -2871,19 +2871,38 @@
         }
 
         function getBuildingStatus(building) {
-            // Check for error states
-            if (building.type.inputs) {
+            // Check for output full (highest priority after errors)
+            if (building.outputBuffer && building.outputCount >= 5) {
+                return 'OUTPUT FULL';
+            }
+
+            // Check for press-specific errors
+            if (building.type.id.includes('press')) {
+                if (building.inventory[ITEM.PLASTIC] === 0) {
+                    return 'NO PLASTIC';
+                }
+                if (building.moldLife <= 0 && building.inventory[ITEM.MOLD] === 0) {
+                    return 'NO MOLD';
+                }
+            }
+
+            // Check for CNC-specific errors
+            if (building.type.id.includes('cnc')) {
+                if (building.inventory[ITEM.STEEL] === 0) {
+                    return 'NO STEEL';
+                }
+            }
+
+            // Generic check for missing inputs (other building types)
+            if (building.type.inputs && !building.type.id.includes('src')) {
                 for (let input of building.type.inputs) {
-                    if (building.inventory[input] <= 0 && !building.type.id.includes('src')) {
-                        return 'ERR';
+                    if (building.inventory[input] <= 0) {
+                        return 'NO INPUT';
                     }
                 }
             }
-            // Check for full output
-            if (building.outputBuffer) {
-                return 'FULL';
-            }
-            return 'OK';
+
+            return 'OPERATIONAL';
         }
 
         function clearInv(type) {
@@ -2938,7 +2957,13 @@
             // Update Status Panel
             const icon = building.type.icon || '?';
             const status = getBuildingStatus(building);
-            const statusColor = status === 'OK' ? '#39ff14' : status === 'FULL' ? '#ffd700' : '#ff0000';
+            // Status colors: green for operational, yellow for full, red for errors
+            let statusColor = '#4caf50';  // Green for OPERATIONAL
+            if (status === 'OUTPUT FULL') {
+                statusColor = '#ffd700';  // Yellow/gold for full
+            } else if (status !== 'OPERATIONAL') {
+                statusColor = '#f44336';  // Red for errors (NO PLASTIC, NO MOLD, NO STEEL, NO INPUT)
+            }
 
             document.getElementById('status-icon').textContent = icon;
             document.getElementById('status-name').textContent = building.type.name;
