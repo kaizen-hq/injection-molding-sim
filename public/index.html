@@ -403,6 +403,178 @@
         .legend-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: #889; }
         .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
 
+        /* --- Inspect Mode --- */
+        #build-mode {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
+        #inspect-mode {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        #inspect-panels {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .inspect-panel {
+            background: rgba(26, 38, 52, 0.95);
+            border: 2px solid var(--usa-blue);
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .inspect-panel-header {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .inspect-panel .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            padding: 3px 0;
+            border-bottom: 1px dotted #444;
+        }
+
+        .inspect-panel .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .inspect-panel .stat-label {
+            color: #888;
+        }
+
+        .inspect-panel .stat-value {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .buffer-grid {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .buffer-slot {
+            width: 24px;
+            height: 24px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .buffer-slot.filled {
+            border-color: var(--usa-blue);
+            background: #0a1a2a;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .filter-btn {
+            padding: 8px 4px;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 4px;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-btn:hover {
+            border-color: #666;
+            background: #333;
+        }
+
+        .filter-btn.active {
+            border-color: var(--usa-blue);
+            background: #0a1a3a;
+            color: #fff;
+        }
+
+        .filter-btn .filter-icon {
+            font-size: 16px;
+        }
+
+        .delivery-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .delivery-toggle label {
+            color: #aaa;
+            font-size: 11px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch.on {
+            background: var(--usa-blue);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left 0.2s;
+        }
+
+        .toggle-switch.on::after {
+            left: 22px;
+        }
+
+        #exit-inspect-btn {
+            margin-top: auto;
+            padding: 10px;
+        }
+
         .controls-panel {
             background: #111; border: 1px solid #444; padding: 10px;
             border-radius: 4px; font-size: 11px; color: #aaa;
@@ -715,14 +887,7 @@
         }
 
         /* --- Modals & Notifications --- */
-        #inspector {
-            position: absolute; width: 180px;
-            background: #1a2634; border: 4px solid var(--usa-red);
-            padding: 10px; display: none; z-index: 40; box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-            font-family: 'Courier New', Courier, monospace; color: #fff;
-        }
-        .insp-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px dotted #666; align-items: center; }
-        .insp-btn { background: #c00; color: #fff; border: none; font-size: 10px; cursor: pointer; padding: 4px 8px; border-radius: 3px; }
+        /* Old #inspector CSS removed - using unified inspect panel system */
 
         .notification {
             position: absolute; top: 15%; left: 50%; transform: translateX(-50%);
@@ -873,6 +1038,9 @@
     <!-- Flyout Panel (Always Visible, Next to Toolbar) -->
     <div id="flyout-panel">
         <div id="flyout-header">BELT VARIANTS</div>
+
+        <!-- Build Mode: variant selection + tool info -->
+        <div id="build-mode">
         <div id="flyout-content">
             <!-- All variants pre-rendered -->
             <!-- BELT Variants (Slot 1) -->
@@ -1119,6 +1287,18 @@
                 </div>
             </div>
         </div>
+        </div><!-- /#build-mode -->
+
+        <!-- Inspect Mode: building inspection panels -->
+        <div id="inspect-mode" style="display: none;">
+            <div id="inspect-panels">
+                <!-- Panels rendered dynamically -->
+            </div>
+            <button id="exit-inspect-btn" class="btn-secondary" style="width: 100%; margin-top: 10px;">
+                RETURN TO BUILD MODE
+            </button>
+        </div>
+
     </div>
     </div><!-- /.left-column -->
 
@@ -1139,13 +1319,7 @@
                 <canvas id="gameCanvas"></canvas>
                 <div id="notification" class="notification">ALERT</div>
                 
-                <div id="inspector">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <strong id="insp-name">UNIT</strong>
-                        <button class="insp-btn" onclick="closeInspector()">X</button>
-                    </div>
-                    <div id="insp-content"></div>
-                </div>
+                <!-- Old inspector removed - using unified inspect panel system -->
             </div>
         </div>
     </div>
@@ -1342,57 +1516,7 @@
     </div><!-- /.right-column -->
     </div><!-- /#app-grid -->
 
-    <!-- ARM Configuration Modal -->
-    <div id="arm-config" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#1a2634; padding:30px; border-radius:12px; border:4px solid var(--usa-red); box-shadow:0 0 30px var(--usa-red); z-index:1000; max-width:500px;">
-        <h3 style="color:var(--gold); margin-top:0; text-align:center;">ARM CONFIGURATION</h3>
-
-        <!-- Filter Section -->
-        <div id="filter-section" style="margin-bottom:30px;">
-            <h4 style="color:var(--usa-red); margin-bottom:10px;">ITEM FILTER</h4>
-            <p style="color:#aaa; font-size:12px; margin-bottom:15px;">Select which item type this arm should pick up:</p>
-            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
-                <button id="filter-all" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span style="font-size:18px;">⚡</span><span>ALL</span>
-                </button>
-                <button id="filter-plastic" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span style="font-size:18px;">🔴</span><span>PLASTIC</span>
-                </button>
-                <button id="filter-steel" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span style="font-size:18px;">⬜</span><span>STEEL</span>
-                </button>
-                <button id="filter-mold" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span style="font-size:18px;">🟫</span><span>MOLD</span>
-                </button>
-                <button id="filter-mold_quad" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span style="font-size:18px;">🟫</span><span>QUAD MOLD</span>
-                </button>
-                <button id="filter-part" class="btn-secondary" style="padding:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span style="font-size:18px;">⭐</span><span>PART</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Direction Section -->
-        <div id="direction-section">
-            <h4 style="color:var(--usa-red); margin-bottom:10px;">DELIVERY DIRECTION</h4>
-            <p style="color:#aaa; font-size:12px; margin-bottom:15px;">Select where this arm delivers items:</p>
-            <div style="display:grid; grid-template-columns:repeat(3, 80px); gap:10px; margin:0 auto; width:fit-content;">
-                <div></div>
-                <button id="dir-up" class="btn-secondary" style="padding:20px; font-size:24px;">↑</button>
-                <div></div>
-                <button id="dir-left" class="btn-secondary" style="padding:20px; font-size:24px;">←</button>
-                <div style="display:flex; align-items:center; justify-content:center; color:#555;">🦾</div>
-                <button id="dir-right" class="btn-secondary" style="padding:20px; font-size:24px;">→</button>
-                <div></div>
-                <button id="dir-down" class="btn-secondary" style="padding:20px; font-size:24px;">↓</button>
-                <div></div>
-            </div>
-        </div>
-
-        <div style="text-align:center; margin-top:25px;">
-            <button class="btn-secondary" onclick="closeArmConfig()" style="padding:10px 30px;">CLOSE</button>
-        </div>
-    </div>
+    <!-- Old ARM Configuration Modal removed - using unified inspect panel system -->
 
     <!-- Debug Panel for Local Development -->
     <div id="debug-panel" style="display:none; position:fixed; top:20px; right:20px; background:#1a2634; padding:20px; border-radius:8px; border:3px solid var(--gold); box-shadow:0 0 20px rgba(255,215,0,0.3); z-index:10000; min-width:280px; font-family:'Courier New', monospace;">
@@ -1552,6 +1676,7 @@
         let buildings = [];
         let items = [];
         let inspectedBuilding = null;
+        let isInspectMode = false;
         let lastInspectorStructure = '';
         let metrics = { history: [], current: { plastic: 0, steel: 0, mold: 0, part: 0, dollars: 0 } };
 
@@ -1875,23 +2000,18 @@
             canvas.addEventListener('mouseup', () => isDragging = false);
             canvas.addEventListener('contextmenu', e => e.preventDefault());
 
-            // Event delegation for inspector delete buttons
-            document.getElementById('insp-content').addEventListener('click', (e) => {
-                if (e.target.classList.contains('insp-btn')) {
-                    if (e.target.dataset.item) {
-                        clearInv(e.target.dataset.item);
-                    } else if (e.target.dataset.clear === 'output') {
-                        clearOutput();
-                    }
-                }
-            });
+            // Old inspector event delegation removed - now handled in inspect panels
 
             // Auto-save before page unload
             window.addEventListener('beforeunload', saveGameState);
 
+            // Exit inspect mode button
+            document.getElementById('exit-inspect-btn').addEventListener('click', exitInspectMode);
+
             setInterval(update, TICK_RATE);
             setInterval(updateMetrics, 1000);
             setInterval(updateInspectorUI, 200);
+            setInterval(updateInspectPanels, 500);  // Update inspect panels while in inspect mode
             requestAnimationFrame(draw);
 
             // Auto-load saved game if exists
@@ -2327,7 +2447,9 @@
             if (e.key === 'Shift' || e.key === 'Alt') return;
 
             if (e.key.toLowerCase() === 'r') rotation = (rotation + 1) % 4;
-            if (e.key === 'Escape') closeInspector();
+            if (e.key === 'Escape') {
+                if (isInspectMode) exitInspectMode();
+            }
 
             // New toolbar keyboard controls
             if (e.code.startsWith('Digit')) {
@@ -2352,8 +2474,9 @@
                         return;
                     }
 
-                    // Plain Number (1-7): Switch slot (updates flyout)
+                    // Plain Number (1-7): Switch slot (updates flyout) and exit inspect mode
                     if (!e.shiftKey && !e.altKey) {
+                        if (isInspectMode) exitInspectMode();
                         switchToSlot(num);
                         return;
                     }
@@ -2375,21 +2498,29 @@
         function handleMouse(e) {
             if (!gameRunning) return;
             const pos = getMouseGridPos(e);
+
             if (e.button === 0) {
-                if (grid[pos.y] && grid[pos.y][pos.x]) {
-                    const tile = grid[pos.y][pos.x];
-                    if (tile.building && (tile.building.type.canFilter || tile.building.type.canDirectDeliver)) {
-                        openArmConfig(tile.building);
-                        return;
+                if (!grid[pos.y] || !grid[pos.y][pos.x]) return;
+                const tile = grid[pos.y][pos.x];
+
+                if (isInspectMode) {
+                    // Inspect Mode: clicking building switches inspection, empty tile does nothing
+                    if (tile.building) {
+                        enterInspectMode(tile.building);
                     }
-                    if (tile.building && !tile.building.type.isArm && !tile.building.type.transportSpeed) {
-                        openInspector(tile.building); return;
+                    // Empty tile click does nothing in inspect mode
+                } else {
+                    // Build Mode: clicking building enters inspect mode, empty tile places building
+                    if (tile.building) {
+                        enterInspectMode(tile.building);
+                    } else {
+                        placeBuilding(pos.x, pos.y);
+                        isDragging = true;
                     }
-                    placeBuilding(pos.x, pos.y); isDragging = true;
                 }
             } else if (e.button === 2) {
-                if (inspectedBuilding) {
-                    closeInspector();
+                if (isInspectMode) {
+                    exitInspectMode();
                 } else {
                     removeBuilding(pos.x, pos.y);
                 }
@@ -2475,6 +2606,256 @@
             updateInspectorUI();
         }
         function closeInspector() { inspectedBuilding = null; document.getElementById('inspector').style.display = 'none'; }
+
+        // ===== INSPECT MODE =====
+        function enterInspectMode(building) {
+            isInspectMode = true;
+            inspectedBuilding = building;
+
+            // Update header
+            document.getElementById('flyout-header').textContent = `INSPECTING: ${building.type.name}`;
+
+            // Switch display modes
+            document.getElementById('build-mode').style.display = 'none';
+            document.getElementById('inspect-mode').style.display = 'flex';
+
+            // Render panels
+            renderInspectPanels(building);
+        }
+
+        function exitInspectMode() {
+            isInspectMode = false;
+            inspectedBuilding = null;
+
+            // Restore header based on selected tool
+            const toolNames = { 1: 'BELT', 2: 'ARM', 3: 'PLASTIC', 4: 'STEEL', 5: 'CNC', 6: 'PRESS', 7: 'SELL' };
+            document.getElementById('flyout-header').textContent = `${toolNames[selectedSlot] || 'BELT'} VARIANTS`;
+
+            // Switch display modes
+            document.getElementById('build-mode').style.display = 'flex';
+            document.getElementById('inspect-mode').style.display = 'none';
+
+            // Clear panels
+            document.getElementById('inspect-panels').innerHTML = '';
+        }
+
+        function renderInspectPanels(building) {
+            const container = document.getElementById('inspect-panels');
+            container.innerHTML = '';
+
+            // Status Panel (always shown)
+            container.appendChild(renderStatusPanel(building));
+
+            // Buffer Panel (for buildings with input/output)
+            if (building.type.inputs || building.outputBuffer !== undefined) {
+                container.appendChild(renderBufferPanel(building));
+            }
+
+            // Filter Panel (for arms with canFilter)
+            if (building.type.canFilter) {
+                container.appendChild(renderFilterPanel(building));
+            }
+
+            // Delivery Panel (for arms with canDirectDeliver)
+            if (building.type.canDirectDeliver) {
+                container.appendChild(renderDeliveryPanel(building));
+            }
+        }
+
+        function updateInspectPanels() {
+            if (!isInspectMode || !inspectedBuilding) return;
+            renderInspectPanels(inspectedBuilding);
+        }
+
+        function renderStatusPanel(building) {
+            const panel = document.createElement('div');
+            panel.className = 'inspect-panel';
+
+            const icon = building.type.icon || '?';
+            const status = getBuildingStatus(building);
+            const statusColor = status === 'OK' ? '#39ff14' : status === 'FULL' ? '#ffd700' : '#ff0000';
+
+            panel.innerHTML = `
+                <div class="inspect-panel-header">
+                    <span style="font-size: 18px;">${icon}</span>
+                    <span>${building.type.name}</span>
+                    <span style="margin-left: auto; color: ${statusColor};">● ${status}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Position</span>
+                    <span class="stat-value">(${building.x}, ${building.y})</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Cycles</span>
+                    <span class="stat-value">${building.cycleCount || 0}</span>
+                </div>
+            `;
+
+            return panel;
+        }
+
+        function getBuildingStatus(building) {
+            // Check for error states
+            if (building.type.inputs) {
+                for (let input of building.type.inputs) {
+                    if (building.inventory[input] <= 0 && !building.type.id.includes('src')) {
+                        return 'ERR';
+                    }
+                }
+            }
+            // Check for full output
+            if (building.outputBuffer) {
+                return 'FULL';
+            }
+            return 'OK';
+        }
+
+        function renderBufferPanel(building) {
+            const panel = document.createElement('div');
+            panel.className = 'inspect-panel';
+
+            let inputHtml = '';
+            let outputHtml = '';
+
+            // Input buffers
+            if (building.type.inputs && !building.type.id.includes('src')) {
+                const inputSlots = building.type.inputs.map(input => {
+                    const count = building.inventory[input] || 0;
+                    const icon = getItemIcon(input);
+                    return `<div class="buffer-slot ${count > 0 ? 'filled' : ''}">${count > 0 ? icon : ''}</div>`;
+                }).join('');
+                inputHtml = `
+                    <div style="margin-bottom: 8px;">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">INPUT</div>
+                        <div class="buffer-grid">${inputSlots}</div>
+                    </div>
+                `;
+            }
+
+            // Output buffer
+            if (building.outputBuffer !== undefined) {
+                const hasOutput = building.outputBuffer !== null;
+                const icon = hasOutput ? getItemIcon(building.outputBuffer) : '';
+                outputHtml = `
+                    <div>
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">OUTPUT</div>
+                        <div class="buffer-grid">
+                            <div class="buffer-slot ${hasOutput ? 'filled' : ''}">${icon}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            panel.innerHTML = `
+                <div class="inspect-panel-header">BUFFERS</div>
+                ${inputHtml}
+                ${outputHtml}
+            `;
+
+            return panel;
+        }
+
+        function getItemIcon(itemType) {
+            const icons = {
+                [ITEM.PLASTIC]: '🔴',
+                [ITEM.STEEL]: '⬜',
+                [ITEM.MOLD]: '🟫',
+                [ITEM.MOLD_QUAD]: '🟫',
+                [ITEM.PART]: '⭐',
+                [ITEM.PART_QUAD]: '⭐'
+            };
+            return icons[itemType] || '?';
+        }
+
+        function renderFilterPanel(building) {
+            const panel = document.createElement('div');
+            panel.className = 'inspect-panel';
+
+            const filters = [
+                { id: 'all', icon: '⚡', label: 'ALL' },
+                { id: ITEM.PLASTIC, icon: '🔴', label: 'PLASTIC' },
+                { id: ITEM.STEEL, icon: '⬜', label: 'STEEL' },
+                { id: ITEM.MOLD, icon: '🟫', label: 'MOLD' },
+                { id: ITEM.MOLD_QUAD, icon: '🟫⁴', label: 'QUAD' },
+                { id: ITEM.PART, icon: '⭐', label: 'PART' }
+            ];
+
+            const filterButtons = filters.map(f => {
+                const isActive = building.filter === f.id || (f.id === 'all' && !building.filter);
+                return `
+                    <button class="filter-btn ${isActive ? 'active' : ''}" data-filter="${f.id}">
+                        <span class="filter-icon">${f.icon}</span>
+                        <span>${f.label}</span>
+                    </button>
+                `;
+            }).join('');
+
+            panel.innerHTML = `
+                <div class="inspect-panel-header">ITEM FILTER</div>
+                <div class="filter-grid">${filterButtons}</div>
+            `;
+
+            // Add click handlers
+            panel.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.dataset.filter;
+                    building.filter = filter === 'all' ? null : filter;
+                    renderInspectPanels(building);
+                });
+            });
+
+            return panel;
+        }
+
+        function renderDeliveryPanel(building) {
+            const panel = document.createElement('div');
+            panel.className = 'inspect-panel';
+
+            const isEnabled = building.directDeliver || false;
+            const targetId = building.deliverTarget;
+            const targetBuilding = targetId ? buildings.find(b => b.id === targetId) : null;
+            const targetName = targetBuilding ? targetBuilding.type.name : 'None';
+
+            // Find valid delivery targets (sellers)
+            const sellers = buildings.filter(b => b.type.id === 'SELL' || b.type.id === 'SELL_MEGA');
+
+            let targetOptions = '<option value="">Select Target...</option>';
+            sellers.forEach(s => {
+                const selected = s.id === targetId ? 'selected' : '';
+                targetOptions += `<option value="${s.id}" ${selected}>${s.type.name} (${s.x},${s.y})</option>`;
+            });
+
+            panel.innerHTML = `
+                <div class="inspect-panel-header">DIRECT DELIVERY</div>
+                <div class="delivery-toggle">
+                    <label>Enable Direct Delivery</label>
+                    <div class="toggle-switch ${isEnabled ? 'on' : ''}" id="delivery-toggle"></div>
+                </div>
+                <div style="display: ${isEnabled ? 'block' : 'none'};" id="delivery-target-section">
+                    <div style="font-size: 10px; color: #888; margin-bottom: 4px;">TARGET</div>
+                    <select style="width: 100%; padding: 6px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px;" id="delivery-target-select">
+                        ${targetOptions}
+                    </select>
+                </div>
+            `;
+
+            // Add toggle handler
+            panel.querySelector('#delivery-toggle').addEventListener('click', function() {
+                building.directDeliver = !building.directDeliver;
+                renderInspectPanels(building);
+            });
+
+            // Add target select handler
+            const select = panel.querySelector('#delivery-target-select');
+            if (select) {
+                select.addEventListener('change', function() {
+                    building.deliverTarget = this.value || null;
+                });
+            }
+
+            return panel;
+        }
+
         function clearInv(type) {
             if (inspectedBuilding && inspectedBuilding.inventory.hasOwnProperty(type)) {
                 inspectedBuilding.inventory[type] = 0;
@@ -2489,71 +2870,9 @@
             updateInspectorUI(); 
         }
 
+        // Old updateInspectorUI removed - now handled by updateInspectPanels
         function updateInspectorUI() {
-            if (!inspectedBuilding) return;
-            let b = inspectedBuilding;
-
-            // Determine structure (what items exist, not their values)
-            let structure = '';
-            let inventoryKeys = [];
-            if (Object.keys(b.inventory).length > 0) {
-                for (let k in b.inventory) {
-                    if (b.type.id.includes('src')) continue;
-                    if (b.type.id.includes('cnc') && k !== ITEM.STEEL) continue;
-                    if (b.type.id.includes('press') && k === ITEM.STEEL) continue;
-                    inventoryKeys.push(k);
-                    structure += k + ',';
-                }
-            }
-            // Always include output row for machines that produce items
-            let hasOutput = b.type.output || b.type.recipe?.out;
-            structure += hasOutput ? 'output' : '';
-
-            // If structure changed, rebuild HTML
-            if (structure !== lastInspectorStructure) {
-                let html = '';
-                let status = "OPERATIONAL", statusColor = "#4caf50";
-                if (b.outputBuffer && b.outputCount >= 5) { status = "OUTPUT FULL"; statusColor = "#ffd700"; }
-                else if (b.type.id.includes('press') && b.inventory[ITEM.PLASTIC] === 0) { status = "NO PLASTIC"; statusColor = "#f44336"; }
-                else if (b.type.id.includes('press') && b.moldLife <= 0 && b.inventory[ITEM.MOLD] === 0) { status = "NO MOLD"; statusColor = "#f44336"; }
-
-                html += `<div id="insp-status" style="color:${statusColor}; font-weight:bold; margin-bottom:10px;">${status}</div>`;
-                for (let k of inventoryKeys) {
-                    html += `<div class="insp-row"><span id="insp-${k}">${k.toUpperCase()}: ${b.inventory[k]}</span><button class="insp-btn" data-item="${k}">DEL</button></div>`;
-                }
-                if (hasOutput) {
-                    let outType = b.outputBuffer ? b.outputBuffer.toUpperCase() : 'NONE';
-                    let outCount = b.outputCount || 0;
-                    html += `<div class="insp-row"><span id="insp-output">OUT: ${outType} (x${outCount})</span><button class="insp-btn" data-clear="output">DEL</button></div>`;
-                }
-                document.getElementById('insp-content').innerHTML = html;
-                lastInspectorStructure = structure;
-            } else {
-                // Just update the values
-                let status = "OPERATIONAL", statusColor = "#4caf50";
-                if (b.outputBuffer && b.outputCount >= 5) { status = "OUTPUT FULL"; statusColor = "#ffd700"; }
-                else if (b.type.id.includes('press') && b.inventory[ITEM.PLASTIC] === 0) { status = "NO PLASTIC"; statusColor = "#f44336"; }
-                else if (b.type.id.includes('press') && b.moldLife <= 0 && b.inventory[ITEM.MOLD] === 0) { status = "NO MOLD"; statusColor = "#f44336"; }
-
-                let statusEl = document.getElementById('insp-status');
-                if (statusEl) {
-                    statusEl.textContent = status;
-                    statusEl.style.color = statusColor;
-                }
-
-                for (let k of inventoryKeys) {
-                    let el = document.getElementById(`insp-${k}`);
-                    if (el) el.textContent = `${k.toUpperCase()}: ${b.inventory[k]}`;
-                }
-                if (hasOutput) {
-                    let el = document.getElementById('insp-output');
-                    if (el) {
-                        let outType = b.outputBuffer ? b.outputBuffer.toUpperCase() : 'NONE';
-                        let outCount = b.outputCount || 0;
-                        el.textContent = `OUT: ${outType} (x${outCount})`;
-                    }
-                }
-            }
+            // Stub - old inspector removed, new inspect panels use updateInspectPanels()
         }
 
         function updateUI() {
@@ -2568,111 +2887,10 @@
             setTimeout(()=>n.style.opacity=0, 2000);
         }
 
+        // Old arm config functions removed - functionality moved to unified inspect panel system
         let selectedArm = null;
-
-        function openArmConfig(building) {
-            selectedArm = building;
-            const modal = document.getElementById('arm-config');
-            const filterSection = document.getElementById('filter-section');
-            const directionSection = document.getElementById('direction-section');
-
-            // Show/hide sections based on arm capabilities
-            filterSection.style.display = building.type.canFilter ? 'block' : 'none';
-            directionSection.style.display = building.type.canDirectDeliver ? 'block' : 'none';
-
-            modal.style.display = 'block';
-
-            // Setup FILTER section
-            if (building.type.canFilter) {
-                const filterButtons = {
-                    'filter-all': null,
-                    'filter-plastic': ITEM.PLASTIC,
-                    'filter-steel': ITEM.STEEL,
-                    'filter-mold': ITEM.MOLD,
-                    'filter-mold_quad': ITEM.MOLD_QUAD,
-                    'filter-part': ITEM.PART
-                };
-
-                Object.entries(filterButtons).forEach(([btnId, itemType]) => {
-                    const btn = document.getElementById(btnId);
-                    // Reset styles
-                    btn.style.border = '2px solid #444';
-                    btn.style.background = '';
-
-                    // Highlight current filter
-                    if (building.filter === itemType) {
-                        btn.style.border = '3px solid var(--usa-red)';
-                        btn.style.background = 'rgba(220, 53, 69, 0.2)';
-                    }
-
-                    // Set click handler
-                    btn.onclick = () => setArmFilter(itemType);
-                });
-            }
-
-            // Setup DIRECTION section
-            if (building.type.canDirectDeliver) {
-                const pickupDir = (building.rot + 2) % 4;
-                const currentDir = building.deliverDir;
-
-                // Map buttons to actual direction constants: 0=RIGHT, 1=DOWN, 2=LEFT, 3=UP
-                const dirButtons = [
-                    document.getElementById('dir-right'),  // dir=0 = RIGHT
-                    document.getElementById('dir-down'),   // dir=1 = DOWN
-                    document.getElementById('dir-left'),   // dir=2 = LEFT
-                    document.getElementById('dir-up')      // dir=3 = UP
-                ];
-
-                dirButtons.forEach((btn, dir) => {
-                    // Reset styles
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.style.border = '2px solid #444';
-                    btn.style.background = '';
-
-                    // Disable pickup direction
-                    if (dir === pickupDir) {
-                        btn.disabled = true;
-                        btn.style.opacity = '0.3';
-                        btn.style.cursor = 'not-allowed';
-                    }
-
-                    // Highlight current delivery direction
-                    if (dir === currentDir) {
-                        btn.style.border = '3px solid var(--usa-red)';
-                        btn.style.background = 'rgba(220, 53, 69, 0.2)';
-                    }
-
-                    // Set click handler
-                    btn.onclick = () => setArmDirection(dir);
-                });
-            }
-        }
-
-        function setArmFilter(itemType) {
-            if (selectedArm) {
-                selectedArm.filter = itemType;
-                const filterName = itemType ? itemType.toUpperCase() : 'ALL';
-                showNotification(`ARM FILTER: ${filterName}`);
-                // Update button highlighting
-                openArmConfig(selectedArm);
-            }
-        }
-
-        function setArmDirection(dir) {
-            if (selectedArm) {
-                selectedArm.deliverDir = dir;
-                const dirNames = ['RIGHT', 'DOWN', 'LEFT', 'UP'];
-                showNotification(`ARM DIRECTION: ${dirNames[dir]}`);
-                // Update button highlighting
-                openArmConfig(selectedArm);
-            }
-        }
-
-        function closeArmConfig() {
-            selectedArm = null;
-            document.getElementById('arm-config').style.display = 'none';
-        }
+        function openArmConfig(building) { enterInspectMode(building); }
+        function closeArmConfig() { exitInspectMode(); }
 
         // Debug Panel Functions
         function toggleDebugPanel() {
