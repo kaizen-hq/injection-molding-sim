@@ -148,6 +148,85 @@
         <h2>🎯 Major Features</h2>
         <ul>
             <li class="feature">
+                <strong>Level 5 Progression System</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Maximum player level increased from 4 to 5, unlocking the ultimate tier of equipment:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">📈 <strong>Level 5 Threshold:</strong> 5,000 parts sold (up from 1,000 for Level 4)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🎯 <strong>Progression:</strong> L1→L2 (50 parts), L2→L3 (250), L3→L4 (1,000), L4→L5 (5,000)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🏆 <strong>End Game Content:</strong> Late-game challenge requiring efficient factory optimization</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>HYPER ARM - Extended Reach Robotics</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Ultimate ARM variant with revolutionary extended reach capability:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">🦾 <strong>Icon:</strong> 🦾H with electric blue color (#00D4FF)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">💰 <strong>Cost:</strong> $5,000 (most expensive ARM, 2.5x MEGA ARM)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📏 <strong>Extended Reach:</strong> Picks up from 2 tiles behind, delivers 2 tiles forward (skips over obstacles)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">⚡ <strong>Speed:</strong> 75% (slower than normal due to longer travel distance)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🔍 <strong>Item Filtering:</strong> Yes (can filter by item type)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">➡️ <strong>Delivery Mode:</strong> Forward-only (no omni-directional like MEGA ARM)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🎯 <strong>Use Cases:</strong> Crossing production lines, skipping belt clusters, tight space routing</li>
+                    <li style="background: none; border: none; padding: 5px 0;">👁️ <strong>Visual:</strong> 2x longer arm rendering, extended placement preview zones</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>Unified Inspection Panel System</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Complete redesign of building inspection UI with flyout-based panels:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">📍 <strong>Location:</strong> Inspection panels moved from canvas to left flyout area (280px width)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🎨 <strong>Persistent DOM:</strong> Panels use persistent HTML structure (never destroyed/recreated) for reliable button clicks</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📊 <strong>Status Panel:</strong> Shows building icon, name, position, operational status (OK/FULL/ERR), cycle count</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📦 <strong>Buffer Panel:</strong> Visual inventory display with per-item-type DELETE buttons, output buffer management</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🔍 <strong>Filter Panel:</strong> 2x3 grid of filter buttons (ALL, PLASTIC, STEEL, MOLD, QUAD MOLD, PART) for filter-capable ARMs</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🧭 <strong>Direction Panel:</strong> 3x3 compass grid with ↑↓←→ buttons for MEGA ARM delivery direction (center shows 🦾 icon)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🔄 <strong>Mode Switching:</strong> Clicking building enters Inspect Mode (dims variants flyout), ESC/X/hotkey exits back to Build Mode</li>
+                    <li style="background: none; border: none; padding: 5px 0;">✨ <strong>Smooth Transitions:</strong> Opacity-based dimming (no flickering), real-time updates every 500ms</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>In-Place Building Rotation</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Rotate placed buildings without rebuilding, adding strategic flexibility:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">🔄 <strong>Rotation Controls:</strong> CCW (↺) and CW (↻) buttons in inspection panel</li>
+                    <li style="background: none; border: none; padding: 5px 0;">💰 <strong>Cost:</strong> 10% of building cost per 90° rotation (e.g., $500 HYPER ARM = $500 to rotate)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">⚙️ <strong>Rotatable Buildings:</strong> All buildings except sellers (BIN)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🎯 <strong>Belt Item Handling:</strong> Items on belts automatically rotate their direction when belt rotates</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🦾 <strong>ARM Direction Sync:</strong> ARMs with delivery direction (MEGA ARM) rotate both pickup and delivery simultaneously</li>
+                    <li style="background: none; border: none; padding: 5px 0;">💵 <strong>Insufficient Funds:</strong> Shows notification if player can't afford rotation</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📊 <strong>Cost Display:</strong> Real-time cost preview on rotation buttons</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>Responsive Layout & Adaptive Scaling</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Complete responsive redesign supporting various screen sizes:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">📐 <strong>CSS Grid Layout:</strong> Replaced fixed positioning with responsive grid (left toolbar | flyout | canvas | gauges | stats)</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📏 <strong>Canvas Shrinking:</strong> Game canvas scales down to fit smaller screens while maintaining aspect ratio</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🖱️ <strong>Scaled Cursor:</strong> Mouse coordinates properly mapped across different canvas scales</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🏷️ <strong>Adaptive Badges:</strong> 1776/2026 badges scale with canvas and auto-hide below 45px to prevent clutter</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📱 <strong>Mobile Warning:</strong> Improved messaging for devices below 1800x600px minimum</li>
+                </ul>
+            </li>
+
+            <li class="feature">
+                <strong>Enhanced Production Metrics</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">Advanced analytics with smoothing, trends, and hysteresis:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">📈 <strong>Sliding Window Average:</strong> 5-sample window prevents jitter in graph data</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🎯 <strong>EMA Smoothing:</strong> Exponential Moving Average with trend detection for stable gauge readings without lag</li>
+                    <li style="background: none; border: none; padding: 5px 0;">⚖️ <strong>Hysteresis:</strong> Prevents rapid gauge flickering by requiring significant change before updating</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📊 <strong>Snap to Zero:</strong> Gauges snap to 0 when values drop below threshold for clean UI</li>
+                    <li style="background: none; border: none; padding: 5px 0;">📉 <strong>Trend Detection:</strong> Gauges respond faster during rapid changes, slower during stability</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🎨 <strong>Synchronized Graphs:</strong> Production graphs use same smoothed data as gauges for consistency</li>
+                </ul>
+            </li>
+
+            <li class="feature">
                 <strong>MEGA Tier Equipment (Level 4)</strong><span class="badge badge-new">New</span>
                 <ul style="margin-top: 10px; padding-left: 20px;">
                     <li style="background: none; border: none; padding: 5px 0;">🔴 <strong>MEGA PLASTIC</strong> - Ultra high-speed plastic extruder (4x faster, speed 15)</li>
@@ -400,11 +479,11 @@
 
         <h2>📊 Statistics</h2>
         <ul>
-            <li class="improvement">Total Commits: <strong>40+</strong></li>
-            <li class="improvement">New Features: <strong>11 major features</strong></li>
-            <li class="improvement">Bug Fixes: <strong>8 critical and minor fixes</strong></li>
-            <li class="improvement">New Equipment: <strong>4 MEGA tier variants</strong></li>
-            <li class="improvement">UI/UX Improvements: <strong>Complete theme overhaul + 11 improvements</strong></li>
+            <li class="improvement">Total Commits: <strong>65+</strong></li>
+            <li class="improvement">New Features: <strong>17 major features</strong></li>
+            <li class="improvement">Bug Fixes: <strong>12 critical and minor fixes</strong></li>
+            <li class="improvement">New Equipment: <strong>4 MEGA tier variants + HYPER ARM (Level 5)</strong></li>
+            <li class="improvement">UI/UX Improvements: <strong>Complete theme overhaul + 17 improvements</strong></li>
         </ul>
 
         <div style="text-align: center; margin-top: 40px;">
