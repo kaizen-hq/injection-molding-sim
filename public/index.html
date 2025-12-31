@@ -576,6 +576,73 @@
             cursor: not-allowed;
         }
 
+        .rotation-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .rotate-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            background: rgba(26, 38, 52, 0.95);
+            border: 2px solid var(--usa-blue);
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s;
+            font-size: 11px;
+        }
+
+        .rotate-button:hover {
+            border-color: var(--gold);
+            background: #1a2a3a;
+        }
+
+        .rotate-button .rotate-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .rotate-button .rotate-label {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .rotate-button .rotate-cost {
+            font-size: 10px;
+            color: #888;
+        }
+
+        .rotate-hint {
+            text-align: center;
+            font-size: 9px;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        /* Rotation animation */
+        @keyframes rotateClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(90deg); }
+        }
+
+        @keyframes rotateCounterClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-90deg); }
+        }
+
+        .rotating-cw {
+            animation: rotateClockwise 200ms ease-in-out;
+        }
+
+        .rotating-ccw {
+            animation: rotateCounterClockwise 200ms ease-in-out;
+        }
+
         .delivery-toggle {
             display: flex;
             align-items: center;
@@ -1361,6 +1428,24 @@
                         <span class="stat-label">Cycles</span>
                         <span id="status-cycles" class="stat-value"></span>
                     </div>
+                </div>
+
+                <!-- Rotation Panel (show/hide based on building - hidden for sellers) -->
+                <div id="rotation-panel" class="inspect-panel" style="display: none;">
+                    <div class="inspect-panel-header">ROTATION</div>
+                    <div class="rotation-buttons">
+                        <button id="rotate-ccw-btn" class="rotate-button">
+                            <span class="rotate-icon">↺</span>
+                            <span class="rotate-label">CCW</span>
+                            <span class="rotate-cost" id="rotate-cost-ccw">$0</span>
+                        </button>
+                        <button id="rotate-cw-btn" class="rotate-button">
+                            <span class="rotate-icon">↻</span>
+                            <span class="rotate-label">CW</span>
+                            <span class="rotate-cost" id="rotate-cost-cw">$0</span>
+                        </button>
+                    </div>
+                    <div class="rotate-hint">90° counter / clockwise</div>
                 </div>
 
                 <!-- Buffer Panel (show/hide based on building) -->
@@ -2205,6 +2290,24 @@
                 }
             });
 
+            // Attach rotation button event listeners once
+            const rotateCCWBtn = document.getElementById('rotate-ccw-btn');
+            const rotateCWBtn = document.getElementById('rotate-cw-btn');
+            if (rotateCCWBtn) {
+                rotateCCWBtn.addEventListener('click', () => {
+                    if (inspectedBuilding) {
+                        rotateBuilding(inspectedBuilding, -1);  // Counter-clockwise
+                    }
+                });
+            }
+            if (rotateCWBtn) {
+                rotateCWBtn.addEventListener('click', () => {
+                    if (inspectedBuilding) {
+                        rotateBuilding(inspectedBuilding, 1);  // Clockwise
+                    }
+                });
+            }
+
             // Attach inventory delete button event listeners once
             const invItems = ['plastic', 'steel', 'mold', 'mold_quad', 'part', 'part_quad'];
             invItems.forEach(item => {
@@ -2928,6 +3031,53 @@
             }
         }
 
+        function rotateBuilding(building, direction) {
+            // direction: 1 for clockwise, -1 for counter-clockwise
+
+            // Calculate 10% cost
+            const cost = Math.floor(building.type.cost * 0.10);
+
+            // Check for insufficient funds
+            if (money < cost) {
+                showNotification("INSUFFICIENT FUNDS");
+                return;
+            }
+
+            // Deduct cost
+            money -= cost;
+
+            // Rotate building
+            building.rot = (building.rot + direction + 4) % 4;  // +4 to handle negative modulo
+
+            // If arm with canDirectDeliver, rotate deliverDir too
+            if (building.type.canDirectDeliver) {
+                building.deliverDir = (building.deliverDir + direction + 4) % 4;
+            }
+
+            // If belt (has transportSpeed), rotate items on this tile
+            if (building.type.transportSpeed) {
+                // Find all items on this tile
+                const buildingX = building.x;
+                const buildingY = building.y;
+                for (let item of items) {
+                    const itemGx = Math.floor(item.x);
+                    const itemGy = Math.floor(item.y);
+                    if (itemGx === buildingX && itemGy === buildingY) {
+                        // Rotate item's exitDir
+                        item.exitDir = (item.exitDir + direction + 4) % 4;
+                    }
+                }
+            }
+
+            // Show notification
+            const rotName = direction === 1 ? "CLOCKWISE" : "COUNTER-CLOCKWISE";
+            showNotification(`ROTATED ${rotName} - $${cost}`);
+
+            // Update UI
+            updateUI();
+            if (isInspectMode) updateInspectPanelValues(inspectedBuilding);
+        }
+
         // Old updateInspectorUI removed - now handled by updateInspectPanels
         function updateInspectorUI() {
             // Stub - old inspector removed, new inspect panels use updateInspectPanels()
@@ -2938,6 +3088,10 @@
         function showHideInspectPanels(building) {
             // Status panel always visible
             document.getElementById('status-panel').style.display = 'block';
+
+            // Rotation panel - hide for sellers (bins)
+            const canRotate = building.type.id !== 'bin';
+            document.getElementById('rotation-panel').style.display = canRotate ? 'block' : 'none';
 
             // Buffer panel - show if building has inputs or outputs
             const hasBuffers = building.type.inputs || building.outputBuffer !== undefined;
@@ -2971,6 +3125,13 @@
             statusIndicator.style.color = statusColor;
             document.getElementById('status-position').textContent = `(${building.x}, ${building.y})`;
             document.getElementById('status-cycles').textContent = building.cycleCount || 0;
+
+            // Update Rotation Panel costs
+            const rotationCost = Math.floor(building.type.cost * 0.10);
+            const rotateCostCCW = document.getElementById('rotate-cost-ccw');
+            const rotateCostCW = document.getElementById('rotate-cost-cw');
+            if (rotateCostCCW) rotateCostCCW.textContent = `$${rotationCost}`;
+            if (rotateCostCW) rotateCostCW.textContent = `$${rotationCost}`;
 
             // Update Inventory Panel - show/hide persistent slots
             // Determine which inventory items to show (same logic as main)
