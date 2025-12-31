@@ -3244,7 +3244,29 @@
             fireworksCanvas.height = fireworksCanvas.offsetHeight;
         }
         resizeFireworksCanvas();
-        window.addEventListener('resize', resizeFireworksCanvas);
+
+        // Update visual tile size for badges when canvas is CSS-scaled
+        function updateVisualTileSize() {
+            const gameCanvas = document.getElementById('gameCanvas');
+            if (!gameCanvas) return;
+            const rect = gameCanvas.getBoundingClientRect();
+            const scale = rect.width / gameCanvas.width;
+            const visualTileSize = TILE_SIZE * scale;
+            document.documentElement.style.setProperty('--tile-size', visualTileSize);
+
+            // Hide all badges when they get smaller than 45px
+            const badgeSize = visualTileSize * 1.5;
+            const badges = document.querySelectorAll('.logo-badge, .year-badge');
+            badges.forEach(badge => {
+                badge.style.display = badgeSize < 42 ? 'none' : 'flex';
+            });
+        }
+        updateVisualTileSize();
+
+        window.addEventListener('resize', () => {
+            resizeFireworksCanvas();
+            updateVisualTileSize();
+        });
 
         const COLORS = ['#B22234', '#FFFFFF', '#3C3B6E']; // USA Red, White, Blue
 
