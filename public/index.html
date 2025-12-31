@@ -2920,10 +2920,16 @@
                 // Apply EMA to the rate for stability
                 gaugeEMA[key] = alpha * rawRate + (1 - alpha) * gaugeEMA[key];
 
-                // Hysteresis: only update display if EMA moved enough from current display
-                const diff = gaugeEMA[key] - gaugeDisplayed[key];
-                if (Math.abs(diff) >= 3) {
-                    gaugeDisplayed[key] = Math.round(gaugeEMA[key]);
+                // Snap to zero quickly when window sum is zero
+                if (totals[key] === 0 && gaugeEMA[key] < 5) {
+                    gaugeEMA[key] = 0;
+                    gaugeDisplayed[key] = 0;
+                } else {
+                    // Hysteresis: only update display if EMA moved enough from current display
+                    const diff = gaugeEMA[key] - gaugeDisplayed[key];
+                    if (Math.abs(diff) >= 3) {
+                        gaugeDisplayed[key] = Math.round(gaugeEMA[key]);
+                    }
                 }
                 const value = gaugeDisplayed[key];
 
