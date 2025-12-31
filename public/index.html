@@ -1851,7 +1851,7 @@
             ARM_F: { id: 'arm_filter', name: 'FILTER ARM', cost: 100, color: '#8e24aa', icon: '🔬', reqLevel: 2, isArm: true, speed: 1.5, canFilter: true, desc: "Smart Filter Arm. Click placed arm to select item type. Ignores other items." },
             ARM_S: { id: 'arm_smart', name: 'SMART ARM', cost: 200, color: '#006064', icon: '⚡', reqLevel: 3, isArm: true, speed: 3.0, canFilter: true, desc: "High-Speed Servo Arm. Transfers items 3x faster." },
             ARM_M: { id: 'arm_mega', name: 'MEGA ARM', cost: 1000, color: '#64b5f6', icon: '🦾M', reqLevel: 4, isArm: true, speed: 3.0, canFilter: true, canDirectDeliver: true, desc: "Omni-Directional Mega Arm. Click to set delivery direction (Up/Down/Left/Right). 3x speed." },
-            ARM_H: { id: 'arm_hyper', name: 'HYPER ARM', cost: 5000, color: '#00D4FF', icon: '🦾H', reqLevel: 5, isArm: true, speed: 0.75, canFilter: true, canDirectDeliver: false, reachDistance: 2, desc: "Extended-Reach Robotic Arm. Picks up from 2 squares behind, delivers 2 squares forward. 75% speed due to longer travel distance." },
+            ARM_H: { id: 'arm_hyper', name: 'HYPER ARM', cost: 5000, color: '#00D4FF', icon: '🦾H', reqLevel: 5, isArm: true, speed: 0.75, canFilter: true, canDirectDeliver: false, reachDistance: 2, desc: "Extended-Reach Robotic Arm. Picks up from 1 square behind, delivers 2 squares forward. 75% speed due to longer travel distance." },
 
             // PLASTIC SOURCE variants
             SRC_P: { id: 'src_p', name: 'PLASTIC', cost: 100, color: '#c62828', icon: '🔴', reqLevel: 1, output: ITEM.PLASTIC, speed: 60, desc: "Infinite source of Red Plastic Pellets. Used in Injection Presses." },
@@ -1971,20 +1971,20 @@
                 let speed = this.type.speed * 0.05;
                 // Use deliverDir for delivery target (MEGA ARM can deliver in any cardinal direction)
                 let deliveryDirection = this.type.canDirectDeliver ? this.deliverDir : this.rot;
-                // Use reachDistance for HYPER ARM (2 tiles) or default to 1 for regular ARMs
-                const reachDistance = this.type.reachDistance || 1;
+                // Pickup is always 1 tile behind; reachDistance only affects delivery (HYPER ARM = 2)
+                const deliveryDistance = this.type.reachDistance || 1;
 
                 if (this.heldItem) {
                     if (this.armAnim < 1.0) this.armAnim = Math.min(1.0, this.armAnim + speed);
                     else {
-                        let targetXY = getNeighborAtDistance(this.x, this.y, deliveryDirection, reachDistance);
+                        let targetXY = getNeighborAtDistance(this.x, this.y, deliveryDirection, deliveryDistance);
                         if (this.attemptDrop(targetXY, this.heldItem)) this.heldItem = null;
                     }
                 } else {
                     if (this.armAnim > 0) this.armAnim = Math.max(0, this.armAnim - speed);
                     else {
-                        let sourceXY = getNeighborAtDistance(this.x, this.y, (this.rot + 2) % 4, reachDistance);
-                        let targetXY = getNeighborAtDistance(this.x, this.y, deliveryDirection, reachDistance);
+                        let sourceXY = getNeighborAtDistance(this.x, this.y, (this.rot + 2) % 4, 1);
+                        let targetXY = getNeighborAtDistance(this.x, this.y, deliveryDirection, deliveryDistance);
                         let item = this.attemptPickup(sourceXY, targetXY);
                         if (item) this.heldItem = item;
                     }
@@ -3674,10 +3674,11 @@
                 let angleOffset = -Math.PI + b.armAnim * (targetAngle + Math.PI);
                 ctx.rotate(angleOffset);
 
-                // Scale arm length based on reachDistance (HYPER ARM = 2 tiles)
-                const reachDistance = b.type.reachDistance || 1;
-                const armLength = 24 * reachDistance;
-                const armThickness = Math.min(10, 10 / reachDistance); // Thinner for longer arms
+                // Arm extends from pickup (1 tile) to delivery (reachDistance tiles)
+                const deliveryDistance = b.type.reachDistance || 1;
+                const currentReach = 1 + b.armAnim * (deliveryDistance - 1);
+                const armLength = 24 * currentReach;
+                const armThickness = Math.min(10, 10 / deliveryDistance); // Thinner for longer-reach arms
                 const handPos = armLength - 2;
 
                 ctx.fillStyle = b.type.color;
@@ -3844,22 +3845,22 @@
             let s = 1 + Math.sin(Date.now()/200)*0.1;
             ctx.scale(s, s);
 
-            // Show pickup/delivery zones at correct distance for HYPER ARM
-            const reachDistance = b.reachDistance || 1;
-            const reachOffset = TILE_SIZE * reachDistance;
+            // Pickup is always 1 tile behind; reachDistance only affects delivery (HYPER ARM = 2)
+            const deliveryOffset = TILE_SIZE * (b.reachDistance || 1);
+            const pickupOffset = TILE_SIZE; // Always 1 tile
 
             // Green arrow (delivery zone)
             ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
             ctx.beginPath();
-            ctx.moveTo(reachOffset - 10, -8);
-            ctx.lineTo(reachOffset + 2, 0);
-            ctx.lineTo(reachOffset - 10, 8);
+            ctx.moveTo(deliveryOffset - 10, -8);
+            ctx.lineTo(deliveryOffset + 2, 0);
+            ctx.lineTo(deliveryOffset - 10, 8);
             ctx.fill();
 
             // Red circle (pickup zone)
             ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
             ctx.beginPath();
-            ctx.arc(-reachOffset, 0, 4, 0, Math.PI*2);
+            ctx.arc(-pickupOffset, 0, 4, 0, Math.PI*2);
             ctx.fill();
             ctx.restore();
 
