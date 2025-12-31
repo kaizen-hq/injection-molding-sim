@@ -1332,14 +1332,9 @@
 
                 <!-- Buffer Panel (show/hide based on building) -->
                 <div id="buffer-panel" class="inspect-panel" style="display: none;">
-                    <div class="inspect-panel-header">BUFFERS</div>
-                    <div id="input-buffer-section" style="margin-bottom: 8px; display: none;">
-                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">INPUT</div>
-                        <div id="input-buffer-grid" class="buffer-grid"></div>
-                    </div>
-                    <div id="output-buffer-section" style="display: none;">
-                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">OUTPUT</div>
-                        <div id="output-buffer-grid" class="buffer-grid"></div>
+                    <div class="inspect-panel-header">INVENTORY</div>
+                    <div id="inventory-items">
+                        <!-- Dynamically populated with inventory rows: PLASTIC: 2 [DEL], MOLD: 1 [DEL], OUT: PART (x1) [DEL] -->
                     </div>
                 </div>
 
@@ -2754,61 +2749,6 @@
             document.getElementById('build-mode').style.display = 'flex';
         }
 
-        function renderInspectPanels(building) {
-            const container = document.getElementById('inspect-panels');
-            container.innerHTML = '';
-
-            // Status Panel (always shown)
-            container.appendChild(renderStatusPanel(building));
-
-            // Buffer Panel (for buildings with input/output)
-            if (building.type.inputs || building.outputBuffer !== undefined) {
-                container.appendChild(renderBufferPanel(building));
-            }
-
-            // Filter Panel (for arms with canFilter)
-            if (building.type.canFilter) {
-                container.appendChild(renderFilterPanel(building));
-            }
-
-            // Delivery Panel (for arms with canDirectDeliver)
-            if (building.type.canDirectDeliver) {
-                container.appendChild(renderDeliveryPanel(building));
-            }
-        }
-
-        function updateInspectPanels() {
-            if (!isInspectMode || !inspectedBuilding) return;
-            renderInspectPanels(inspectedBuilding);
-        }
-
-        function renderStatusPanel(building) {
-            const panel = document.createElement('div');
-            panel.className = 'inspect-panel';
-
-            const icon = building.type.icon || '?';
-            const status = getBuildingStatus(building);
-            const statusColor = status === 'OK' ? '#39ff14' : status === 'FULL' ? '#ffd700' : '#ff0000';
-
-            panel.innerHTML = `
-                <div class="inspect-panel-header">
-                    <span style="font-size: 18px;">${icon}</span>
-                    <span>${building.type.name}</span>
-                    <span style="margin-left: auto; color: ${statusColor};">● ${status}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Position</span>
-                    <span class="stat-value">(${building.x}, ${building.y})</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Cycles</span>
-                    <span class="stat-value">${building.cycleCount || 0}</span>
-                </div>
-            `;
-
-            return panel;
-        }
-
         function getBuildingStatus(building) {
             // Check for error states
             if (building.type.inputs) {
@@ -2823,152 +2763,6 @@
                 return 'FULL';
             }
             return 'OK';
-        }
-
-        function renderBufferPanel(building) {
-            const panel = document.createElement('div');
-            panel.className = 'inspect-panel';
-
-            let inputHtml = '';
-            let outputHtml = '';
-
-            // Input buffers
-            if (building.type.inputs && !building.type.id.includes('src')) {
-                const inputSlots = building.type.inputs.map(input => {
-                    const count = building.inventory[input] || 0;
-                    const icon = getItemIcon(input);
-                    return `<div class="buffer-slot ${count > 0 ? 'filled' : ''}">${count > 0 ? icon : ''}</div>`;
-                }).join('');
-                inputHtml = `
-                    <div style="margin-bottom: 8px;">
-                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">INPUT</div>
-                        <div class="buffer-grid">${inputSlots}</div>
-                    </div>
-                `;
-            }
-
-            // Output buffer
-            if (building.outputBuffer !== undefined) {
-                const hasOutput = building.outputBuffer !== null;
-                const icon = hasOutput ? getItemIcon(building.outputBuffer) : '';
-                outputHtml = `
-                    <div>
-                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">OUTPUT</div>
-                        <div class="buffer-grid">
-                            <div class="buffer-slot ${hasOutput ? 'filled' : ''}">${icon}</div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            panel.innerHTML = `
-                <div class="inspect-panel-header">BUFFERS</div>
-                ${inputHtml}
-                ${outputHtml}
-            `;
-
-            return panel;
-        }
-
-        function getItemIcon(itemType) {
-            const icons = {
-                [ITEM.PLASTIC]: '🔴',
-                [ITEM.STEEL]: '⬜',
-                [ITEM.MOLD]: '🟫',
-                [ITEM.MOLD_QUAD]: '🟫',
-                [ITEM.PART]: '⭐',
-                [ITEM.PART_QUAD]: '⭐'
-            };
-            return icons[itemType] || '?';
-        }
-
-        function renderFilterPanel(building) {
-            const panel = document.createElement('div');
-            panel.className = 'inspect-panel';
-
-            const filters = [
-                { id: 'all', icon: '⚡', label: 'ALL' },
-                { id: ITEM.PLASTIC, icon: '🔴', label: 'PLASTIC' },
-                { id: ITEM.STEEL, icon: '⬜', label: 'STEEL' },
-                { id: ITEM.MOLD, icon: '🟫', label: 'MOLD' },
-                { id: ITEM.MOLD_QUAD, icon: '🟫⁴', label: 'QUAD' },
-                { id: ITEM.PART, icon: '⭐', label: 'PART' }
-            ];
-
-            const filterButtons = filters.map(f => {
-                const isActive = building.filter === f.id || (f.id === 'all' && !building.filter);
-                return `
-                    <button class="filter-btn ${isActive ? 'active' : ''}" data-filter="${f.id}">
-                        <span class="filter-icon">${f.icon}</span>
-                        <span>${f.label}</span>
-                    </button>
-                `;
-            }).join('');
-
-            panel.innerHTML = `
-                <div class="inspect-panel-header">ITEM FILTER</div>
-                <div class="filter-grid">${filterButtons}</div>
-            `;
-
-            // Add click handlers
-            panel.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const filter = btn.dataset.filter;
-                    building.filter = filter === 'all' ? null : filter;
-                    renderInspectPanels(building);
-                });
-            });
-
-            return panel;
-        }
-
-        function renderDeliveryPanel(building) {
-            const panel = document.createElement('div');
-            panel.className = 'inspect-panel';
-
-            const isEnabled = building.directDeliver || false;
-            const targetId = building.deliverTarget;
-            const targetBuilding = targetId ? buildings.find(b => b.id === targetId) : null;
-            const targetName = targetBuilding ? targetBuilding.type.name : 'None';
-
-            // Find valid delivery targets (sellers)
-            const sellers = buildings.filter(b => b.type.id === 'SELL' || b.type.id === 'SELL_MEGA');
-
-            let targetOptions = '<option value="">Select Target...</option>';
-            sellers.forEach(s => {
-                const selected = s.id === targetId ? 'selected' : '';
-                targetOptions += `<option value="${s.id}" ${selected}>${s.type.name} (${s.x},${s.y})</option>`;
-            });
-
-            panel.innerHTML = `
-                <div class="inspect-panel-header">DIRECT DELIVERY</div>
-                <div class="delivery-toggle">
-                    <label>Enable Direct Delivery</label>
-                    <div class="toggle-switch ${isEnabled ? 'on' : ''}" id="delivery-toggle"></div>
-                </div>
-                <div style="display: ${isEnabled ? 'block' : 'none'};" id="delivery-target-section">
-                    <div style="font-size: 10px; color: #888; margin-bottom: 4px;">TARGET</div>
-                    <select style="width: 100%; padding: 6px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px;" id="delivery-target-select">
-                        ${targetOptions}
-                    </select>
-                </div>
-            `;
-
-            // Add toggle handler
-            panel.querySelector('#delivery-toggle').addEventListener('click', function() {
-                building.directDeliver = !building.directDeliver;
-                renderInspectPanels(building);
-            });
-
-            // Add target select handler
-            const select = panel.querySelector('#delivery-target-select');
-            if (select) {
-                select.addEventListener('change', function() {
-                    building.deliverTarget = this.value || null;
-                });
-            }
-
-            return panel;
         }
 
         function clearInv(type) {
@@ -3029,29 +2823,69 @@
             document.getElementById('status-position').textContent = `(${building.x}, ${building.y})`;
             document.getElementById('status-cycles').textContent = building.cycleCount || 0;
 
-            // Update Buffer Panel
-            const inputGrid = document.getElementById('input-buffer-grid');
-            if (inputGrid && building.type.inputs) {
-                inputGrid.innerHTML = '';
-                building.type.inputs.forEach(input => {
-                    const count = building.inventory[input] || 0;
-                    const icon = getItemIcon(input);
-                    const slot = document.createElement('div');
-                    slot.className = `buffer-slot ${count > 0 ? 'filled' : ''}`;
-                    slot.textContent = count > 0 ? icon : '';
-                    inputGrid.appendChild(slot);
-                });
-            }
+            // Update Inventory Panel (like old inspector)
+            const inventoryContainer = document.getElementById('inventory-items');
+            if (inventoryContainer) {
+                inventoryContainer.innerHTML = '';
 
-            const outputGrid = document.getElementById('output-buffer-grid');
-            if (outputGrid) {
-                outputGrid.innerHTML = '';
-                const hasOutput = building.outputBuffer !== null;
-                const icon = hasOutput ? getItemIcon(building.outputBuffer) : '';
-                const slot = document.createElement('div');
-                slot.className = `buffer-slot ${hasOutput ? 'filled' : ''}`;
-                slot.textContent = icon;
-                outputGrid.appendChild(slot);
+                // Determine which inventory items to show (same logic as main)
+                let inventoryKeys = [];
+                for (let k in building.inventory) {
+                    if (building.type.id.includes('src')) continue; // Skip source buildings
+                    if (building.type.id.includes('cnc') && k !== ITEM.STEEL) continue; // CNC only shows steel
+                    if (building.type.id.includes('press') && k === ITEM.STEEL) continue; // Press doesn't show steel
+                    inventoryKeys.push(k);
+                }
+
+                // Add each inventory item with delete button
+                inventoryKeys.forEach(k => {
+                    const row = document.createElement('div');
+                    row.className = 'stat-row';
+                    row.style.padding = '4px 0';
+                    row.innerHTML = `
+                        <span>${k.toUpperCase()}: ${building.inventory[k]}</span>
+                        <button class="insp-btn" data-item="${k}" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    `;
+                    // Attach delete handler
+                    row.querySelector('.insp-btn').addEventListener('click', () => {
+                        clearInv(k);
+                    });
+                    inventoryContainer.appendChild(row);
+                });
+
+                // Add output section if building produces items
+                const hasOutput = building.type.output || building.type.recipe?.out;
+                if (hasOutput) {
+                    // Visual separator
+                    const separator = document.createElement('div');
+                    separator.style.borderTop = '1px solid #444';
+                    separator.style.margin = '8px 0';
+                    inventoryContainer.appendChild(separator);
+
+                    // Output header
+                    const outputHeader = document.createElement('div');
+                    outputHeader.style.fontSize = '10px';
+                    outputHeader.style.color = '#888';
+                    outputHeader.style.marginBottom = '4px';
+                    outputHeader.textContent = 'OUTPUT';
+                    inventoryContainer.appendChild(outputHeader);
+
+                    // Output row
+                    const outType = building.outputBuffer ? building.outputBuffer.toUpperCase() : 'NONE';
+                    const outCount = building.outputCount || 0;
+                    const row = document.createElement('div');
+                    row.className = 'stat-row';
+                    row.style.padding = '4px 0';
+                    row.innerHTML = `
+                        <span>${outType} (x${outCount})</span>
+                        <button class="insp-btn" data-clear="output" style="padding: 2px 8px; background: #333; border: 1px solid #666; color: #fff; cursor: pointer; border-radius: 3px; font-size: 10px;">DEL</button>
+                    `;
+                    // Attach delete handler
+                    row.querySelector('.insp-btn').addEventListener('click', () => {
+                        clearOutput();
+                    });
+                    inventoryContainer.appendChild(row);
+                }
             }
 
             // Update Filter Panel
