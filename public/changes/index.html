@@ -217,6 +217,19 @@
                 <strong>Dynamic Inspector Positioning</strong><span class="badge badge-new">New</span>
                 <p style="margin-top: 10px;">Building inspector now positions itself intelligently near the inspected building instead of fixed corner placement. Automatically adjusts position to stay within grid bounds, preferring right, then left, then below placement.</p>
             </li>
+
+            <li class="feature">
+                <strong>Production Gauges Column</strong><span class="badge badge-new">New</span>
+                <p style="margin-top: 10px;">New gauge column between game canvas and stats sidebar showing real-time production rates:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li style="background: none; border: none; padding: 5px 0;">🔴 <strong>PLASTIC</strong> - Red segmented arc gauge</li>
+                    <li style="background: none; border: none; padding: 5px 0;">⚪ <strong>STEEL</strong> - Gray segmented arc gauge</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🔵 <strong>MOLDS</strong> - Blue segmented arc gauge</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🟡 <strong>PARTS</strong> - Gold segmented arc gauge</li>
+                    <li style="background: none; border: none; padding: 5px 0;">🟢 <strong>$/MIN</strong> - Green segmented arc gauge</li>
+                </ul>
+                <p style="margin-top: 10px;">Features 270° segmented arcs with digital readouts, dynamic peak scaling, and smart smoothing using EMA with trend detection to provide stable readings without lag.</p>
+            </li>
         </ul>
 
         <h2>🐛 Bug Fixes</h2>
@@ -310,6 +323,11 @@
             </li>
 
             <li class="improvement">
+                <strong>Smoothed Graph Lines</strong><span class="badge badge-improved">Improved</span>
+                <p style="margin-top: 10px;">Production graphs now use the same EMA-smoothed data as gauges, eliminating jagged zigzag patterns caused by sampling aliasing. Graphs display smooth curves that accurately reflect production trends.</p>
+            </li>
+
+            <li class="improvement">
                 <strong>Code Quality: Descriptive Variable Names</strong><span class="badge badge-improved">Improved</span>
                 <p style="margin-top: 10px;">Refactored graph variables and canvas IDs for clarity: <code>gResCanvas → gPlasticCanvas</code>, <code>gProdCanvas → gPartsCanvas</code>, <code>graphResources → graphPlastic</code>, <code>graphProduction → graphParts</code>.</p>
             </li>
@@ -383,10 +401,10 @@
         <h2>📊 Statistics</h2>
         <ul>
             <li class="improvement">Total Commits: <strong>40+</strong></li>
-            <li class="improvement">New Features: <strong>10 major features</strong></li>
+            <li class="improvement">New Features: <strong>11 major features</strong></li>
             <li class="improvement">Bug Fixes: <strong>8 critical and minor fixes</strong></li>
             <li class="improvement">New Equipment: <strong>4 MEGA tier variants</strong></li>
-            <li class="improvement">UI/UX Improvements: <strong>Complete theme overhaul + 10 improvements</strong></li>
+            <li class="improvement">UI/UX Improvements: <strong>Complete theme overhaul + 11 improvements</strong></li>
         </ul>
 
         <div style="text-align: center; margin-top: 40px;">
