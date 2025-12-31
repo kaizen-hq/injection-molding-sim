@@ -411,12 +411,30 @@
             min-height: 0;
         }
 
+        #left-toolbar.dimmed {
+            opacity: 0.3;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
         #inspect-mode {
-            display: flex;
+            display: none; /* Hidden by default */
             flex-direction: column;
             flex: 1;
             min-height: 0;
             overflow-y: auto;
+        }
+
+        #inspect-mode-header {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--gold);
+            padding: 15px 0;
+            border-bottom: 2px solid #333;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
         }
 
         #inspect-panels {
@@ -726,6 +744,7 @@
             flex-direction: column;
             padding: 20px 15px;
             flex-shrink: 0;
+            position: relative; /* For absolute positioning of inspect-mode */
             transition: opacity 0.1s ease-in-out;
             overflow-y: auto;
             height: 100vh;
@@ -1037,10 +1056,10 @@
 
     <!-- Flyout Panel (Always Visible, Next to Toolbar) -->
     <div id="flyout-panel">
-        <div id="flyout-header">BELT VARIANTS</div>
 
         <!-- Build Mode: variant selection + tool info -->
         <div id="build-mode">
+        <div id="flyout-header">BELT VARIANTS</div>
         <div id="flyout-content">
             <!-- All variants pre-rendered -->
             <!-- BELT Variants (Slot 1) -->
@@ -1291,8 +1310,76 @@
 
         <!-- Inspect Mode: building inspection panels -->
         <div id="inspect-mode" style="display: none;">
+            <div id="inspect-mode-header">INSPECTING</div>
             <div id="inspect-panels">
-                <!-- Panels rendered dynamically -->
+
+                <!-- Status Panel (always visible) -->
+                <div id="status-panel" class="inspect-panel">
+                    <div class="inspect-panel-header">
+                        <span id="status-icon" style="font-size: 18px;"></span>
+                        <span id="status-name"></span>
+                        <span id="status-indicator" style="margin-left: auto;"></span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Position</span>
+                        <span id="status-position" class="stat-value"></span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Cycles</span>
+                        <span id="status-cycles" class="stat-value"></span>
+                    </div>
+                </div>
+
+                <!-- Buffer Panel (show/hide based on building) -->
+                <div id="buffer-panel" class="inspect-panel" style="display: none;">
+                    <div class="inspect-panel-header">BUFFERS</div>
+                    <div id="input-buffer-section" style="margin-bottom: 8px; display: none;">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">INPUT</div>
+                        <div id="input-buffer-grid" class="buffer-grid"></div>
+                    </div>
+                    <div id="output-buffer-section" style="display: none;">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">OUTPUT</div>
+                        <div id="output-buffer-grid" class="buffer-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Filter Panel (show/hide based on building) -->
+                <div id="filter-panel" class="inspect-panel" style="display: none;">
+                    <div class="inspect-panel-header">ITEM FILTER</div>
+                    <div class="filter-grid">
+                        <button class="filter-btn" data-filter="all" id="filter-btn-all">
+                            <span class="filter-icon">⚡</span>
+                            <span>ALL</span>
+                        </button>
+                        <button class="filter-btn" data-filter="plastic" id="filter-btn-plastic">
+                            <span class="filter-icon">🔴</span>
+                            <span>PLASTIC</span>
+                        </button>
+                        <button class="filter-btn" data-filter="steel" id="filter-btn-steel">
+                            <span class="filter-icon">⬜</span>
+                            <span>STEEL</span>
+                        </button>
+                        <button class="filter-btn" data-filter="mold" id="filter-btn-mold">
+                            <span class="filter-icon">🟫</span>
+                            <span>MOLD</span>
+                        </button>
+                        <button class="filter-btn" data-filter="mold_quad" id="filter-btn-mold_quad">
+                            <span class="filter-icon">🟫⁴</span>
+                            <span>QUAD</span>
+                        </button>
+                        <button class="filter-btn" data-filter="part" id="filter-btn-part">
+                            <span class="filter-icon">⭐</span>
+                            <span>PART</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Direction Panel (show/hide based on building) - placeholder for Phase 4 -->
+                <div id="direction-panel" class="inspect-panel" style="display: none;">
+                    <div class="inspect-panel-header">DELIVERY DIRECTION</div>
+                    <!-- Will be implemented in Phase 4 -->
+                </div>
+
             </div>
             <button id="exit-inspect-btn" class="btn-secondary" style="width: 100%; margin-top: 10px;">
                 RETURN TO BUILD MODE
@@ -2008,10 +2095,36 @@
             // Exit inspect mode button
             document.getElementById('exit-inspect-btn').addEventListener('click', exitInspectMode);
 
+            // Attach filter button event listeners once
+            const filters = [
+                { id: null, dataFilter: 'all' },
+                { id: ITEM.PLASTIC, dataFilter: 'plastic' },
+                { id: ITEM.STEEL, dataFilter: 'steel' },
+                { id: ITEM.MOLD, dataFilter: 'mold' },
+                { id: ITEM.MOLD_QUAD, dataFilter: 'mold_quad' },
+                { id: ITEM.PART, dataFilter: 'part' }
+            ];
+            filters.forEach(f => {
+                const btn = document.getElementById(`filter-btn-${f.dataFilter}`);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        if (inspectedBuilding) {
+                            inspectedBuilding.filter = f.id;
+                            updateInspectPanelValues(inspectedBuilding);
+                        }
+                    });
+                }
+            });
+
             setInterval(update, TICK_RATE);
             setInterval(updateMetrics, 1000);
             setInterval(updateInspectorUI, 200);
-            setInterval(updateInspectPanels, 500);  // Update inspect panels while in inspect mode
+            setInterval(() => {
+                // Update inspect panel values only (no DOM destruction)
+                if (isInspectMode && inspectedBuilding) {
+                    updateInspectPanelValues(inspectedBuilding);
+                }
+            }, 500);
             requestAnimationFrame(draw);
 
             // Auto-load saved game if exists
@@ -2612,31 +2725,33 @@
             isInspectMode = true;
             inspectedBuilding = building;
 
-            // Update header
-            document.getElementById('flyout-header').textContent = `INSPECTING: ${building.type.name}`;
+            // Update inspect mode header
+            document.getElementById('inspect-mode-header').textContent = `INSPECTING: ${building.type.name}`;
 
-            // Switch display modes
+            // Dim the left toolbar (make it clear tools aren't selectable)
+            document.getElementById('left-toolbar').classList.add('dimmed');
+
+            // Hide build mode, show inspect mode
             document.getElementById('build-mode').style.display = 'none';
             document.getElementById('inspect-mode').style.display = 'flex';
 
-            // Render panels
-            renderInspectPanels(building);
+            // Show/hide relevant panels based on building type
+            showHideInspectPanels(building);
+
+            // Initial value update
+            updateInspectPanelValues(building);
         }
 
         function exitInspectMode() {
             isInspectMode = false;
             inspectedBuilding = null;
 
-            // Restore header based on selected tool
-            const toolNames = { 1: 'BELT', 2: 'ARM', 3: 'PLASTIC', 4: 'STEEL', 5: 'CNC', 6: 'PRESS', 7: 'SELL' };
-            document.getElementById('flyout-header').textContent = `${toolNames[selectedSlot] || 'BELT'} VARIANTS`;
+            // Un-dim the left toolbar (tools are selectable again)
+            document.getElementById('left-toolbar').classList.remove('dimmed');
 
-            // Switch display modes
-            document.getElementById('build-mode').style.display = 'flex';
+            // Hide inspect mode, show build mode
             document.getElementById('inspect-mode').style.display = 'none';
-
-            // Clear panels
-            document.getElementById('inspect-panels').innerHTML = '';
+            document.getElementById('build-mode').style.display = 'flex';
         }
 
         function renderInspectPanels(building) {
@@ -2859,20 +2974,104 @@
         function clearInv(type) {
             if (inspectedBuilding && inspectedBuilding.inventory.hasOwnProperty(type)) {
                 inspectedBuilding.inventory[type] = 0;
-                updateInspectorUI();
+                if (isInspectMode) updateInspectPanelValues(inspectedBuilding);
             }
         }
-        function clearOutput() { 
+        function clearOutput() {
             if (inspectedBuilding) {
-                inspectedBuilding.outputBuffer = null; 
+                inspectedBuilding.outputBuffer = null;
                 inspectedBuilding.outputCount = 0;
             }
-            updateInspectorUI(); 
+            if (isInspectMode) updateInspectPanelValues(inspectedBuilding);
         }
 
         // Old updateInspectorUI removed - now handled by updateInspectPanels
         function updateInspectorUI() {
             // Stub - old inspector removed, new inspect panels use updateInspectPanels()
+        }
+
+        // ===== PERSISTENT INSPECT PANELS (No DOM destruction) =====
+
+        function showHideInspectPanels(building) {
+            // Status panel always visible
+            document.getElementById('status-panel').style.display = 'block';
+
+            // Buffer panel - show if building has inputs or outputs
+            const hasBuffers = building.type.inputs || building.outputBuffer !== undefined;
+            document.getElementById('buffer-panel').style.display = hasBuffers ? 'block' : 'none';
+
+            // Show/hide input/output sections within buffer panel
+            const hasInputs = building.type.inputs && !building.type.id.includes('src');
+            const hasOutput = building.outputBuffer !== undefined;
+            document.getElementById('input-buffer-section').style.display = hasInputs ? 'block' : 'none';
+            document.getElementById('output-buffer-section').style.display = hasOutput ? 'block' : 'none';
+
+            // Filter panel - show if building can filter
+            document.getElementById('filter-panel').style.display = building.type.canFilter ? 'block' : 'none';
+
+            // Direction panel - show if building can direct deliver (Phase 4)
+            document.getElementById('direction-panel').style.display = building.type.canDirectDeliver ? 'block' : 'none';
+        }
+
+        function updateInspectPanelValues(building) {
+            if (!isInspectMode || !inspectedBuilding) return;
+
+            // Update Status Panel
+            const icon = building.type.icon || '?';
+            const status = getBuildingStatus(building);
+            const statusColor = status === 'OK' ? '#39ff14' : status === 'FULL' ? '#ffd700' : '#ff0000';
+
+            document.getElementById('status-icon').textContent = icon;
+            document.getElementById('status-name').textContent = building.type.name;
+            const statusIndicator = document.getElementById('status-indicator');
+            statusIndicator.textContent = `● ${status}`;
+            statusIndicator.style.color = statusColor;
+            document.getElementById('status-position').textContent = `(${building.x}, ${building.y})`;
+            document.getElementById('status-cycles').textContent = building.cycleCount || 0;
+
+            // Update Buffer Panel
+            const inputGrid = document.getElementById('input-buffer-grid');
+            if (inputGrid && building.type.inputs) {
+                inputGrid.innerHTML = '';
+                building.type.inputs.forEach(input => {
+                    const count = building.inventory[input] || 0;
+                    const icon = getItemIcon(input);
+                    const slot = document.createElement('div');
+                    slot.className = `buffer-slot ${count > 0 ? 'filled' : ''}`;
+                    slot.textContent = count > 0 ? icon : '';
+                    inputGrid.appendChild(slot);
+                });
+            }
+
+            const outputGrid = document.getElementById('output-buffer-grid');
+            if (outputGrid) {
+                outputGrid.innerHTML = '';
+                const hasOutput = building.outputBuffer !== null;
+                const icon = hasOutput ? getItemIcon(building.outputBuffer) : '';
+                const slot = document.createElement('div');
+                slot.className = `buffer-slot ${hasOutput ? 'filled' : ''}`;
+                slot.textContent = icon;
+                outputGrid.appendChild(slot);
+            }
+
+            // Update Filter Panel
+            if (building.type.canFilter) {
+                const filters = [null, ITEM.PLASTIC, ITEM.STEEL, ITEM.MOLD, ITEM.MOLD_QUAD, ITEM.PART];
+                filters.forEach(f => {
+                    const filterId = f || 'all';
+                    const btn = document.getElementById(`filter-btn-${filterId}`);
+                    if (btn) {
+                        const isActive = building.filter === f;
+                        if (isActive) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    }
+                });
+            }
+
+            // Update Direction Panel (will be implemented in Phase 4)
         }
 
         function updateUI() {
