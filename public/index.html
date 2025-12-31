@@ -576,6 +576,26 @@
             cursor: not-allowed;
         }
 
+        .current-direction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0px 8px;
+            background: rgba(26, 38, 52, 0.95);
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .direction-label {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .direction-value {
+            font-size: 15px;
+            color: #fff;
+        }
+
         .rotation-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -587,7 +607,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 12px 8px;
+            padding: 10px 8px;
             background: rgba(26, 38, 52, 0.95);
             border: 2px solid var(--usa-blue);
             color: #fff;
@@ -604,24 +624,12 @@
 
         .rotate-button .rotate-icon {
             font-size: 24px;
-            margin-bottom: 4px;
-        }
-
-        .rotate-button .rotate-label {
-            font-weight: bold;
-            margin-bottom: 2px;
         }
 
         .rotate-button .rotate-cost {
             font-size: 10px;
             color: #888;
-        }
-
-        .rotate-hint {
-            text-align: center;
-            font-size: 9px;
-            color: #666;
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         /* Rotation animation */
@@ -1446,19 +1454,20 @@
                 <!-- Rotation Panel (show/hide based on building - hidden for sellers) -->
                 <div id="rotation-panel" class="inspect-panel" style="display: none;">
                     <div class="inspect-panel-header">ROTATION</div>
+                    <div class="current-direction">
+                        <span class="direction-label">Facing:</span>
+                        <span id="current-direction-value" class="direction-value">→ RIGHT</span>
+                    </div>
                     <div class="rotation-buttons">
-                        <button id="rotate-ccw-btn" class="rotate-button">
+                        <button id="rotate-ccw-btn" class="rotate-button" title="Rotate Counter-Clockwise">
                             <span class="rotate-icon">↺</span>
-                            <span class="rotate-label">CCW</span>
                             <span class="rotate-cost" id="rotate-cost-ccw">$0</span>
                         </button>
-                        <button id="rotate-cw-btn" class="rotate-button">
+                        <button id="rotate-cw-btn" class="rotate-button" title="Rotate Clockwise">
                             <span class="rotate-icon">↻</span>
-                            <span class="rotate-label">CW</span>
                             <span class="rotate-cost" id="rotate-cost-cw">$0</span>
                         </button>
                     </div>
-                    <div class="rotate-hint">90° counter / clockwise</div>
                 </div>
 
                 <!-- Buffer Panel (show/hide based on building) -->
@@ -3152,12 +3161,17 @@
             document.getElementById('status-position').textContent = `(${building.x}, ${building.y})`;
             document.getElementById('status-cycles').textContent = building.cycleCount || 0;
 
-            // Update Rotation Panel costs
+            // Update Rotation Panel costs and current direction
             const rotationCost = Math.floor(building.type.cost * 0.10);
             const rotateCostCCW = document.getElementById('rotate-cost-ccw');
             const rotateCostCW = document.getElementById('rotate-cost-cw');
             if (rotateCostCCW) rotateCostCCW.textContent = `$${rotationCost}`;
             if (rotateCostCW) rotateCostCW.textContent = `$${rotationCost}`;
+
+            // Update current direction display
+            const directionNames = ['→ RIGHT', '↓ DOWN', '← LEFT', '↑ UP'];
+            const directionEl = document.getElementById('current-direction-value');
+            if (directionEl) directionEl.textContent = directionNames[building.rot];
 
             // Update Inventory Panel - show/hide persistent slots
             // Determine which inventory items to show (same logic as main)
