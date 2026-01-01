@@ -3793,7 +3793,7 @@
             // Arm extends from pickup (1 tile) to delivery (reachDistance tiles)
             const deliveryDistance = b.type.reachDistance || 1;
             const currentReach = 1 + b.armAnim * (deliveryDistance - 1);
-            const armLength = 24 * currentReach;
+            const armLength = 24 + (TILE_SIZE + 1) * (currentReach - 1); // Extends into target cell
             const armThickness = Math.min(10, 10 / deliveryDistance); // Thinner for longer-reach arms
             const handPos = armLength - 2;
 
